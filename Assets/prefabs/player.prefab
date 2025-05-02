@@ -10,8 +10,8 @@ GameObject:
   m_Component:
   - component: {fileID: 8507781504674674717}
   - component: {fileID: -5973135522916903251}
-  - component: {fileID: -3628545483560962087}
   - component: {fileID: -1049964307406843210}
+  - component: {fileID: -3628545483560962087}
   m_Layer: 0
   m_Name: player
   m_TagString: Untagged
@@ -59,6 +59,20 @@ MonoBehaviour:
   AutoObjectParentSync: 1
   SyncOwnerTransformWhenParented: 1
   AllowOwnerToParent: 0
+--- !u!114 &-1049964307406843210
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8347148019087321710}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5d813a1120b0d9d42979beb2fabe1428, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ShowTopMostFoldoutHeaderGroup: 1
+  data: {fileID: 11400000, guid: 9781f34b0282024428c289a377321989, type: 2}
 --- !u!114 &-3628545483560962087
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -105,17 +119,3 @@ MonoBehaviour:
   SwitchTransformSpaceWhenParented: 0
   Interpolate: 1
   SlerpPosition: 0
---- !u!114 &-1049964307406843210
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8347148019087321710}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5d813a1120b0d9d42979beb2fabe1428, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ShowTopMostFoldoutHeaderGroup: 1
-  data: {fileID: 11400000, guid: 9781f34b0282024428c289a377321989, type: 2}

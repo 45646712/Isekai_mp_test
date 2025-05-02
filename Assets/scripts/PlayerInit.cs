@@ -13,30 +13,25 @@ public class PlayerInit : NetworkBehaviour
 
     protected override void OnNetworkPostSpawn()
     {
-        GameObject character;
         if (!IsOwnedByServer)
         {
-            character = Instantiate(data.Character, gameObject.transform);
-            transform.position = new Vector3(2, 2, 0);
-        }
-        else
-        {
-            character = Instantiate(data.Character, gameObject.transform);
-        }
-
-
-
-        meshRenderer = character.GetComponentInChildren<SkinnedMeshRenderer>();
-        List<Material> materials = meshRenderer.materials.ToList();
-        
-        if (!IsOwnedByServer)
-        {
-            materials[0] = data.OtherMaterial[0];
-            materials[1] = data.OtherMaterial[0];
+            GameObject character = Instantiate(data.Character, gameObject.transform);
+            
+            meshRenderer = character.GetComponentInChildren<SkinnedMeshRenderer>();
+            List<Material> materials = meshRenderer.materials.ToList();
+            
+            foreach (KeyValuePair<int, Material> element in data.MaterialVariations)
+            {
+                materials[element.Key] = element.Value;
+            }
         
             meshRenderer.materials = materials.ToArray();
 
             GetComponentInChildren<Animator>().runtimeAnimatorController = data.ExtraAnimation[0];
+        }
+        else
+        {
+            Instantiate(data.Character, gameObject.transform);
         }
     }
 }
