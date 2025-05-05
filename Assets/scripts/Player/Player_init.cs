@@ -4,8 +4,9 @@ using System.Linq;
 using Unity.Netcode;
 using Unity.Netcode.Components;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
-public class PlayerInit : NetworkBehaviour
+public class Player_init : NetworkBehaviour
 {
     [SerializeField] private CharacterSO data;
 
@@ -33,5 +34,7 @@ public class PlayerInit : NetworkBehaviour
         {
             Instantiate(data.Character, gameObject.transform);
         }
+
+        GetComponent<PlayerInput>().enabled = IsOwner;
     }
 }
