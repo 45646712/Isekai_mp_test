@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using AYellowpaper.SerializedCollections;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "characterSO", menuName = "Scriptable Objects/characterSO")]
+[CreateAssetMenu(fileName = "character", menuName = "Scriptable Objects/character")]
 public class CharacterSO : ScriptableObject
 {
     [field: SerializeField] public int ID { get; private set; }
