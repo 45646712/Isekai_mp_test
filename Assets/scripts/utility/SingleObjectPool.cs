@@ -1,30 +1,32 @@
 using System;
+using System.Collections.Generic;
 using Unity.Netcode;
+using Unity.Netcode.Components;
 using Unity.VisualScripting;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.Pool;
 
-public class SingleObjectPool : NetworkBehaviour
+public class SingleNetworkObjectPool : NetworkBehaviour
 {
     [SerializeField] private PoolObjectSO poolData;
 
-    private IObjectPool<GameObject> constructedInstance;
+    private IObjectPool<NetworkObject> constructedInstance;
     
     private bool checkPool = true;
 
     //SO data
-    private GameObject Prefab;
+    public GameObject Prefab { get; private set; }
     private int DefaultPoolSize;
     private int MaxPoolSize;
     
-    public IObjectPool<GameObject> Instance
+    public IObjectPool<NetworkObject> Instance
     {
         get
         {
             if (constructedInstance == null)
             {
-                constructedInstance = new ObjectPool<GameObject>(CreatePoolObj, OnGetPoolObj, OnReturnPoolObj, OnDestroyPoolObj, checkPool, DefaultPoolSize, MaxPoolSize);
+                constructedInstance = new ObjectPool<NetworkObject>(CreatePoolObj, OnGetPoolObj, OnReturnPoolObj, OnDestroyPoolObj, checkPool, DefaultPoolSize, MaxPoolSize);
             }
 
             return constructedInstance;
@@ -39,20 +41,31 @@ public class SingleObjectPool : NetworkBehaviour
         MaxPoolSize = poolData.MaxPoolSize;
     }
 
-    private GameObject CreatePoolObj()
+    private NetworkObject CreatePoolObj()
     {
-        return Instantiate(Prefab);
+        GameObject poolObj = Instantiate(Prefab);
+        
+        if (IsServer)
+        {
+            poolObj.GetComponent<NetworkObject>().Spawn();
+        }
+        
+        if (!IsServer && poolObj.GetComponent<NetworkRigidbody>() == null)
+        {
+            poolObj.AddComponent<NetworkRigidbody>();
+        }
+        
+        return poolObj.GetComponent<NetworkObject>();
     }
-    private void OnGetPoolObj(GameObject poolObj)
+
+    public void OnGetPoolObj(NetworkObject poolObj) => poolObj.gameObject.SetActive(true);
+    public void OnReturnPoolObj(NetworkObject poolObj) => poolObj.gameObject.SetActive(false);
+    
+    private void OnDestroyPoolObj(NetworkObject poolObj)
     {
-        poolObj.SetActive(true);
-    }
-    private void OnReturnPoolObj(GameObject poolObj)
-    {
-        poolObj.SetActive(false);
-    }
-    private void OnDestroyPoolObj(GameObject poolObj)
-    {
-        Destroy(poolObj);
+        if (IsServer)
+        {
+            poolObj.Despawn();
+        }
     }
 }
