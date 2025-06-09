@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using AYellowpaper.SerializedCollections;
 using Unity.Netcode;
 using Unity.Netcode.Components;
 using UnityEngine;
@@ -11,7 +12,7 @@ public class Player_init : NetworkBehaviour
     [SerializeField] private CharacterSO data;
 
     private Renderer meshRenderer;
-
+    
     protected override void OnNetworkPostSpawn()
     {
         if (!IsOwnedByServer)
@@ -25,7 +26,7 @@ public class Player_init : NetworkBehaviour
             {
                 materials[element.Key] = element.Value;
             }
-        
+            
             meshRenderer.materials = materials.ToArray();
 
             GetComponentInChildren<Animator>().runtimeAnimatorController = data.ExtraAnimation[0];

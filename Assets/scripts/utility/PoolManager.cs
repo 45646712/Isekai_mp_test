@@ -11,7 +11,7 @@ public enum ObjectPoolType
 
 public class PoolManager : NetworkBehaviour
 {
-    [field: SerializeField, SerializedDictionary("material index", "material variant")]
+    [field: SerializeField, SerializedDictionary("Pool Types", "Pool")]
     public SerializedDictionary<ObjectPoolType, SingleNetworkObjectPool> AllObjectPools { get; private set; }
     
     private List<ObjectPoolType> RegisteredPool = new();
