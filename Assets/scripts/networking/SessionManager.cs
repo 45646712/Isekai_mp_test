@@ -1,30 +1,19 @@
 using System;
 using System.Collections.Generic;
-using Unity.Services.Authentication;
-using Unity.Services.Core;
-using UnityEngine;
+using Unity.Netcode;
 using Unity.Services.Multiplayer;
+using UnityEngine;
 using UnityEngine.UI;
 
-public class SessionManager : MonoBehaviour
+public class SessionManager : NetworkBehaviour
 {
-    [SerializeField] private Button Host;
-    [SerializeField] private Button Client;
+    [SerializeField] private Button host;
+    [SerializeField] private Button client;
     
     async void Start()
     {
-        Host.onClick.AddListener(StartHost);
-        Client.onClick.AddListener(StartClient);
-        
-        try
-        {
-            await UnityServices.InitializeAsync();
-            await AuthenticationService.Instance.SignInAnonymouslyAsync();
-        }
-        catch (Exception e)
-        {
-            Debug.LogException(e);
-        }
+        host.onClick.AddListener(StartHost);
+        client.onClick.AddListener(StartClient);
     }
     
     private async void StartHost()
@@ -38,7 +27,7 @@ public class SessionManager : MonoBehaviour
             //password
         }.WithRelayNetwork();
         
-        await MultiplayerService.Instance.CreateOrJoinSessionAsync("1234",option);
+        await MultiplayerService.Instance.CreateSessionAsync(option);
     }
 
     private async void StartClient()

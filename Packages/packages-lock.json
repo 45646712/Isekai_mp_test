@@ -97,7 +97,7 @@
       }
     },
     "com.unity.multiplayer.playmode": {
-      "version": "1.4.2",
+      "version": "1.4.3",
       "depth": 0,
       "source": "registry",
       "dependencies": {
@@ -106,7 +106,7 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.multiplayer.tools": {
-      "version": "2.2.3",
+      "version": "2.2.4",
       "depth": 0,
       "source": "registry",
       "dependencies": {
@@ -121,7 +121,7 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.netcode.gameobjects": {
-      "version": "2.3.2",
+      "version": "2.4.1",
       "depth": 0,
       "source": "registry",
       "dependencies": {
@@ -334,7 +334,7 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.toonshader": {
-      "version": "0.11.0-preview",
+      "version": "0.11.1-preview",
       "depth": 0,
       "source": "registry",
       "dependencies": {
@@ -356,7 +356,7 @@
     },
     "com.unity.ugui": {
       "version": "2.0.0",
-      "depth": 0,
+      "depth": 1,
       "source": "builtin",
       "dependencies": {
         "com.unity.modules.ui": "1.0.0",
@@ -372,12 +372,6 @@
         "com.unity.modules.jsonserialize": "1.0.0"
       },
       "url": "https://packages.unity.com"
-    },
-    "jp.lilxyzw.liltoon": {
-      "version": "file:jp.lilxyzw.liltoon",
-      "depth": 0,
-      "source": "embedded",
-      "dependencies": {}
     },
     "com.unity.modules.accessibility": {
       "version": "1.0.0",
