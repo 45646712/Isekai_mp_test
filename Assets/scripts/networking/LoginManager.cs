@@ -14,7 +14,7 @@ public class LoginManager : MonoBehaviour
     private async void Start()
     {
         await UnityServices.InitializeAsync();
-        
+        PlayGamesPlatform.Activate();
         
         InitLoginEvents();
         Instantiate(LoginUI);
