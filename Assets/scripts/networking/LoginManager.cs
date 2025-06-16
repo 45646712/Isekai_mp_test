@@ -1,3 +1,4 @@
+using System;
 using System.Threading.Tasks;
 using UnityEngine;
 using Unity.Netcode;
@@ -5,26 +6,40 @@ using Unity.Services.Core;
 using Unity.Services.Multiplayer;
 using Unity.Services.Authentication;
 using GooglePlayGames;
+using Unity.Services.Relay.Models;
 using UnityEngine.SceneManagement;
 
-public class LoginManager : MonoBehaviour
+public enum LoginUIState
 {
-    [SerializeField] private GameObject LoginUI;
+    PreLogin,
+    Login
+}
+
+public class LoginManager : NetworkBehaviour
+{
+    public static LoginManager Instance;
+
+    [SerializeField] private GameObject[] preLoginButtons;
     
+    private void Awake()
+    {
+        Instance = this;
+    }
+
     private async void Start()
     {
         await UnityServices.InitializeAsync();
         PlayGamesPlatform.Activate();
         
         InitLoginEvents();
-        Instantiate(LoginUI);
     }
-
+    
     private void InitLoginEvents()
     {
-        AuthenticationService.Instance.SignedIn += () =>
+        AuthenticationService.Instance.SignedIn += async() =>
         {
-            NetworkManager.Singleton.SceneManager.LoadScene("v1test",LoadSceneMode.Single);
+            await SessionManager.Instance.StartHost();
+            NetworkManager.Singleton.SceneManager.LoadScene("v1test", LoadSceneMode.Single);
         };
 
         AuthenticationService.Instance.SignInFailed += Debug.LogError;
@@ -34,19 +49,24 @@ public class LoginManager : MonoBehaviour
             Debug.Log("Player session could not be refreshed and expired.");
         };
     }
-
-    public async Task GoogleLogin()
+    
+    public async void GoogleLogin()
     {
-        
+        Debug.Log("Google");
     }
 
-    public async Task FacebookLogin()
+    public async void FacebookLogin()
     {
-        
+        Debug.Log("Facebook");
     }
     
-    public async Task GuestLogin()
+    public async void GuestLogin() => await AuthenticationService.Instance.SignInAnonymouslyAsync();
+    
+    public void RefreshLoginUIState(LoginUIState state)
     {
-        await AuthenticationService.Instance.SignInAnonymouslyAsync();
+        foreach (GameObject element in preLoginButtons)
+        {
+            element.SetActive(state == LoginUIState.PreLogin);
+        }
     }
 }
