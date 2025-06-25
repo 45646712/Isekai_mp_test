@@ -1,12 +1,6 @@
 <dependencies>
   <packages>
-    <package>com.facebook.android:facebook-applinks:[18.0.0,19)</package>
-    <package>com.facebook.android:facebook-core:[18.0.0,19)</package>
-    <package>com.facebook.android:facebook-gamingservices:[18.0.0,19)</package>
-    <package>com.facebook.android:facebook-login:[18.0.0,19)</package>
-    <package>com.facebook.android:facebook-share:[18.0.0,19)</package>
     <package>com.google.games:gpgs-plugin-support:2.0.0</package>
-    <package>com.parse.bolts:bolts-android:1.4.0</package>
   </packages>
   <files />
   <settings>

@@ -1,11 +1,14 @@
 using System;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 using UnityEngine;
 using Unity.Netcode;
 using Unity.Services.Core;
 using Unity.Services.Multiplayer;
 using Unity.Services.Authentication;
-using GooglePlayGames;
+using Unity.Services.CloudCode;
+using Unity.Services.CloudCode.Subscriptions;
+//using GooglePlayGames;
 using Unity.Services.Relay.Models;
 using UnityEngine.SceneManagement;
 
@@ -29,16 +32,19 @@ public class LoginManager : NetworkBehaviour
     private async void Start()
     {
         await UnityServices.InitializeAsync();
-        PlayGamesPlatform.Activate();
-        
+        //PlayGamesPlatform.Activate();
+
         InitLoginEvents();
     }
     
+
     private void InitLoginEvents()
     {
         AuthenticationService.Instance.SignedIn += async() =>
         {
             await SessionManager.Instance.StartHost();
+            await SessionManager.Instance.UpdateSessions();
+            await CommunicationManager.Instance.Init();
             NetworkManager.Singleton.SceneManager.LoadScene("v1test", LoadSceneMode.Single);
         };
 

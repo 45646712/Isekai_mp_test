@@ -15,7 +15,7 @@ public class Player_init : NetworkBehaviour
     
     protected override void OnNetworkPostSpawn()
     {
-        if (!IsHost)
+        if (!IsOwner)
         {
             GameObject character = Instantiate(data.Character, gameObject.transform);
             
