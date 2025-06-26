@@ -12,17 +12,9 @@ using Unity.Services.CloudCode.Subscriptions;
 using Unity.Services.Relay.Models;
 using UnityEngine.SceneManagement;
 
-public enum LoginUIState
-{
-    PreLogin,
-    Login
-}
-
 public class LoginManager : NetworkBehaviour
 {
     public static LoginManager Instance;
-
-    [SerializeField] private GameObject[] preLoginButtons;
     
     private void Awake()
     {
@@ -43,7 +35,6 @@ public class LoginManager : NetworkBehaviour
         AuthenticationService.Instance.SignedIn += async() =>
         {
             await SessionManager.Instance.StartHost();
-            await SessionManager.Instance.UpdateSessions();
             await CommunicationManager.Instance.Init();
             NetworkManager.Singleton.SceneManager.LoadScene("v1test", LoadSceneMode.Single);
         };
@@ -67,12 +58,4 @@ public class LoginManager : NetworkBehaviour
     }
     
     public async void GuestLogin() => await AuthenticationService.Instance.SignInAnonymouslyAsync();
-    
-    public void RefreshLoginUIState(LoginUIState state)
-    {
-        foreach (GameObject element in preLoginButtons)
-        {
-            element.SetActive(state == LoginUIState.PreLogin);
-        }
-    }
 }

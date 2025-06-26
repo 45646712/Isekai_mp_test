@@ -6,7 +6,7 @@ using UnityEngine;
 
 public class UIManager : MonoBehaviour
 {
-    public static UIManager Instance;
+    public static UIManager Instance { get; private set; }
 
     //joinrequestsubUI : normal
     //joinrequestUI : normal
@@ -20,6 +20,8 @@ public class UIManager : MonoBehaviour
         DontDestroyOnLoad(gameObject);
     }
     
+    
+    
     public void CloseAllUI()
     {
         while (AllActiveStepUIs.TryPop(out GameObject element))
@@ -27,9 +29,12 @@ public class UIManager : MonoBehaviour
             Destroy(element);
         }
         
-        foreach (KeyValuePair<UIConstant.AllTypes, GameObject> element in AllActiveUIs)
+        foreach (var(key,value) in AllActiveUIs)
         {
-            Destroy(element.Value);
+            Destroy(value);
         }
+        
+        AllActiveUIs.Clear();
+        AllActiveStepUIs.Clear();
     }
 }

@@ -1,26 +1,36 @@
 using System;
+using System.Collections.Generic;
+using AYellowpaper.SerializedCollections;
+using Constant;
 using UnityEngine;
-using UnityEngine.InputSystem.HID;
 using UnityEngine.UI;
 
 public class LoginUI : MonoBehaviour
 {
-    [SerializeField] private Button googleLogin;
-    [SerializeField] private Button facebookLogin;
-    [SerializeField] private Button guestLogin;
-    [SerializeField] private Button closeButton;
+    [field: SerializeField, SerializedDictionary("Button type" , "Button")]
+    private SerializedDictionary<LoginConstants.LoginButton, Button> loginButtons = new();
     
-    private void Awake()
+    private Dictionary<LoginConstants.PreLoginButton, Button> preLoginButtons = new();
+
+    public void Init(Dictionary<LoginConstants.PreLoginButton, Button> preLoginButtons)
     {
-        googleLogin.onClick.AddListener(LoginManager.Instance.GoogleLogin);
-        facebookLogin.onClick.AddListener(LoginManager.Instance.FacebookLogin);
-        guestLogin.onClick.AddListener(LoginManager.Instance.GuestLogin);
-        closeButton.onClick.AddListener(RefreshUI);
+        this.preLoginButtons = preLoginButtons;
+
+        loginButtons[LoginConstants.LoginButton.Google].onClick.AddListener(LoginManager.Instance.GoogleLogin);
+        loginButtons[LoginConstants.LoginButton.Facebook].onClick.AddListener(LoginManager.Instance.FacebookLogin);
+        loginButtons[LoginConstants.LoginButton.Guest].onClick.AddListener(LoginManager.Instance.GuestLogin);
+        loginButtons[LoginConstants.LoginButton.Close].onClick.AddListener(() =>
+        {
+            RefreshLoginUIState(true);
+            Destroy(gameObject);
+        });
     }
 
-    private void RefreshUI()
+    public void RefreshLoginUIState(bool resetToPreLogin)
     {
-        LoginManager.Instance.RefreshLoginUIState(LoginUIState.PreLogin);
-        Destroy(gameObject);
+        foreach (var (key, value) in preLoginButtons)
+        {
+            value.gameObject.SetActive(resetToPreLogin);
+        }
     }
 }

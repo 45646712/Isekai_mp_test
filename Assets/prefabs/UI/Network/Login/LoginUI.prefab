@@ -508,10 +508,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9c77000f75ea8fe45847db75066ed8bf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  googleLogin: {fileID: 676962246530099086}
-  facebookLogin: {fileID: 4783326463888568252}
-  guestLogin: {fileID: 2110645101860077265}
-  closeButton: {fileID: 1766004273487217360}
+  loginButtons:
+    _serializedList:
+    - Key: 0
+      Value: {fileID: 676962246530099086}
+    - Key: 1
+      Value: {fileID: 4783326463888568252}
+    - Key: 2
+      Value: {fileID: 2110645101860077265}
+    - Key: 3
+      Value: {fileID: 1766004273487217360}
 --- !u!1 &3087462765841311297
 GameObject:
   m_ObjectHideFlags: 0
@@ -867,7 +873,7 @@ GameObject:
   - component: {fileID: 4933499854542488587}
   - component: {fileID: 2110645101860077265}
   m_Layer: 5
-  m_Name: Login
+  m_Name: Guest
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

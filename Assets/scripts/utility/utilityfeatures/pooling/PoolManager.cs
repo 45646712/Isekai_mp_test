@@ -30,12 +30,12 @@ public class PoolManager : NetworkBehaviour
     //register all pool to NetworkPrefabInstanceHandler
     public override void OnNetworkSpawn()
     {
-        foreach (KeyValuePair<ObjectPoolType, SingleNetworkObjectPool> element in AllObjectPools)
+        foreach (var(key,value) in AllObjectPools)
         {
-            GameObject prefab = AllObjectPools[element.Key].Prefab; 
+            GameObject prefab = AllObjectPools[key].Prefab; 
         
-            RegisteredPool.Add(element.Key);
-            NetworkManager.Singleton.PrefabHandler.AddHandler(prefab, new PooledPrefabInstanceHandler(element.Key));
+            RegisteredPool.Add(key);
+            NetworkManager.Singleton.PrefabHandler.AddHandler(prefab, new PooledPrefabInstanceHandler(key));
         }
     }
     

@@ -2,14 +2,13 @@ using UnityEngine;
 
 namespace Constant
 {
-    public class CommunicationConstants
+    public static class CommunicationConstants
     {
         public enum MessageType
         {
             SystemMessage,
             DebugMessage,
             JoinRequest,
-            JoinRequestTimeout,
             JoinAcknowledged,
             JoinDenied,
             PlayerMessage
