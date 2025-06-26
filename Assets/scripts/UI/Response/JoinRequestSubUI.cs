@@ -41,13 +41,13 @@ public class JoinRequestSubUI : MonoBehaviour, IResponse
 
         accept.onClick.AddListener(async () =>
         {
-            await CommunicationManager.Instance.SendMsgToPlayer(SessionManager.Instance.CurrentSession.Id, CommunicationConstants.MessageType.JoinAcknowledged, sendTarget);
+            CommunicationManager.Instance.SendMsgToPlayer(SessionManager.Instance.CurrentSession.Id, CommunicationConstants.MessageType.JoinAcknowledged, sendTarget);
             Destroy();
         });
 
         deny.onClick.AddListener(async () =>
         {
-            await CommunicationManager.Instance.SendMsgToPlayer(SessionManager.Instance.CurrentSession.Id, CommunicationConstants.MessageType.JoinDenied, sendTarget);
+            CommunicationManager.Instance.SendMsgToPlayer(SessionManager.Instance.CurrentSession.Id, CommunicationConstants.MessageType.JoinDenied, sendTarget);
             Destroy();
         });
     }
@@ -61,7 +61,7 @@ public class JoinRequestSubUI : MonoBehaviour, IResponse
         }
         else
         {
-            await CommunicationManager.Instance.SendMsgToPlayer(SessionManager.Instance.CurrentSession.Id, CommunicationConstants.MessageType.JoinDenied, sendTarget);
+            CommunicationManager.Instance.SendMsgToPlayer(SessionManager.Instance.CurrentSession.Id, CommunicationConstants.MessageType.JoinDenied, sendTarget);
             Destroy();
         }
 

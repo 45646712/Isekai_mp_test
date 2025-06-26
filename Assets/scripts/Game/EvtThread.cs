@@ -3,7 +3,7 @@ using System.Collections.Concurrent;
 using UnityEngine;
 using System.Collections.Generic;
 
-//act as main thread to poll/execute void events
+//act as main thread to poll/execute instant void events
 [DefaultExecutionOrder(int.MaxValue)]
 public class EvtThread : MonoBehaviour
 {

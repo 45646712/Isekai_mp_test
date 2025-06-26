@@ -20,8 +20,6 @@ public class UIManager : MonoBehaviour
         DontDestroyOnLoad(gameObject);
     }
     
-    
-    
     public void CloseAllUI()
     {
         while (AllActiveStepUIs.TryPop(out GameObject element))

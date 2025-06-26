@@ -25,12 +25,13 @@ public class SessionDetail : MonoBehaviour
     [SerializeField] private Button joinButton;
     [SerializeField] private TMP_Text joinText;
 
-    public string HostID { get; private set; }
+    public ISessionInfo Info { get; private set; }
 
     public void Init(ISessionInfo info)
     {
+        Info = info;
+        
         int userid = 99999001;
-        HostID = info.HostId;
         SessionConstants.SessionPrivacy state = info.GetPrivacyState();
 
         nickname.text = "Lv.99 placeholder";

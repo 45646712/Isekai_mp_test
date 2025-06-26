@@ -19,7 +19,7 @@ public class CommunicationManager : NetworkBehaviour
 
     //access control flags
     public bool isJoinRequestRestricted { get; set; } // block invalid join request after host left
-    public bool isJoinAccessRestricted { get; set; } // block multiple possible incoming joinAck
+    public bool isJoinAccessRestricted { get; set; } // block possible incoming join information after joined a room
     
     private void Awake()
     {
@@ -39,7 +39,7 @@ public class CommunicationManager : NetworkBehaviour
             case CommunicationConstants.MessageType.JoinRequest:
                 if (isJoinRequestRestricted)
                 {
-                    await this.SendMsgToPlayer(AuthenticationService.Instance.PlayerId, CommunicationConstants.MessageType.JoinDenied, evt.Message);
+                    await this.SendMsgToPlayer(AuthenticationService.Instance.PlayerId, CommunicationConstants.MessageType.JoinTimeout, evt.Message);
                     return;
                 }
 
@@ -47,13 +47,29 @@ public class CommunicationManager : NetworkBehaviour
                 Instantiate(messageUI).GetComponent<IResponse>().Init(evt);
                 break;
             case CommunicationConstants.MessageType.JoinDenied:
-                Debug.LogError("Join Request Denied or Timeout!");
-                UIManager.Instance.AllActiveUIs[UIConstant.AllTypes.SessionList].GetComponent<SessionListUI>().RefreshActivatedButton(evt.Message);
+                if (isJoinAccessRestricted)
+                {
+                    break;
+                }
+                
+                Debug.LogError("Join Request Denied!");
+                
+                UIManager.Instance.AllActiveUIs[UIConstant.AllTypes.SessionList].GetComponent<SessionListUI>().AllRoomsAvailable.Find(x => x.Info.Id == evt.Message).RefreshButton();;
+                break;
+            case CommunicationConstants.MessageType.JoinTimeout:
+                SessionDetail roomUI = UIManager.Instance.AllActiveUIs[UIConstant.AllTypes.SessionList].GetComponent<SessionListUI>().AllRoomsAvailable.Find(x => x.Info.HostId == evt.Message);
+                
+                Debug.LogError("Session Timeout!");
+                
+                if (roomUI != null)
+                {
+                    roomUI.gameObject.SetActive(false);
+                }
                 break;
             case CommunicationConstants.MessageType.JoinAcknowledged:
                 if (isJoinAccessRestricted)
                 {
-                    return;
+                    break;
                 }
                 isJoinAccessRestricted = true;
                 

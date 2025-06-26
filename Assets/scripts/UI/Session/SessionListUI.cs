@@ -14,7 +14,7 @@ public class SessionListUI : MonoBehaviour, IRefreshable
     [SerializeField] private GameObject listAnchor;
     [SerializeField] private Button closeButton;
     
-    private List<SessionDetail> AllRoomsAvailable { get; set; } = new();
+    public List<SessionDetail> AllRoomsAvailable { get; } = new();
 
     private int SessionRefreshTimer = 30; //await option
     private float counter = 0;
@@ -40,17 +40,6 @@ public class SessionListUI : MonoBehaviour, IRefreshable
         {
             counter = 0;
             await Refresh();
-        }
-    }
-
-    public void RefreshActivatedButton(string hostID)
-    {
-        foreach (SessionDetail element in AllRoomsAvailable)
-        {
-            if (element.HostID == hostID)
-            {
-                element.RefreshButton();
-            }
         }
     }
     
@@ -91,5 +80,10 @@ public class SessionListUI : MonoBehaviour, IRefreshable
     public void UnregisterUI()
     {
         UIManager.Instance.AllActiveUIs.Remove(UIConstant.AllTypes.SessionList);
+    }
+
+    private void OnDestroy()
+    {
+        UnregisterUI();
     }
 }
