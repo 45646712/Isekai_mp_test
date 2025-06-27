@@ -8,6 +8,12 @@ namespace Constant
 {        
     public static class SessionConstants
     {
+        public enum SessionOwnership
+        {
+            Host,
+            Client
+        }
+        
         public enum SessionPrivacy
         {
             Public,

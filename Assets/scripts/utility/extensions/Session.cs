@@ -1,11 +1,15 @@
 using System;
 using Constant;
 using Unity.Services.Multiplayer;
+using Unity.VisualScripting;
 
 namespace Extensions
 {
     static class Session
     {
+        //get field
+        public static SessionConstants.SessionOwnership GetSessionOwnership(this ISession info) => info.IsHost ? SessionConstants.SessionOwnership.Host : SessionConstants.SessionOwnership.Client;
+
         //get property
         public static string GetProperty(this ISessionInfo info, SessionConstants.PropertyKeys key)
         { 
@@ -23,7 +27,6 @@ namespace Extensions
         
         //set property(session/host only)
         private static void UpdateFriendOnlyStatus(this ISession session, bool isFriendOnly) => session.AsHost().SetProperty(SessionConstants.PropertyKeys.IsFriendOnly.ToString(), new SessionProperty(isFriendOnly.ToString()));
-
         private static void UpdateAskToJoinStatus(this ISession session, bool isAskToJoin) => session.AsHost().SetProperty(SessionConstants.PropertyKeys.IsAskToJoin.ToString(), new SessionProperty(isAskToJoin.ToString()));
         
         //privacy state

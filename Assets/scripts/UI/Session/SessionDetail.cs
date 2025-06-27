@@ -11,6 +11,7 @@ using Unity.Netcode;
 using Unity.Services.Authentication;
 using UnityEngine.UI;
 using Unity.Services.Multiplayer;
+using Exception = System.Exception;
 
 public class SessionDetail : MonoBehaviour
 {
@@ -21,7 +22,8 @@ public class SessionDetail : MonoBehaviour
     [SerializeField] private TMP_Text ID;
     [SerializeField] private TMP_Text population;
     [SerializeField] private Image privacyIcon;
-    [SerializeField] private TMP_Text privacyStateText; 
+    [SerializeField] private TMP_Text privacyStateText;
+    [SerializeField] private TMP_InputField password;
     [SerializeField] private Button joinButton;
     [SerializeField] private TMP_Text joinText;
 
@@ -40,28 +42,39 @@ public class SessionDetail : MonoBehaviour
         privacyIcon.sprite = allIcons[state];
         privacyStateText.text = SessionConstants.PrivacyStateToString[state];
 
-        if (state is SessionConstants.SessionPrivacy.AskToJoin or SessionConstants.SessionPrivacy.AskToJoin_friend)
+        switch (state)
         {
-            joinText.fontSize = 48;
-            joinText.text = "Request Join";
+            case SessionConstants.SessionPrivacy.AskToJoin:
+            case SessionConstants.SessionPrivacy.AskToJoin_friend:
+                joinText.fontSize = 48;
+                joinText.text = "Request Join";
+                break;
+            case SessionConstants.SessionPrivacy.Private:
+                password.gameObject.SetActive(true);
+                break;
         }
 
         joinButton.onClick.RemoveAllListeners();
         joinButton.onClick.AddListener(async () =>
         {
-            joinButton.interactable = false;
-            
-            if (state is SessionConstants.SessionPrivacy.AskToJoin or SessionConstants.SessionPrivacy.AskToJoin_friend)
+            switch (state)
             {
-                CommunicationManager.Instance.isJoinAccessRestricted = false;
-                
-                await CommunicationManager.Instance.SendMsgToPlayer(AuthenticationService.Instance.PlayerId, CommunicationConstants.MessageType.JoinRequest, info.HostId);
-                joinText.text = "Waiting Reply...";
-                return;
+                case SessionConstants.SessionPrivacy.AskToJoin:
+                case SessionConstants.SessionPrivacy.AskToJoin_friend:
+                    CommunicationManager.Instance.isJoinAccessRestricted = false;
+                    
+                    await CommunicationManager.Instance.SendMsgToPlayer(AuthenticationService.Instance.PlayerId, CommunicationConstants.MessageType.JoinRequest, info.HostId);
+                    
+                    joinText.text = "Waiting Reply...";
+                    joinButton.interactable = false;
+                    return;
+                case SessionConstants.SessionPrivacy.Private:
+                    await SessionManager.Instance.StartClient(info.Id, new JoinSessionOptions { Password = password.text + AccountConstant.BypassSessionPwRestriction });
+                    break;
+                default:
+                    await SessionManager.Instance.StartClient(info.Id);
+                    break;
             }
-
-            await SessionManager.Instance.StartClient(info.Id);
-            Destroy(transform.root.gameObject);
         });
     }
 

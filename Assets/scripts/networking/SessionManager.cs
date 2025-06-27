@@ -1,20 +1,27 @@
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Linq;
 using Constant;
+using Extensions;
+using Newtonsoft.Json;
 using Unity.Netcode;
+using Unity.Services.Authentication;
 using Unity.Services.Multiplayer;
+using UnityEngine;
 
 public class SessionManager : NetworkBehaviour
 {
     public static SessionManager Instance;
     
     public List<ISessionInfo> AllActiveSessions { get; private set; } = new();
+    
     public ISession CurrentSession { get; private set; }
-
+    private ISession previousSession;
+    
     private SessionOptions hostOption;
     private QuerySessionsOptions SessionFilterOption;
-
+    
     private void Awake()
     {
         Instance = this;
@@ -24,9 +31,10 @@ public class SessionManager : NetworkBehaviour
             MaxPlayers = 4,
             IsLocked = false,
             IsPrivate = false,
+            Password = "9999" + AccountConstant.BypassSessionPwRestriction,
             SessionProperties =
             {
-                { SessionConstants.PropertyKeys.IsAskToJoin.ToString(), new SessionProperty("true") },
+                { SessionConstants.PropertyKeys.IsAskToJoin.ToString(), new SessionProperty("false") },
                 { SessionConstants.PropertyKeys.IsFriendOnly.ToString(), new SessionProperty("false") }
             }
         }.WithRelayNetwork();
@@ -39,34 +47,71 @@ public class SessionManager : NetworkBehaviour
 
     public async Task StartHost()
     {
+        previousSession = CurrentSession;
+        
+        try
+        {
+            CurrentSession = await MultiplayerService.Instance.CreateSessionAsync(hostOption);
+        }
+        catch (Exception e)
+        {
+            if (e.ToString().Contains(SystemConstants.ErrorKey_MultipleOwnership)) // not yet an error
+            {
+                await LeaveSession(previousSession);
+                await StartHost();
+                return;
+            }
+            
+            Debug.LogError(e);
+            return;
+        }
+        
         UIManager.Instance.CloseAllUI();
         
-        await LeaveSession();
-        
-        IHostSession result = await MultiplayerService.Instance.CreateSessionAsync(hostOption);
-        CurrentSession = result;
         SessionFilterOption.FilterOptions = new()
         {
             new FilterOption(FilterField.Name, CurrentSession.Name, FilterOperation.NotEqual)
         };
-        
+
         CommunicationManager.Instance.isJoinRequestRestricted = false;
     }
 
-    public async Task StartClient(string sessionID)
+    public async Task StartClient(string sessionID, JoinSessionOptions joinPassword = null) 
     {
+        previousSession = CurrentSession;
+        
+        try
+        {
+            if (joinPassword != null)
+            {
+                CurrentSession = await MultiplayerService.Instance.JoinSessionByIdAsync(sessionID, joinPassword);
+            }
+            else
+            {
+                CurrentSession = await MultiplayerService.Instance.JoinSessionByIdAsync(sessionID);
+            }
+        }
+        catch (Exception e)
+        {
+            if (e.ToString().Contains(SystemConstants.ErrorKey_MultipleOwnership)) // not yet an error
+            {
+                await LeaveSession(previousSession);
+                await StartClient(sessionID, joinPassword);
+                return;
+            }
+            
+            Debug.LogError(e);
+            return;
+        }
+        
         UIManager.Instance.CloseAllUI();
         
-        await LeaveSession();
-        
-        ISession result = await MultiplayerService.Instance.JoinSessionByIdAsync(sessionID);
-        CurrentSession = result;
         SessionFilterOption.FilterOptions = new()
         {
             new FilterOption(FilterField.Name, CurrentSession.Name, FilterOperation.NotEqual)
         };
     }
-
+    
     public async Task UpdateSessions()
     {
         QuerySessionsResults result = await MultiplayerService.Instance.QuerySessionsAsync(SessionFilterOption);
@@ -74,27 +119,29 @@ public class SessionManager : NetworkBehaviour
         AllActiveSessions = new(result.Sessions);
     }
     
-    private async Task LeaveSession()
+    private async Task LeaveSession(ISession previousSession)
     {
-        if (CurrentSession == null)
+        if (previousSession == null)
         {
             return;
         }
-        
+
         CommunicationManager.Instance.isJoinRequestRestricted = true;
         
         if (IsHost)
         {
-            await CurrentSession.AsHost().DeleteAsync();
+            await previousSession.AsHost().DeleteAsync();
         }
         else
         {
-            await CurrentSession.LeaveAsync();
+            await previousSession.LeaveAsync();
         }
         
         if (NetworkManager.Singleton.IsListening)
         {
             NetworkManager.Singleton.Shutdown();
         }
+
+        previousSession = null;
     }
 }

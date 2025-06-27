@@ -54,7 +54,7 @@ public class CommunicationManager : NetworkBehaviour
                 
                 Debug.LogError("Join Request Denied!");
                 
-                UIManager.Instance.AllActiveUIs[UIConstant.AllTypes.SessionList].GetComponent<SessionListUI>().AllRoomsAvailable.Find(x => x.Info.Id == evt.Message).RefreshButton();;
+                UIManager.Instance.AllActiveUIs[UIConstant.AllTypes.SessionList].GetComponent<SessionListUI>().AllRoomsAvailable.Find(x => x.Info.Id == evt.Message).RefreshButton();
                 break;
             case CommunicationConstants.MessageType.JoinTimeout:
                 SessionDetail roomUI = UIManager.Instance.AllActiveUIs[UIConstant.AllTypes.SessionList].GetComponent<SessionListUI>().AllRoomsAvailable.Find(x => x.Info.HostId == evt.Message);
@@ -74,6 +74,10 @@ public class CommunicationManager : NetworkBehaviour
                 isJoinAccessRestricted = true;
                 
                 await SessionManager.Instance.StartClient(evt.Message);
+                break;
+            case CommunicationConstants.MessageType.Kicked:
+                Debug.LogError("You have been kicked by the host!\n Going back to own session");
+                await SessionManager.Instance.StartHost();
                 break;
         }
     }

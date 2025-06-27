@@ -12,6 +12,7 @@ namespace Constant
             JoinAcknowledged,
             JoinDenied,
             JoinTimeout,
+            Kicked,
             PlayerMessage
         }
 
