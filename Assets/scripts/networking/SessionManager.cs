@@ -1,12 +1,12 @@
 using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
-using System.Linq;
+using Communications;
+using Cysharp.Threading.Tasks;
 using Constant;
 using Extensions;
-using Newtonsoft.Json;
 using Unity.Netcode;
 using Unity.Services.Authentication;
+using Unity.Services.CloudSave;
 using Unity.Services.Multiplayer;
 using UnityEngine;
 
@@ -17,21 +17,19 @@ public class SessionManager : NetworkBehaviour
     public List<ISessionInfo> AllActiveSessions { get; private set; } = new();
     
     public ISession CurrentSession { get; private set; }
-    private ISession previousSession;
-    
-    private SessionOptions hostOption;
+
+    public SessionOptions hostOption { get; set; }
     private QuerySessionsOptions SessionFilterOption;
-    
+
+    public int MaxSessionQuery = 50;
+
     private void Awake()
     {
         Instance = this;
 
         hostOption = new SessionOptions
         {
-            MaxPlayers = 4,
-            IsLocked = false,
-            IsPrivate = false,
-            Password = "9999" + AccountConstant.BypassSessionPwRestriction,
+            MaxPlayers = SessionConstants.MaxSessionPlayers,
             SessionProperties =
             {
                 { SessionConstants.PropertyKeys.IsAskToJoin.ToString(), new SessionProperty("false") },
@@ -41,32 +39,29 @@ public class SessionManager : NetworkBehaviour
 
         SessionFilterOption = new QuerySessionsOptions()
         {
-            Count = 50
+            Count = MaxSessionQuery
         };
     }
-
-    public async Task StartHost()
+    
+    public async UniTask StartHost(SessionConstants.SessionPrivacy privacy = SessionConstants.SessionPrivacy.SinglePlayer, string password = null)
     {
-        previousSession = CurrentSession;
-        
         try
-        {
-            CurrentSession = await MultiplayerService.Instance.CreateSessionAsync(hostOption);
-        }
-        catch (Exception e)
-        {
-            if (e.ToString().Contains(SystemConstants.ErrorKey_MultipleOwnership)) // not yet an error
-            {
-                await LeaveSession(previousSession);
-                await StartHost();
-                return;
-            }
+        {   
+            NetworkManager.Singleton.Shutdown();
             
-            Debug.LogError(e);
+            UIManager.Instance.CloseAllUI();
+            
+            ISession newSession = await MultiplayerService.Instance.CreateSessionAsync(hostOption);
+            
+            await LeaveSession(SessionConstants.SessionOwnership.Host);
+            CurrentSession = newSession;
+            CurrentSession.SetPrivacyState(privacy, password);
+        }
+        catch (SessionException e)
+        {
+            LogManager.instance.LogErrorAndShowUI(e.Error.ToString());
             return;
         }
-        
-        UIManager.Instance.CloseAllUI();
         
         SessionFilterOption.FilterOptions = new()
         {
@@ -75,73 +70,94 @@ public class SessionManager : NetworkBehaviour
 
         CommunicationManager.Instance.isJoinRequestRestricted = false;
     }
-
-    public async Task StartClient(string sessionID, JoinSessionOptions joinPassword = null) 
+    
+    public async UniTask StartClient(string sessionID, JoinSessionOptions joinPassword = null)
     {
-        previousSession = CurrentSession;
-        
         try
         {
-            if (joinPassword != null)
-            {
-                CurrentSession = await MultiplayerService.Instance.JoinSessionByIdAsync(sessionID, joinPassword);
-            }
-            else
-            {
-                CurrentSession = await MultiplayerService.Instance.JoinSessionByIdAsync(sessionID);
-            }
+            NetworkManager.Singleton.Shutdown();
+
+            UIManager.Instance.CloseAllUI();
+            
+            ISession newSession = await MultiplayerService.Instance.JoinSessionByIdAsync(sessionID,joinPassword);
+            
+            await LeaveSession(SessionConstants.SessionOwnership.Client);
+            CurrentSession = newSession;
         }
         catch (Exception e)
         {
-            if (e.ToString().Contains(SystemConstants.ErrorKey_MultipleOwnership)) // not yet an error
+            List<string> result = await MultiplayerService.Instance.GetJoinedSessionIdsAsync();
+
+            if (result.Count == 0)
             {
-                await LeaveSession(previousSession);
-                await StartClient(sessionID, joinPassword);
-                return;
+                await StartHost();
             }
-            
-            Debug.LogError(e);
+            else
+            {
+                ISession previousSession = await MultiplayerService.Instance.ReconnectToSessionAsync(result[0]);
+                if (previousSession.Host == AuthenticationService.Instance.PlayerId)
+                {
+                    NetworkManager.Singleton.StartHost();
+                }
+                else
+                {
+                    NetworkManager.Singleton.StartClient();
+                }
+            }
+
+            LogManager.instance.LogErrorAndShowUI(e);
             return;
         }
-        
-        UIManager.Instance.CloseAllUI();
         
         SessionFilterOption.FilterOptions = new()
         {
             new FilterOption(FilterField.Name, CurrentSession.Name, FilterOperation.NotEqual)
         };
     }
-    
-    public async Task UpdateSessions()
+
+    public async UniTask UpdateSessions()
     {
         QuerySessionsResults result = await MultiplayerService.Instance.QuerySessionsAsync(SessionFilterOption);
         AllActiveSessions.Clear();
         AllActiveSessions = new(result.Sessions);
     }
     
-    private async Task LeaveSession(ISession previousSession)
+    private async UniTask LeaveSession(SessionConstants.SessionOwnership ownership)
     {
-        if (previousSession == null)
+        CommunicationManager.Instance.isJoinRequestRestricted = true;
+
+        if (CurrentSession == null)
         {
             return;
         }
 
-        CommunicationManager.Instance.isJoinRequestRestricted = true;
-        
-        if (IsHost)
+        if (CurrentSession.Host == AuthenticationService.Instance.PlayerId)
         {
-            await previousSession.AsHost().DeleteAsync();
+            foreach (IReadOnlyPlayer element in CurrentSession.Players)
+            {
+                if (element.Id == AuthenticationService.Instance.PlayerId)
+                {
+                    continue;
+                }
+
+                await CommunicationManager.Instance.SendMsgToPlayer(CommunicationConstants.MessageType.SessionTerminated, element.Id);
+            }
+            
+            await CurrentSession.AsHost().LeaveAsync();
         }
         else
         {
-            await previousSession.LeaveAsync();
-        }
-        
-        if (NetworkManager.Singleton.IsListening)
-        {
-            NetworkManager.Singleton.Shutdown();
+            await CurrentSession.LeaveAsync();
         }
 
-        previousSession = null;
+        switch (ownership)
+        {
+            case SessionConstants.SessionOwnership.Host:
+                NetworkManager.Singleton.StartHost();
+                break;
+            case SessionConstants.SessionOwnership.Client:
+                NetworkManager.Singleton.StartClient();
+                break;
+        }
     }
 }

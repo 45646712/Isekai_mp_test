@@ -14,20 +14,22 @@ namespace Constant
             Client
         }
         
+        public enum PropertyKeys
+        {
+            IsAskToJoin,
+            IsFriendOnly,
+            SessionHostInfo,
+            SessionPlayerInfo
+        }
+        
         public enum SessionPrivacy
         {
-            Public,
+            Public = 0,
             Public_friend,
             AskToJoin,
             AskToJoin_friend,
             Private,
             SinglePlayer
-        }
-
-        public enum PropertyKeys
-        {
-            IsAskToJoin,
-            IsFriendOnly,
         }
         
         public static Dictionary<SessionPrivacy, string> PrivacyStateToString { get; } = new()
@@ -39,5 +41,8 @@ namespace Constant
             { SessionPrivacy.Private, "Private" },
             { SessionPrivacy.SinglePlayer, "Single Player Mode" }
         };
+        
+        public const int SessionRefreshTimer = 30;
+        public const int MaxSessionPlayers = 4;
     }
 }

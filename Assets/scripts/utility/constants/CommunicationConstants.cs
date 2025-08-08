@@ -1,5 +1,3 @@
-using UnityEngine;
-
 namespace Constant
 {
     public static class CommunicationConstants
@@ -13,6 +11,7 @@ namespace Constant
             JoinDenied,
             JoinTimeout,
             Kicked,
+            SessionTerminated,
             PlayerMessage
         }
 

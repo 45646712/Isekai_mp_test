@@ -1,16 +1,22 @@
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
+using Constant;
+using Cysharp.Threading.Tasks;
+using Extensions;
 using Newtonsoft.Json;
+using Unity.Cinemachine;
 using UnityEngine;
 using Unity.Netcode;
 using Unity.Services.Core;
-using Unity.Services.Multiplayer;
 using Unity.Services.Authentication;
 using Unity.Services.CloudCode;
-using Unity.Services.CloudCode.Subscriptions;
+using Unity.Services.CloudSave;
+using Unity.Services.CloudSave.Models;
+using Unity.Services.CloudSave.Models.Data.Player;
 //using GooglePlayGames;
-using Unity.Services.Relay.Models;
 using UnityEngine.SceneManagement;
+using SaveOptions = Unity.Services.CloudSave.Models.Data.Player.SaveOptions;
 
 public class LoginManager : NetworkBehaviour
 {
@@ -21,7 +27,7 @@ public class LoginManager : NetworkBehaviour
         Instance = this;
     }
 
-    private async void Start()
+    private async UniTaskVoid Start()
     {
         await UnityServices.InitializeAsync();
         //PlayGamesPlatform.Activate();
@@ -32,12 +38,14 @@ public class LoginManager : NetworkBehaviour
 
     private void InitLoginEvents()
     {
-        AuthenticationService.Instance.SignedIn += async() =>
+        AuthenticationService.Instance.SignedIn += UniTask.Action(async () =>
         {
-            await SessionManager.Instance.StartHost();
+            await PlayerDataManager.Instance.LoadAllData();
             await CommunicationManager.Instance.Init();
+            await SessionManager.Instance.StartHost();
+            
             NetworkManager.Singleton.SceneManager.LoadScene("v1test", LoadSceneMode.Single);
-        };
+        });
 
         AuthenticationService.Instance.SignInFailed += Debug.LogError;
         AuthenticationService.Instance.SignedOut += () => { Debug.Log("Signed out."); };
@@ -56,6 +64,6 @@ public class LoginManager : NetworkBehaviour
     {
         Debug.Log("Facebook");
     }
-    
-    public async void GuestLogin() => await AuthenticationService.Instance.SignInAnonymouslyAsync();
+
+    public void GuestLogin() => AuthenticationService.Instance.SignInAnonymouslyAsync().AsUniTask().Forget();
 }

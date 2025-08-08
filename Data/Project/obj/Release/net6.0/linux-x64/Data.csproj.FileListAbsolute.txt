@@ -1,0 +1,13 @@
+C:\Users\omg12\Desktop\Isekai_mp_test\Data\Project\bin\Release\net6.0\linux-x64\Data.deps.json
+C:\Users\omg12\Desktop\Isekai_mp_test\Data\Project\bin\Release\net6.0\linux-x64\Data.dll
+C:\Users\omg12\Desktop\Isekai_mp_test\Data\Project\bin\Release\net6.0\linux-x64\Data.pdb
+C:\Users\omg12\Desktop\Isekai_mp_test\Data\Project\obj\Release\net6.0\linux-x64\Data.csproj.AssemblyReference.cache
+C:\Users\omg12\Desktop\Isekai_mp_test\Data\Project\obj\Release\net6.0\linux-x64\Data.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\omg12\Desktop\Isekai_mp_test\Data\Project\obj\Release\net6.0\linux-x64\Data.AssemblyInfoInputs.cache
+C:\Users\omg12\Desktop\Isekai_mp_test\Data\Project\obj\Release\net6.0\linux-x64\Data.AssemblyInfo.cs
+C:\Users\omg12\Desktop\Isekai_mp_test\Data\Project\obj\Release\net6.0\linux-x64\Data.csproj.CoreCompileInputs.cache
+C:\Users\omg12\Desktop\Isekai_mp_test\Data\Project\obj\Release\net6.0\linux-x64\Data.sourcelink.json
+C:\Users\omg12\Desktop\Isekai_mp_test\Data\Project\obj\Release\net6.0\linux-x64\Data.dll
+C:\Users\omg12\Desktop\Isekai_mp_test\Data\Project\obj\Release\net6.0\linux-x64\refint\Data.dll
+C:\Users\omg12\Desktop\Isekai_mp_test\Data\Project\obj\Release\net6.0\linux-x64\Data.pdb
+C:\Users\omg12\Desktop\Isekai_mp_test\Data\Project\obj\Release\net6.0\linux-x64\ref\Data.dll

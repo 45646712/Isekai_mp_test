@@ -1,0 +1,13 @@
+C:\Users\omg12\AppData\Local\Temp\Communications\module-compilation\Communications.dll
+C:\Users\omg12\AppData\Local\Temp\Communications\module-compilation\Communications.deps.json
+C:\Users\omg12\AppData\Local\Temp\Communications\module-compilation\Communications.pdb
+C:\Users\omg12\AppData\Local\Temp\Communications\module-compilation\Unity.Services.CloudCode.Apis.dll
+C:\Users\omg12\AppData\Local\Temp\Communications\module-compilation\Unity.Services.CloudCode.Core.dll
+C:\Users\omg12\AppData\Local\Temp\Communications\module-compilation\Google.Protobuf.dll
+C:\Users\omg12\AppData\Local\Temp\Communications\module-compilation\Grpc.Core.Api.dll
+C:\Users\omg12\AppData\Local\Temp\Communications\module-compilation\Grpc.Net.Client.dll
+C:\Users\omg12\AppData\Local\Temp\Communications\module-compilation\Grpc.Net.Common.dll
+C:\Users\omg12\AppData\Local\Temp\Communications\module-compilation\JsonSubTypes.dll
+C:\Users\omg12\AppData\Local\Temp\Communications\module-compilation\Microsoft.Extensions.DependencyInjection.Abstractions.dll
+C:\Users\omg12\AppData\Local\Temp\Communications\module-compilation\Microsoft.Extensions.Logging.Abstractions.dll
+C:\Users\omg12\AppData\Local\Temp\Communications\module-compilation\Newtonsoft.Json.dll

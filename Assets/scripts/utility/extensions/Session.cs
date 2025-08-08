@@ -1,34 +1,36 @@
 using System;
 using Constant;
+using Model;
+using Newtonsoft.Json;
+using Unity.Services.Authentication;
 using Unity.Services.Multiplayer;
 using Unity.VisualScripting;
+using UnityEngine;
+using UnityEngine.Rendering;
 
 namespace Extensions
 {
     static class Session
     {
-        //get field
-        public static SessionConstants.SessionOwnership GetSessionOwnership(this ISession info) => info.IsHost ? SessionConstants.SessionOwnership.Host : SessionConstants.SessionOwnership.Client;
-
         //get property
         public static string GetProperty(this ISessionInfo info, SessionConstants.PropertyKeys key)
-        { 
+        {
             info.Properties.TryGetValue(key.ToString(), out SessionProperty value);
 
             return value?.Value;
         }
-        
+
         public static string GetProperty(this ISession session, SessionConstants.PropertyKeys key)
-        { 
+        {
             session.Properties.TryGetValue(key.ToString(), out SessionProperty value);
 
             return value?.Value;
         }
-        
+
         //set property(session/host only)
         private static void UpdateFriendOnlyStatus(this ISession session, bool isFriendOnly) => session.AsHost().SetProperty(SessionConstants.PropertyKeys.IsFriendOnly.ToString(), new SessionProperty(isFriendOnly.ToString()));
         private static void UpdateAskToJoinStatus(this ISession session, bool isAskToJoin) => session.AsHost().SetProperty(SessionConstants.PropertyKeys.IsAskToJoin.ToString(), new SessionProperty(isAskToJoin.ToString()));
-        
+
         //privacy state
         public static SessionConstants.SessionPrivacy GetPrivacyState(this ISessionInfo info)
         {
@@ -51,7 +53,7 @@ namespace Extensions
                     ? SessionConstants.SessionPrivacy.AskToJoin_friend
                     : SessionConstants.SessionPrivacy.AskToJoin;
             }
-            
+
             return isFriendOnly
                 ? SessionConstants.SessionPrivacy.Public_friend
                 : SessionConstants.SessionPrivacy.Public;
@@ -61,7 +63,7 @@ namespace Extensions
         {
             bool.TryParse(session.GetProperty(SessionConstants.PropertyKeys.IsFriendOnly), out bool isFriendOnly);
             bool.TryParse(session.GetProperty(SessionConstants.PropertyKeys.IsAskToJoin), out bool isAskToJoin);
-            
+
             if (session.IsLocked)
             {
                 return SessionConstants.SessionPrivacy.SinglePlayer;
@@ -78,7 +80,7 @@ namespace Extensions
                     ? SessionConstants.SessionPrivacy.AskToJoin_friend
                     : SessionConstants.SessionPrivacy.AskToJoin;
             }
-            
+
             return isFriendOnly
                 ? SessionConstants.SessionPrivacy.Public_friend
                 : SessionConstants.SessionPrivacy.Public;
@@ -86,21 +88,60 @@ namespace Extensions
 
         public static void SetPrivacyState(this ISession session, SessionConstants.SessionPrivacy privacy, string password = null)
         {
+            SessionConstants.SessionPrivacy currentPrivacy = SessionManager.Instance.CurrentSession.GetPrivacyState();
+            
+            if (privacy == SessionConstants.SessionPrivacy.Private && password is { Length: < 4 })
+            {
+                LogManager.instance.LogErrorAndShowUI("Password Must Be Longer Than 4 Characters!");
+                return;
+            }
+
+            password = privacy != SessionConstants.SessionPrivacy.Private
+                ? null
+                : password + AccountConstant.BypassSessionPwRestriction;
+            
             IHostSession sessionConfig = session.AsHost();
 
             sessionConfig.IsLocked = privacy is SessionConstants.SessionPrivacy.SinglePlayer;
             sessionConfig.IsPrivate = privacy is SessionConstants.SessionPrivacy.SinglePlayer;
+            sessionConfig.Password = password;
             sessionConfig.UpdateFriendOnlyStatus(privacy is SessionConstants.SessionPrivacy.Public_friend or SessionConstants.SessionPrivacy.AskToJoin_friend);
             sessionConfig.UpdateAskToJoinStatus(privacy is SessionConstants.SessionPrivacy.AskToJoin or SessionConstants.SessionPrivacy.AskToJoin_friend);
 
-            if (privacy is SessionConstants.SessionPrivacy.Private)
+            session.AsHost().SavePropertiesAsync();
+        }
+    }
+    
+    static class SessionData
+    {
+        public static void UpdateSessionHostInfo(this SessionManager manager)
+        {
+            Int64 userID = PlayerDataManager.Instance.GetPublicData<Int64>(PlayerDataConstant.PublicDataType.UserID);
+            byte playerLevel = PlayerDataManager.Instance.GetPublicData<byte>(PlayerDataConstant.PublicDataType.Lv);
+            string playerName = PlayerDataManager.Instance.GetPublicData<string>(PlayerDataConstant.PublicDataType.Name);
+
+            SessionModel.SessionHostInfo hostInfo = new SessionModel.SessionHostInfo(userID, playerLevel, playerName);
+            string jsonSource = JsonConvert.SerializeObject(hostInfo);
+
+            manager.hostOption.SessionProperties[SessionConstants.PropertyKeys.SessionHostInfo.ToString()] = new SessionProperty(jsonSource);
+
+            if (manager.CurrentSession is { IsHost: true })
             {
-                sessionConfig.Password = password;
+                manager.CurrentSession.AsHost().SetProperty(SessionConstants.PropertyKeys.SessionHostInfo.ToString(), new SessionProperty(jsonSource));
+                manager.CurrentSession.AsHost().SavePropertiesAsync();
             }
-            else
-            {
-                sessionConfig.Password = String.Empty;
-            }
+        }
+        
+        public static void UpdateSessionPlayerInfo(this SessionManager manager)
+        {
+            Int64 userID = PlayerDataManager.Instance.GetPublicData<Int64>(PlayerDataConstant.PublicDataType.UserID);
+            byte playerLevel = PlayerDataManager.Instance.GetPublicData<byte>(PlayerDataConstant.PublicDataType.Lv);
+            string playerName = PlayerDataManager.Instance.GetPublicData<string>(PlayerDataConstant.PublicDataType.Name);
+
+            SessionModel.SessionPlayerInfo clientInfo = new SessionModel.SessionPlayerInfo(userID, playerLevel, playerName);
+            string jsonSource = JsonConvert.SerializeObject(clientInfo);
+
+            manager.CurrentSession.CurrentPlayer.SetProperty(SessionConstants.PropertyKeys.SessionPlayerInfo.ToString(), new PlayerProperty(jsonSource));
         }
     }
 }

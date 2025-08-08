@@ -7,10 +7,7 @@ using UnityEngine;
 public class UIManager : MonoBehaviour
 {
     public static UIManager Instance { get; private set; }
-
-    //joinrequestsubUI : normal
-    //joinrequestUI : normal
-    //sessionListUI : step
+    
     public Stack<GameObject> AllActiveStepUIs { get; set; } = new();
     public Dictionary<UIConstant.AllTypes, GameObject> AllActiveUIs { get; set; } = new();
     

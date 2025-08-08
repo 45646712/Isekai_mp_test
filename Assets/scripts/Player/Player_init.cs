@@ -2,10 +2,12 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using AYellowpaper.SerializedCollections;
+using Unity.Cinemachine;
 using Unity.Netcode;
 using Unity.Netcode.Components;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
 
 public class Player_init : NetworkBehaviour
 {
@@ -13,12 +15,12 @@ public class Player_init : NetworkBehaviour
 
     private Renderer meshRenderer;
     
-    protected override void OnNetworkPostSpawn()
+    public override void OnNetworkSpawn()
     {
+        GameObject character = Instantiate(data.Character, gameObject.transform);
+
         if (!IsOwner)
         {
-            GameObject character = Instantiate(data.Character, gameObject.transform);
-            
             meshRenderer = character.GetComponentInChildren<SkinnedMeshRenderer>();
             List<Material> materials = meshRenderer.materials.ToList();
             
@@ -33,9 +35,21 @@ public class Player_init : NetworkBehaviour
         }
         else
         {
-            Instantiate(data.Character, gameObject.transform);
-        }
+            NetworkManager.Singleton.SceneManager.OnLoadComplete += (v1, v2, v3) =>
+            {
+                GameObject cam = Instantiate(InputManager.Instance.IngameCamera);
+                CinemachineCamera camCore = cam.GetComponent<CinemachineCamera>();
+                
+                camCore.Follow = gameObject.transform;
+                cam.GetComponent<CameraInput>().enabled = true;
 
-        GetComponent<PlayerInput>().enabled = IsOwner;
+                InputManager.Instance.SpawnedCamera = camCore;
+            };
+
+            if (InputManager.Instance.SpawnedCamera != null)
+            {
+                InputManager.Instance.SpawnedCamera.Follow = gameObject.transform;
+            }
+        }
     }
 }

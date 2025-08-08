@@ -1,0 +1,13 @@
+C:\Users\omg12\Desktop\Isekai_mp_test\Data\Project\bin\Release\net6.0\any\Data.deps.json
+C:\Users\omg12\Desktop\Isekai_mp_test\Data\Project\bin\Release\net6.0\any\Data.dll
+C:\Users\omg12\Desktop\Isekai_mp_test\Data\Project\bin\Release\net6.0\any\Data.pdb
+C:\Users\omg12\Desktop\Isekai_mp_test\Data\Project\obj\Release\net6.0\any\Data.csproj.AssemblyReference.cache
+C:\Users\omg12\Desktop\Isekai_mp_test\Data\Project\obj\Release\net6.0\any\Data.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\omg12\Desktop\Isekai_mp_test\Data\Project\obj\Release\net6.0\any\Data.AssemblyInfoInputs.cache
+C:\Users\omg12\Desktop\Isekai_mp_test\Data\Project\obj\Release\net6.0\any\Data.AssemblyInfo.cs
+C:\Users\omg12\Desktop\Isekai_mp_test\Data\Project\obj\Release\net6.0\any\Data.csproj.CoreCompileInputs.cache
+C:\Users\omg12\Desktop\Isekai_mp_test\Data\Project\obj\Release\net6.0\any\Data.sourcelink.json
+C:\Users\omg12\Desktop\Isekai_mp_test\Data\Project\obj\Release\net6.0\any\Data.dll
+C:\Users\omg12\Desktop\Isekai_mp_test\Data\Project\obj\Release\net6.0\any\refint\Data.dll
+C:\Users\omg12\Desktop\Isekai_mp_test\Data\Project\obj\Release\net6.0\any\Data.pdb
+C:\Users\omg12\Desktop\Isekai_mp_test\Data\Project\obj\Release\net6.0\any\ref\Data.dll

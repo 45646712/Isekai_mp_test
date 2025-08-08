@@ -5,7 +5,9 @@ namespace Constant
         public enum AllTypes
         {
             SessionList,
-            JoinRequestSubMenu
+            JoinRequestSubMenu,
+            JoinRequestMenu,
+            ControlOverlay
         }
     }
 }

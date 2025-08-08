@@ -1,0 +1,13 @@
+C:\Users\omg12\AppData\Local\Temp\Data\module-compilation\Data.dll
+C:\Users\omg12\AppData\Local\Temp\Data\module-compilation\Data.deps.json
+C:\Users\omg12\AppData\Local\Temp\Data\module-compilation\Data.pdb
+C:\Users\omg12\AppData\Local\Temp\Data\module-compilation\Unity.Services.CloudCode.Apis.dll
+C:\Users\omg12\AppData\Local\Temp\Data\module-compilation\Unity.Services.CloudCode.Core.dll
+C:\Users\omg12\AppData\Local\Temp\Data\module-compilation\Google.Protobuf.dll
+C:\Users\omg12\AppData\Local\Temp\Data\module-compilation\Grpc.Core.Api.dll
+C:\Users\omg12\AppData\Local\Temp\Data\module-compilation\Grpc.Net.Client.dll
+C:\Users\omg12\AppData\Local\Temp\Data\module-compilation\Grpc.Net.Common.dll
+C:\Users\omg12\AppData\Local\Temp\Data\module-compilation\JsonSubTypes.dll
+C:\Users\omg12\AppData\Local\Temp\Data\module-compilation\Microsoft.Extensions.DependencyInjection.Abstractions.dll
+C:\Users\omg12\AppData\Local\Temp\Data\module-compilation\Microsoft.Extensions.Logging.Abstractions.dll
+C:\Users\omg12\AppData\Local\Temp\Data\module-compilation\Newtonsoft.Json.dll

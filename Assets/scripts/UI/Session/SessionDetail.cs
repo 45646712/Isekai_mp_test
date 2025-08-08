@@ -1,10 +1,14 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using AYellowpaper.SerializedCollections;
 using Constant;
 using Extensions;
 using Communications;
+using Cysharp.Threading.Tasks;
+using Model;
+using Newtonsoft.Json;
 using UnityEngine;
 using TMPro;
 using Unity.Netcode;
@@ -33,11 +37,12 @@ public class SessionDetail : MonoBehaviour
     {
         Info = info;
         
-        int userid = 99999001;
         SessionConstants.SessionPrivacy state = info.GetPrivacyState();
 
-        nickname.text = "Lv.99 placeholder";
-        ID.text = $"UserID : {userid}";
+        SessionModel.SessionHostInfo hostInfo = JsonConvert.DeserializeObject<SessionModel.SessionHostInfo>(info.GetProperty(SessionConstants.PropertyKeys.SessionHostInfo));
+        
+        nickname.text = $"Lv.{hostInfo.PlayerLevel} {hostInfo.PlayerName}";
+        ID.text = $"UserID : {hostInfo.UserID}";
         population.text = $"{info.MaxPlayers - info.AvailableSlots} / {info.MaxPlayers}";
         privacyIcon.sprite = allIcons[state];
         privacyStateText.text = SessionConstants.PrivacyStateToString[state];
@@ -55,32 +60,45 @@ public class SessionDetail : MonoBehaviour
         }
 
         joinButton.onClick.RemoveAllListeners();
-        joinButton.onClick.AddListener(async () =>
+        joinButton.onClick.AddListener(() =>
         {
             switch (state)
             {
                 case SessionConstants.SessionPrivacy.AskToJoin:
                 case SessionConstants.SessionPrivacy.AskToJoin_friend:
                     CommunicationManager.Instance.isJoinAccessRestricted = false;
-                    
-                    await CommunicationManager.Instance.SendMsgToPlayer(AuthenticationService.Instance.PlayerId, CommunicationConstants.MessageType.JoinRequest, info.HostId);
-                    
+
+                    CommunicationManager.Instance.SendMsgToPlayer(AuthenticationService.Instance.PlayerId, CommunicationConstants.MessageType.JoinRequest, info.HostId).Forget();
+
                     joinText.text = "Waiting Reply...";
                     joinButton.interactable = false;
+                    
+                    StartCoroutine(localRefresh());//safeguard to prevent no response
                     return;
                 case SessionConstants.SessionPrivacy.Private:
-                    await SessionManager.Instance.StartClient(info.Id, new JoinSessionOptions { Password = password.text + AccountConstant.BypassSessionPwRestriction });
+                    SessionManager.Instance.StartClient(info.Id, new JoinSessionOptions { Password = password.text + AccountConstant.BypassSessionPwRestriction }).Forget();
                     break;
                 default:
-                    await SessionManager.Instance.StartClient(info.Id);
+                    SessionManager.Instance.StartClient(info.Id).Forget();
                     break;
             }
         });
     }
-
+    
+    private IEnumerator localRefresh()
+    {
+        yield return new WaitForSeconds(15);
+        RefreshButton();
+    }
+    
     public void RefreshButton()
     {
         joinText.text = "Request Join";
         joinButton.interactable = true;
+    }
+
+    private void OnDisable()
+    {
+        StopAllCoroutines();
     }
 }

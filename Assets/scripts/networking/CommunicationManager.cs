@@ -6,6 +6,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using Constant;
 using Communications;
+using Cysharp.Threading.Tasks;
 using Unity.Netcode;
 using Unity.Services.Authentication;
 using Unity.Services.CloudCode.Subscriptions;
@@ -26,13 +27,13 @@ public class CommunicationManager : NetworkBehaviour
         Instance = this;
     }
 
-    public async Task Init()
+    public async UniTask Init()
     {
         await this.SubscribeToMessage();
         await this.SubscribeToBroadCast();
     }
 
-    public async Task OnMessageReceived(CommunicationConstants.MessageType type, IMessageReceivedEvent evt)
+    public async UniTask OnMessageReceived(CommunicationConstants.MessageType type, IMessageReceivedEvent evt)
     {
         switch (type)
         {
@@ -42,9 +43,24 @@ public class CommunicationManager : NetworkBehaviour
                     await this.SendMsgToPlayer(AuthenticationService.Instance.PlayerId, CommunicationConstants.MessageType.JoinTimeout, evt.Message);
                     return;
                 }
-
-                allMessageUI.TryGetValue(type, out GameObject messageUI);
-                Instantiate(messageUI).GetComponent<IResponse>().Init(evt);
+                
+                bool isSubUIExist = UIManager.Instance.AllActiveUIs.TryGetValue(UIConstant.AllTypes.JoinRequestSubMenu, out GameObject joinRequestSubUI);
+                bool isMainUIExist = UIManager.Instance.AllActiveUIs.TryGetValue(UIConstant.AllTypes.JoinRequestMenu, out GameObject joinRequestUI);
+                
+                if (isSubUIExist)
+                {
+                    joinRequestSubUI.GetComponent<JoinRequestSubUI>().StoredRequests.Enqueue(evt);
+                    break;
+                }
+                
+                if (isMainUIExist)
+                {
+                    joinRequestUI.GetComponent<JoinRequestUI>().Init(evt);
+                    break;
+                }
+                
+                allMessageUI.TryGetValue(type, out GameObject messageUI); //joinrequestsubUI
+                Instantiate(messageUI).GetComponent<JoinRequestSubUI>().Init(evt);
                 break;
             case CommunicationConstants.MessageType.JoinDenied:
                 if (isJoinAccessRestricted)
@@ -75,12 +91,16 @@ public class CommunicationManager : NetworkBehaviour
                 
                 await SessionManager.Instance.StartClient(evt.Message);
                 break;
+            case CommunicationConstants.MessageType.SessionTerminated:
+                Debug.LogError("host left, session terminated\n returning to own session.");
+                await SessionManager.Instance.StartHost();
+                break;
             case CommunicationConstants.MessageType.Kicked:
-                Debug.LogError("You have been kicked by the host!\n Going back to own session");
+                Debug.LogError("You have been kicked by the host!\n returning to own session");
                 await SessionManager.Instance.StartHost();
                 break;
         }
     }
-    
-    public async Task OnBroadCastReceived(CommunicationConstants.BroadcastType type, IMessageReceivedEvent evt){}
+
+    public async UniTask OnBroadCastReceived(CommunicationConstants.BroadcastType type, IMessageReceivedEvent evt){}
 }
