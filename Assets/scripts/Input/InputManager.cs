@@ -1,23 +1,19 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.InputSystem;
 using Constant;
 using Unity.Cinemachine;
-using Unity.VisualScripting;
+using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.OnScreen;
-using UnityEngine.SceneManagement;
 
 public class InputManager : MonoBehaviour
 {
     public static InputManager Instance;
 
-    [SerializeField] private GameObject joystick;
-    
-    public GameObject IngameCamera;
-    public PlayerInput playerInput { get; private set; }
-    public VariableJoystick joystickCore { get; private set; }
+    [SerializeField] private GameObject controlUI;
+    [field: SerializeField] public GameObject IngameCamera { get; private set; }
 
+    public PlayerInput playerInput { get; private set; }
     public CinemachineCamera SpawnedCamera { get; set; }
 
     private void Awake()
@@ -30,9 +26,8 @@ public class InputManager : MonoBehaviour
     
     public void EnableControl()
     {
-        GameObject obj = Instantiate(joystick, gameObject.transform);
+        GameObject obj = Instantiate(controlUI, gameObject.transform);
         UIManager.Instance.AllActiveUIs.Add(UIConstant.AllTypes.ControlOverlay, obj);
-        joystickCore = obj.GetComponentInChildren<VariableJoystick>();
     }
 
     public void DisableControl()

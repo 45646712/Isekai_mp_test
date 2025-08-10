@@ -17,13 +17,13 @@ public class CameraInput : InputAxisControllerBase<Reader>
             }
         };
     }
-    
+
     void Update()
     {
         if (Application.isPlaying)
         {
             UpdateControllers(); //intrinsic input update
-            
+
             foreach (Controller element in Controllers)
             {
                 element.Input.Reset();

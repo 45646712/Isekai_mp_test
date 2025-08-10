@@ -2012,8 +2012,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3045c775deb36bd42996bb86c8dc74f4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  joystick: {fileID: 5784828275854214829, guid: f3cadda45b3842a4393d7fe2326cf0a1, type: 3}
-  IngameCamera: {fileID: 7897228192437212498, guid: bdb3a673b7c2553429fcc0cf774db546, type: 3}
+  controlUI: {fileID: 6855052414574708527, guid: 589508e228357f24eac90d3027fbbfb1, type: 3}
+  <IngameCamera>k__BackingField: {fileID: 7897228192437212498, guid: bdb3a673b7c2553429fcc0cf774db546, type: 3}
 --- !u!114 &1651464017
 MonoBehaviour:
   m_ObjectHideFlags: 0
