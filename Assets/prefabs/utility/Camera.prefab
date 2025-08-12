@@ -227,7 +227,9 @@ MonoBehaviour:
       Driver:
         AccelTime: 0
         DecelTime: 0
-  LookSpeed: 6
+  LookSpeed: 2
+  verticalRatio: 1.5
+  horizontalRatio: 3
 --- !u!114 &2396957944914846140
 MonoBehaviour:
   m_ObjectHideFlags: 0

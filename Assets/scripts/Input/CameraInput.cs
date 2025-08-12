@@ -5,15 +5,17 @@ using UnityEngine.InputSystem;
 
 public class CameraInput : InputAxisControllerBase<Reader>
 {
-    [Range(0, 20)] public float LookSpeed = 6;
+    [Range(1, 5)] public float LookSpeed;
+    [Range(1, 5), SerializeField] private float verticalRatio;
+    [Range(1, 5), SerializeField] private float horizontalRatio;
     
     private void Start()
     {
-        InputManager.Instance.playerInput.Player.Look.started += value =>
+        InputManager.Instance.playerInput.Player.Look.performed += context =>
         {
             foreach (Controller element in Controllers)
             {
-                element.Input.ProcessInput(value.action, LookSpeed);
+                element.Input.ProcessInput(context.action, LookSpeed, verticalRatio, horizontalRatio);
             }
         };
     }
@@ -35,9 +37,15 @@ public class CameraInput : InputAxisControllerBase<Reader>
 [Serializable]
 public class Reader : IInputAxisReader
 {
-    Vector2 value; // the cached value of the input
+    private Vector2 value; // the cached value of the input
 
     public void Reset() => value = Vector2.zero;
-    public void ProcessInput(InputAction action, float speed) => value = action.ReadValue<Vector2>() * speed;
+
+    public void ProcessInput(InputAction action, float speed, float verticalRatio, float horizontalRatio)
+    {
+        Vector2 inputval = action.ReadValue<Vector2>();
+        value = new Vector2(inputval.x * horizontalRatio, inputval.y * verticalRatio) * speed * 60;
+    }
+
     public float GetValue(UnityEngine.Object context, IInputAxisOwner.AxisDescriptor.Hints hint) => hint == IInputAxisOwner.AxisDescriptor.Hints.Y ? value.y : value.x;
 }

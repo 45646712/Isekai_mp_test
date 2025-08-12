@@ -1,14 +1,32 @@
 using System;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.InputSystem.Layouts;
+using UnityEngine.InputSystem.OnScreen;
 
-public class Look : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
+public class Look : OnScreenStick
 {
-    private void Awake()
+    public new void OnPointerDown(PointerEventData data)
     {
-        InputManager.Instance.playerInput.Player.Look.Disable();
+       // anchor.position = data.position;
+       Debug.Log(InputManager.Instance.playerInput.Player.Look.ReadValue<Vector2>());
+        base.OnPointerDown(data);
+    }
+    public new void OnDrag(PointerEventData data)
+    {
+        // anchor.position = data.position;
+        Debug.Log(InputManager.Instance.playerInput.Player.Look.ReadValue<Vector2>());
+        base.OnDrag(data);
+    }
+    public new void OnPointerUp(PointerEventData data)
+    {
+        // anchor.position = data.position;
+        Debug.Log(InputManager.Instance.playerInput.Player.Look.ReadValue<Vector2>());
+        base.OnPointerUp(data);
     }
 
-    public void OnPointerDown(PointerEventData data)=> InputManager.Instance.playerInput.Player.Look.Enable();
-    public void OnPointerUp(PointerEventData data) => InputManager.Instance.playerInput.Player.Look.Disable();
+    private void Update()
+    {
+        //baseArea.position = originPos;
+    }
 }

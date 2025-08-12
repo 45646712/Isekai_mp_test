@@ -17,7 +17,7 @@ public class Joystick : OnScreenStick, IPointerDownHandler, IPointerUpHandler
     {
         originPos = baseArea.position;
     }
-    
+
     public new void OnPointerDown(PointerEventData data)
     {
         anchor.position = data.position;
@@ -29,7 +29,7 @@ public class Joystick : OnScreenStick, IPointerDownHandler, IPointerUpHandler
     public new void OnPointerUp(PointerEventData data)
     {
         UpdateUI(false);
-        
+
         base.OnPointerUp(data);
     }
 

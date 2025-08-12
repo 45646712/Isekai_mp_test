@@ -91,7 +91,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_MovementRange: 150
   m_DynamicOriginRange: 100
-  m_ControlPath: <Gamepad>/leftStick
+  m_ControlPath: <Gamepad>/rightStick
   m_Behaviour: 2
   m_UseIsolatedInputActions: 0
   m_PointerDownAction:
@@ -231,7 +231,7 @@ GameObject:
   - component: {fileID: 5292670323457186644}
   - component: {fileID: 7622861703862147784}
   - component: {fileID: 3259952083827553197}
-  - component: {fileID: 4251771561405359175}
+  - component: {fileID: 40079640617490244}
   m_Layer: 5
   m_Name: Look
   m_TagString: Untagged
@@ -246,7 +246,7 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7183415796314232917}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -296,7 +296,7 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!114 &4251771561405359175
+--- !u!114 &40079640617490244
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -305,9 +305,32 @@ MonoBehaviour:
   m_GameObject: {fileID: 7183415796314232917}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 582efab55bdaccc4e8107a36dbf17ef8, type: 3}
+  m_Script: {fileID: 11500000, guid: e9d677f1681015749b15c436eec6d880, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_MovementRange: 150
+  m_DynamicOriginRange: 100
+  m_ControlPath: <Gamepad>/rightStick
+  m_Behaviour: 2
+  m_UseIsolatedInputActions: 0
+  m_PointerDownAction:
+    m_Name: 
+    m_Type: 0
+    m_ExpectedControlType: 
+    m_Id: 01781ef6-19a1-497e-af94-9a54fc5a24f8
+    m_Processors: 
+    m_Interactions: 
+    m_SingletonActionBindings: []
+    m_Flags: 0
+  m_PointerMoveAction:
+    m_Name: 
+    m_Type: 0
+    m_ExpectedControlType: 
+    m_Id: a8edf054-4c2b-4845-8e76-bce20f4e09d6
+    m_Processors: 
+    m_Interactions: 
+    m_SingletonActionBindings: []
+    m_Flags: 0
 --- !u!1 &7577373233094716426
 GameObject:
   m_ObjectHideFlags: 0
