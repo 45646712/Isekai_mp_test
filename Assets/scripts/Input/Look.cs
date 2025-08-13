@@ -4,29 +4,23 @@ using UnityEngine.EventSystems;
 using UnityEngine.InputSystem.Layouts;
 using UnityEngine.InputSystem.OnScreen;
 
-public class Look : OnScreenStick
+public class Look : OnScreenControl,IPointerDownHandler, IPointerUpHandler,IDragHandler
 {
-    public new void OnPointerDown(PointerEventData data)
-    {
-       // anchor.position = data.position;
-       Debug.Log(InputManager.Instance.playerInput.Player.Look.ReadValue<Vector2>());
-        base.OnPointerDown(data);
-    }
-    public new void OnDrag(PointerEventData data)
-    {
-        // anchor.position = data.position;
-        Debug.Log(InputManager.Instance.playerInput.Player.Look.ReadValue<Vector2>());
-        base.OnDrag(data);
-    }
-    public new void OnPointerUp(PointerEventData data)
-    {
-        // anchor.position = data.position;
-        Debug.Log(InputManager.Instance.playerInput.Player.Look.ReadValue<Vector2>());
-        base.OnPointerUp(data);
-    }
+    [InputControl(layout = "Button"), SerializeField] private string m_ControlPath;
 
-    private void Update()
+    protected override string controlPathInternal
     {
-        //baseArea.position = originPos;
+        get => m_ControlPath;
+        set => m_ControlPath = value;
+    }
+    
+    private Vector2 originPos;
+
+    public void OnPointerDown(PointerEventData data) => SendValueToControl(Vector2.zero);
+    public void OnPointerUp(PointerEventData data) => SendValueToControl(Vector2.zero);
+    
+    public void OnDrag(PointerEventData data)
+    {
+        SendValueToControl(data.delta.normalized);
     }
 }
