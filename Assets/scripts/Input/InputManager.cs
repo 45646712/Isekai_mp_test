@@ -27,13 +27,13 @@ public class InputManager : MonoBehaviour
     public void EnableControl()
     {
         GameObject obj = Instantiate(controlUI, gameObject.transform);
-        UIManager.Instance.AllActiveUIs.Add(UIConstant.AllTypes.ControlOverlay, obj);
+        UIManager.Instance.AllActiveUIs.Add(UIConstants.AllTypes.ControlOverlay, obj);
     }
 
     public void DisableControl()
     {
-        Destroy(UIManager.Instance.AllActiveUIs[UIConstant.AllTypes.ControlOverlay]);
-        UIManager.Instance.AllActiveUIs.Remove(UIConstant.AllTypes.ControlOverlay);
+        Destroy(UIManager.Instance.AllActiveUIs[UIConstants.AllTypes.ControlOverlay]);
+        UIManager.Instance.AllActiveUIs.Remove(UIConstants.AllTypes.ControlOverlay);
     }
     
     private void OnDestroy()

@@ -1,9 +1,9 @@
 using System;
 using UnityEngine;
 
-namespace Model
+namespace Models
 {
-    public class SessionModel : MonoBehaviour
+    static class SessionModel
     {
         public struct SessionHostInfo //for host
         {

@@ -44,8 +44,8 @@ public class CommunicationManager : NetworkBehaviour
                     return;
                 }
                 
-                bool isSubUIExist = UIManager.Instance.AllActiveUIs.TryGetValue(UIConstant.AllTypes.JoinRequestSubMenu, out GameObject joinRequestSubUI);
-                bool isMainUIExist = UIManager.Instance.AllActiveUIs.TryGetValue(UIConstant.AllTypes.JoinRequestMenu, out GameObject joinRequestUI);
+                bool isSubUIExist = UIManager.Instance.AllActiveUIs.TryGetValue(UIConstants.AllTypes.JoinRequestSubMenu, out GameObject joinRequestSubUI);
+                bool isMainUIExist = UIManager.Instance.AllActiveUIs.TryGetValue(UIConstants.AllTypes.JoinRequestMenu, out GameObject joinRequestUI);
                 
                 if (isSubUIExist)
                 {
@@ -70,10 +70,10 @@ public class CommunicationManager : NetworkBehaviour
                 
                 Debug.LogError("Join Request Denied!");
                 
-                UIManager.Instance.AllActiveUIs[UIConstant.AllTypes.SessionList].GetComponent<SessionListUI>().AllRoomsAvailable.Find(x => x.Info.Id == evt.Message).RefreshButton();
+                UIManager.Instance.AllActiveUIs[UIConstants.AllTypes.SessionList].GetComponent<SessionListUI>().AllRoomsAvailable.Find(x => x.Info.Id == evt.Message).RefreshButton();
                 break;
             case CommunicationConstants.MessageType.JoinTimeout:
-                SessionDetail roomUI = UIManager.Instance.AllActiveUIs[UIConstant.AllTypes.SessionList].GetComponent<SessionListUI>().AllRoomsAvailable.Find(x => x.Info.HostId == evt.Message);
+                SessionDetail roomUI = UIManager.Instance.AllActiveUIs[UIConstants.AllTypes.SessionList].GetComponent<SessionListUI>().AllRoomsAvailable.Find(x => x.Info.HostId == evt.Message);
                 
                 Debug.LogError("Session Timeout!");
                 

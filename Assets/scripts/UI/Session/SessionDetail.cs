@@ -7,7 +7,7 @@ using Constant;
 using Extensions;
 using Communications;
 using Cysharp.Threading.Tasks;
-using Model;
+using Models;
 using Newtonsoft.Json;
 using UnityEngine;
 using TMPro;

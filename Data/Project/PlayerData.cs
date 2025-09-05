@@ -2,8 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
 using Unity.Services.CloudCode.Apis;
 using Unity.Services.CloudCode.Core;
 using Unity.Services.CloudCode.Shared;
@@ -11,9 +9,9 @@ using Unity.Services.CloudSave.Model;
 
 namespace HelloWorld;
 
-public class DataExchange
+public class PlayerData
 {
-    [CloudCodeFunction("SaveProtectedData")]
+    [CloudCodeFunction("SavePlayerData")]
     public async Task SaveProtectedData(IExecutionContext context, IGameApiClient gameApiClient, string key, object value)
     {
         try
@@ -26,7 +24,7 @@ public class DataExchange
         }
     }
 
-    [CloudCodeFunction("LoadData")]
+    [CloudCodeFunction("LoadPlayerData")]
     public async Task<object> LoadProtectedData(IExecutionContext context, IGameApiClient gameApiClient, string key)
     {
         try
@@ -75,13 +73,5 @@ public class DataExchange
         {
             throw new Exception($"Failed to save data for playerId {context.PlayerId}. Error: {ex.Message}");
         }
-    }
-}
-
-public class ModuleConfig : ICloudCodeSetup
-{
-    public void Setup(ICloudCodeConfig config)
-    {
-        config.Dependencies.AddSingleton(GameApiClient.Create());
     }
 }

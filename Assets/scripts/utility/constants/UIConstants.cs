@@ -1,6 +1,6 @@
 namespace Constant
 {
-    public class UIConstant
+    public class UIConstants
     {
         public enum AllTypes
         {

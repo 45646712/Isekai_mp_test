@@ -1,19 +1,18 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Threading;
 using Communications;
 using Constant;
 using Cysharp.Threading.Tasks;
 using TMPro;
-using Unity.Services.Authentication;
-using Unity.Services.CloudCode;
 using Unity.Services.CloudCode.Subscriptions;
 using Unity.Services.CloudSave;
 using Unity.Services.CloudSave.Models;
 using Unity.Services.CloudSave.Models.Data.Player;
 using UnityEngine;
 using UnityEngine.UI;
+
+using PublicData = Constant.PlayerDataConstants.PublicDataType;
 
 public class JoinRequestDetail : MonoBehaviour
 {
@@ -35,11 +34,13 @@ public class JoinRequestDetail : MonoBehaviour
     {
         sendTarget = evt.Message;
 
-        Dictionary<string, Item> targetInfo = await CloudSaveService.Instance.Data.Player.LoadAsync(PlayerDataConstant.PublicKeys, new LoadOptions(new PublicReadAccessClassOptions(evt.Message)));
+        List<PublicData> query = new() { PublicData.UserID, PublicData.Lv, PublicData.Name };
+        
+        Dictionary<string, Item> targetInfo = await CloudSaveService.Instance.Data.Player.LoadAsync(PlayerDataConstants.GetKeys(query), new LoadOptions(new PublicReadAccessClassOptions(evt.Message)));
 
-        Int64 UID = targetInfo[PlayerDataConstant.PublicDataType.UserID.ToString()].Value.GetAs<Int64>();
-        byte playerLevel = targetInfo[PlayerDataConstant.PublicDataType.Lv.ToString()].Value.GetAs<byte>();
-        string playerName = targetInfo[PlayerDataConstant.PublicDataType.Name.ToString()].Value.GetAs<string>();
+        Int64 UID = targetInfo[PlayerDataConstants.PublicDataType.UserID.ToString()].Value.GetAs<Int64>();
+        byte playerLevel = targetInfo[PlayerDataConstants.PublicDataType.Lv.ToString()].Value.GetAs<byte>();
+        string playerName = targetInfo[PlayerDataConstants.PublicDataType.Name.ToString()].Value.GetAs<string>();
         
         nickname.text = $"Lv.{playerLevel} {playerName}";
         userID.text = $"UserID : {UID}";
@@ -61,14 +62,14 @@ public class JoinRequestDetail : MonoBehaviour
         StartCoroutine(UpdateUI(evt.Time.AddSeconds(CommunicationConstants.JoinRequestDuration)));
     }
 
-    private IEnumerator UpdateUI(DateTime endTime)
+    private IEnumerator UpdateUI(DateTimeOffset endTime)
     {
         yield return new WaitWhile(() =>
         {
-            double lerpIndex = (endTime - DateTime.Now).TotalMilliseconds / 1000 / CommunicationConstants.JoinRequestDuration;
+            double lerpIndex = (endTime - DateTimeOffset.Now).TotalMilliseconds / 1000 / CommunicationConstants.JoinRequestDuration;
             timeGauge.sizeDelta = new Vector2(Mathf.Lerp(-width, 0, (float)lerpIndex), timeGauge.sizeDelta.y);
             
-            return DateTime.Now < endTime;
+            return DateTimeOffset.Now < endTime;
         });
         
         CommunicationManager.Instance.SendMsgToPlayer(SessionManager.Instance.CurrentSession.Id, CommunicationConstants.MessageType.JoinDenied, sendTarget).Forget();

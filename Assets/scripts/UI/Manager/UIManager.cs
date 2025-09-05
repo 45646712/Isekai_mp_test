@@ -9,7 +9,7 @@ public class UIManager : MonoBehaviour
     public static UIManager Instance { get; private set; }
     
     public Stack<GameObject> AllActiveStepUIs { get; set; } = new();
-    public Dictionary<UIConstant.AllTypes, GameObject> AllActiveUIs { get; set; } = new();
+    public Dictionary<UIConstants.AllTypes, GameObject> AllActiveUIs { get; set; } = new();
     
     private void Awake()
     {

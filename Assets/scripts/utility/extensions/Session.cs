@@ -1,12 +1,13 @@
 using System;
 using Constant;
-using Model;
+using Models;
 using Newtonsoft.Json;
-using Unity.Services.Authentication;
 using Unity.Services.Multiplayer;
-using Unity.VisualScripting;
-using UnityEngine;
-using UnityEngine.Rendering;
+
+using Access = Constant.PlayerDataConstants.DataAccessibility;
+using PublicData = Constant.PlayerDataConstants.PublicDataType;
+using ProtectedData = Constant.PlayerDataConstants.ProtectedDataType;
+using PrivateData = Constant.PlayerDataConstants.PrivateDataType;
 
 namespace Extensions
 {
@@ -116,9 +117,9 @@ namespace Extensions
     {
         public static void UpdateSessionHostInfo(this SessionManager manager)
         {
-            Int64 userID = PlayerDataManager.Instance.GetPublicData<Int64>(PlayerDataConstant.PublicDataType.UserID);
-            byte playerLevel = PlayerDataManager.Instance.GetPublicData<byte>(PlayerDataConstant.PublicDataType.Lv);
-            string playerName = PlayerDataManager.Instance.GetPublicData<string>(PlayerDataConstant.PublicDataType.Name);
+            Int64 userID = PlayerDataManager.Instance.GetData<Int64, PublicData>(Access.Public, PublicData.UserID);
+            byte playerLevel = PlayerDataManager.Instance.GetData<byte, PublicData>(Access.Public, PublicData.Lv);
+            string playerName = PlayerDataManager.Instance.GetData<string, PublicData>(Access.Public, PublicData.Name);
 
             SessionModel.SessionHostInfo hostInfo = new SessionModel.SessionHostInfo(userID, playerLevel, playerName);
             string jsonSource = JsonConvert.SerializeObject(hostInfo);
@@ -134,9 +135,9 @@ namespace Extensions
         
         public static void UpdateSessionPlayerInfo(this SessionManager manager)
         {
-            Int64 userID = PlayerDataManager.Instance.GetPublicData<Int64>(PlayerDataConstant.PublicDataType.UserID);
-            byte playerLevel = PlayerDataManager.Instance.GetPublicData<byte>(PlayerDataConstant.PublicDataType.Lv);
-            string playerName = PlayerDataManager.Instance.GetPublicData<string>(PlayerDataConstant.PublicDataType.Name);
+            Int64 userID = PlayerDataManager.Instance.GetData<Int64, PublicData>(Access.Public, PublicData.UserID);
+            byte playerLevel = PlayerDataManager.Instance.GetData<byte, PublicData>(Access.Public, PublicData.Lv);
+            string playerName = PlayerDataManager.Instance.GetData<string, PublicData>(Access.Public, PublicData.Name);
 
             SessionModel.SessionPlayerInfo clientInfo = new SessionModel.SessionPlayerInfo(userID, playerLevel, playerName);
             string jsonSource = JsonConvert.SerializeObject(clientInfo);

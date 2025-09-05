@@ -60,24 +60,24 @@ public class JoinRequestSubUI : MonoBehaviour , IResponse
         StartCoroutine(UpdateUI(evt.Time.AddSeconds(CommunicationConstants.JoinRequestDuration)));
     }
 
-    private IEnumerator UpdateUI(DateTime endTime)
+    private IEnumerator UpdateUI(DateTimeOffset endTime)
     {
         yield return new WaitWhile(() =>
         {
-            double lerpIndex = (endTime - DateTime.Now).TotalMilliseconds / 1000 / CommunicationConstants.JoinRequestDuration;
+            double lerpIndex = (endTime - DateTimeOffset.Now).TotalMilliseconds / 1000 / CommunicationConstants.JoinRequestDuration;
 
             message.text = $"Join Request Received: {Mathf.CeilToInt(CommunicationConstants.JoinRequestDuration)} sec";
             timeGauge.sizeDelta = new Vector2(Mathf.Lerp(-width, 0, (float)lerpIndex), timeGauge.sizeDelta.y);
 
-            return DateTime.Now < endTime;
+            return DateTimeOffset.Now < endTime;
         });
         
         CommunicationManager.Instance.SendMsgToPlayer(SessionManager.Instance.CurrentSession.Id, CommunicationConstants.MessageType.JoinDenied, sendTarget).Forget();
         Destroy();
     }
 
-    public void RegisterUI() => UIManager.Instance.AllActiveUIs.Add(UIConstant.AllTypes.JoinRequestSubMenu, gameObject);
-    public void UnregisterUI() => UIManager.Instance.AllActiveUIs.Remove(UIConstant.AllTypes.JoinRequestSubMenu);
+    public void RegisterUI() => UIManager.Instance.AllActiveUIs.Add(UIConstants.AllTypes.JoinRequestSubMenu, gameObject);
+    public void UnregisterUI() => UIManager.Instance.AllActiveUIs.Remove(UIConstants.AllTypes.JoinRequestSubMenu);
     
     private void Destroy()
     {

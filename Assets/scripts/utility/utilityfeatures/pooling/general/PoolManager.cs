@@ -11,7 +11,7 @@ public class PoolManager : MonoBehaviour
 {
     public static PoolManager Instance;
     
-    [field: SerializeField, SerializedDictionary("Pool Types", "Pool")]
+    [field: SerializeField, SerializedDictionary("Pool Types", "Pool")] 
     public SerializedDictionary<ObjectPoolType, SingleObjectPool> AllObjectPools { get; private set; }
     
     private void Awake()

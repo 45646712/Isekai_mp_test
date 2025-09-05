@@ -16,6 +16,9 @@ using Unity.Services.Multiplayer;
 using UnityEngine;
 using UnityEngine.UI;
 
+using Access = Constant.PlayerDataConstants.DataAccessibility;
+using PublicData = Constant.PlayerDataConstants.PublicDataType;
+
 public class SessionListUI : MonoBehaviour, IRefreshable
 {
     [SerializeField] private GameObject sessionDetailUI;
@@ -50,7 +53,7 @@ public class SessionListUI : MonoBehaviour, IRefreshable
         
         changeNicknameButton.onClick.AddListener(() =>
         {
-            PlayerDataManager.Instance.SetAndSavePublicData(PlayerDataConstant.PublicDataType.Name, changeNicknameInputField.text).Forget();
+            PlayerDataManager.Instance.UpdateAndSaveData(Access.Public, PublicData.Name, changeNicknameInputField.text).Forget();
             SessionManager.Instance.UpdateSessionHostInfo();
         });
     }
@@ -67,7 +70,7 @@ public class SessionListUI : MonoBehaviour, IRefreshable
     {
         Query query = new Query(new List<FieldFilter>
         {
-            new(PlayerDataConstant.PublicDataType.UserID.ToString(), userID, FieldFilter.OpOptions.EQ, false)
+            new(PlayerDataConstants.PublicDataType.UserID.ToString(), userID, FieldFilter.OpOptions.EQ, false)
         }, null, 0, 1);
 
         List<EntityData> result = await CloudSaveService.Instance.Data.Player.QueryAsync(query, new QueryOptions());
@@ -138,7 +141,7 @@ public class SessionListUI : MonoBehaviour, IRefreshable
             
             sortedList.Add(element);
         }
-        
+
         sortedList = sortedList.OrderBy(x=>x.GetPrivacyState()).ToList();
         
         //populate UI using result
@@ -163,12 +166,12 @@ public class SessionListUI : MonoBehaviour, IRefreshable
     public void RegisterUI()
     {
         UIManager.Instance.AllActiveStepUIs.Push(gameObject);
-        UIManager.Instance.AllActiveUIs.Add(UIConstant.AllTypes.SessionList, gameObject);
+        UIManager.Instance.AllActiveUIs.Add(UIConstants.AllTypes.SessionList, gameObject);
     }
 
     public void UnregisterUI()
     {
-        UIManager.Instance.AllActiveUIs.Remove(UIConstant.AllTypes.SessionList);
+        UIManager.Instance.AllActiveUIs.Remove(UIConstants.AllTypes.SessionList);
     }
 
     private void OnDestroy()

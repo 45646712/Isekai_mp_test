@@ -23,7 +23,7 @@ public class JoinRequestUI : MonoBehaviour , IMultiResponse
         
         closeButton.onClick.AddListener(() =>
         {
-            Destroy(UIManager.Instance.AllActiveUIs[UIConstant.AllTypes.JoinRequestMenu]);
+            Destroy(UIManager.Instance.AllActiveUIs[UIConstants.AllTypes.JoinRequestMenu]);
         });
     }
 
@@ -52,8 +52,8 @@ public class JoinRequestUI : MonoBehaviour , IMultiResponse
         }
     }
 
-    public void RegisterUI() => UIManager.Instance.AllActiveUIs.Add(UIConstant.AllTypes.JoinRequestMenu, gameObject);
-    public void UnregisterUI() => UIManager.Instance.AllActiveUIs.Remove(UIConstant.AllTypes.JoinRequestMenu);
+    public void RegisterUI() => UIManager.Instance.AllActiveUIs.Add(UIConstants.AllTypes.JoinRequestMenu, gameObject);
+    public void UnregisterUI() => UIManager.Instance.AllActiveUIs.Remove(UIConstants.AllTypes.JoinRequestMenu);
 
     public void Destroy()
     {

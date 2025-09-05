@@ -40,6 +40,8 @@ public class LoginManager : NetworkBehaviour
     {
         AuthenticationService.Instance.SignedIn += UniTask.Action(async () =>
         {
+            PlayerDataManager.Instance.Player = CloudSaveService.Instance.Data.Player;
+            
             await PlayerDataManager.Instance.LoadAllData();
             await CommunicationManager.Instance.Init();
             await SessionManager.Instance.StartHost();
