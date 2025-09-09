@@ -19,7 +19,7 @@ public class CropManager : MonoBehaviour
     [field: SerializeField] public Field[] Fields { get; private set; }
     [SerializeField] private CropSO[] AllCropBaseData;
 
-    private List<CropSlot> AllCrops = new();
+    public List<CropSlot> AllCrops { get; private set; } = new();
 
     private void Awake()
     {
@@ -89,22 +89,40 @@ public class CropManager : MonoBehaviour
 
     public async UniTask Harvest(int slotID)
     {
-        await InventoryManager.Instance.UpdateItem(ItemConstants.ItemCategory.Crop, AllCrops[slotID].data.ID, AllCrops[slotID].data.HarvestCount);
-        AllCrops[slotID].Reset();
-        
-        await SaveData();
+        try
+        {
+            if (slotID < 0)
+            {
+                return;
+            }
+            
+            await InventoryManager.Instance.UpdateItem(ItemConstants.ItemCategory.Crop, AllCrops[slotID].data.ID, AllCrops[slotID].data.HarvestCount);
+            AllCrops[slotID].Reset();
+            await SaveData();
+        }
+        catch (Exception e)
+        {
+            Debug.LogError(e);
+        }
     }
     
     public async UniTask Harvest(List<int> slotIDs)
     {
-        await InventoryManager.Instance.UpdateItem(ItemConstants.ItemCategory.Crop, slotIDs.Select(x => (AllCrops[x].data.ID, AllCrops[x].data.HarvestCount)).ToList());
-        
-        foreach (int element in slotIDs)
+        try
         {
-            AllCrops[element].Reset();
+            await InventoryManager.Instance.UpdateItem(ItemConstants.ItemCategory.Crop, slotIDs.Select(x => (AllCrops[x].data.ID, AllCrops[x].data.HarvestCount)).ToList());
+            
+            foreach (var element in slotIDs.Where(element => element >= 0))
+            {
+                AllCrops[element].Reset();
+            }
+            
+            await SaveData();
         }
-        
-        await SaveData();
+        catch (Exception e)
+        {
+            Debug.LogError(e);
+        }
     }
     
     private async UniTask SaveData()
@@ -112,7 +130,7 @@ public class CropManager : MonoBehaviour
         List<CropModel.CropUploadData> data = AllCrops.Where(x => x.data.MatureTime != default).Select(x => new CropModel.CropUploadData(AllCrops.IndexOf(x), x.data.ID, x.data.MatureTime)).ToList();
         
         await PlayerDataManager.Instance.UpdateAndSaveData(Access.Protected, ProtectedData.CropData, JsonConvert.SerializeObject(data));
-
+        
         ValidateTimestamp(data.Where(x => x.MatureTime > DateTimeOffset.UtcNow).OrderBy(x => x.MatureTime).FirstOrDefault().MatureTime).Forget();
     }
 

@@ -23,13 +23,3 @@ public interface IMultiResponse : IResponse
 {
     public void Init(Queue<IMessageReceivedEvent> evt); //init based on queued server responses
 }
-
-public interface IAsyncResponse : IGeneric
-{
-    public UniTask Init(IMessageReceivedEvent evt); //init based on server response
-}
-
-public interface IMultiAsyncResponse : IAsyncResponse
-{
-    public UniTask Init(Queue<IMessageReceivedEvent> evt); //init based on queued server responses
-}

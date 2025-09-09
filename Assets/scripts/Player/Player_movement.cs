@@ -22,7 +22,7 @@ public class Player_movement : NetworkBehaviour
             return;
         }
         
-        InputManager.Instance.EnableControl();
+        NetworkManager.Singleton.SceneManager.OnLoadComplete += (id, sceneName, mode) => InputManager.Instance.EnableControl();
     }
 
     private void Update()

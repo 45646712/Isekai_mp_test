@@ -26,8 +26,12 @@ public class InputManager : MonoBehaviour
     
     public void EnableControl()
     {
-        GameObject obj = Instantiate(controlUI, gameObject.transform);
+        GameObject obj = Instantiate(controlUI);
+        Canvas objCanvas = obj.GetComponent<Canvas>();
+        
         UIManager.Instance.AllActiveUIs.Add(UIConstants.AllTypes.ControlOverlay, obj);
+        
+        objCanvas.worldCamera = Camera.main;
     }
 
     public void DisableControl()
