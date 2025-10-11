@@ -2,12 +2,13 @@ namespace Constant
 {
     public class UIConstants
     {
-        public enum AllTypes
+        public enum NonPooledUITypes
         {
             SessionList,
             JoinRequestSubMenu,
             JoinRequestMenu,
-            ControlOverlay
+            ControlOverlay,
+            PlantCropUI
         }
     }
 }

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using Constant;
 using Cysharp.Threading.Tasks;
 using Models;
@@ -31,7 +32,7 @@ namespace Extensions
                 ProtectedData.BalanceGold => value.GetAs<int>(),
                 ProtectedData.CropData => value.GetAs<string>(),
                 ProtectedData.UnlockedCrops => value.GetAs<int>(),
-                _ => throw new Exception("unknown type in cloud save data detected!")
+                _ => throw new InvalidOperationException()
             };
         }
         
@@ -39,7 +40,7 @@ namespace Extensions
         {
             Access.Public => new SaveOptions(new PublicWriteAccessClassOptions()),
             Access.Protected => new SaveOptions(new DefaultWriteAccessClassOptions()),
-            _ => null
+            _ => throw new InvalidOperationException()
         };
 
         public static LoadOptions GetLoadOptions(this PlayerDataManager manager, Access access) => access switch
@@ -47,7 +48,7 @@ namespace Extensions
             Access.Public => new LoadOptions(new PublicReadAccessClassOptions()),
             Access.Protected => new LoadOptions(new DefaultReadAccessClassOptions()),
             Access.Private => new LoadOptions(new ProtectedReadAccessClassOptions()),
-            _ => null
+            _ => throw new InvalidOperationException()
         };
 
         public static LoadAllOptions GetLoadAllOptions(this PlayerDataManager manager, Access access) => access switch
@@ -55,7 +56,7 @@ namespace Extensions
             Access.Public => new LoadAllOptions(new PublicReadAccessClassOptions()),
             Access.Protected => new LoadAllOptions(new DefaultReadAccessClassOptions()),
             Access.Private => new LoadAllOptions(new ProtectedReadAccessClassOptions()),
-            _ => null
+            _ => throw new InvalidOperationException()
         };
         
         public static async UniTask ValidateBasePlayerData(this PlayerDataManager manager)

@@ -2,16 +2,14 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 using Constant;
+using Extensions;
 using Unity.Cinemachine;
-using UnityEngine.InputSystem;
-using UnityEngine.InputSystem.OnScreen;
 
 public class InputManager : MonoBehaviour
 {
     public static InputManager Instance;
-
-    [SerializeField] private GameObject controlUI;
-    [field: SerializeField] public GameObject IngameCamera { get; private set; }
+    
+    [field: SerializeField] public GameObject CinemachinePrefab { get; private set; }
 
     public PlayerInput playerInput { get; private set; }
     public CinemachineCamera SpawnedCamera { get; set; }
@@ -22,22 +20,24 @@ public class InputManager : MonoBehaviour
         
         playerInput = new PlayerInput();
         playerInput.Enable();
+
+        playerInput.UI.Click.performed += this.GenerateRay; //generate raycast each time when clicking screen
     }
     
     public void EnableControl()
     {
-        GameObject obj = Instantiate(controlUI);
-        Canvas objCanvas = obj.GetComponent<Canvas>();
+        GameObject obj = Instantiate(UIManager.Instance.UIPrefabs[UIConstants.NonPooledUITypes.ControlOverlay]);
+        UIManager.Instance.AllActiveUIs.Add(UIConstants.NonPooledUITypes.ControlOverlay, obj);
         
-        UIManager.Instance.AllActiveUIs.Add(UIConstants.AllTypes.ControlOverlay, obj);
-        
-        objCanvas.worldCamera = Camera.main;
+        Canvas inputCanvas = obj.GetComponent<Canvas>();
+        inputCanvas.worldCamera = Camera.main;
+        inputCanvas.planeDistance = 1000;
     }
 
     public void DisableControl()
     {
-        Destroy(UIManager.Instance.AllActiveUIs[UIConstants.AllTypes.ControlOverlay]);
-        UIManager.Instance.AllActiveUIs.Remove(UIConstants.AllTypes.ControlOverlay);
+        Destroy(UIManager.Instance.AllActiveUIs[UIConstants.NonPooledUITypes.ControlOverlay]);
+        UIManager.Instance.AllActiveUIs.Remove(UIConstants.NonPooledUITypes.ControlOverlay);
     }
     
     private void OnDestroy()

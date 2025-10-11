@@ -1,7 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using Communications;
+using Extensions;
 using Constant;
 using Cysharp.Threading.Tasks;
 using Unity.Services.CloudCode.Subscriptions;
@@ -11,7 +11,6 @@ using UnityEngine.UI;
 
 public class JoinRequestUI : MonoBehaviour , IMultiResponse
 {
-    [SerializeField] private GameObject RequestDetailUI;
     [SerializeField] private Transform spawnAnchor;
     [SerializeField] private Button closeButton;
     
@@ -23,7 +22,7 @@ public class JoinRequestUI : MonoBehaviour , IMultiResponse
         
         closeButton.onClick.AddListener(() =>
         {
-            Destroy(UIManager.Instance.AllActiveUIs[UIConstants.AllTypes.JoinRequestMenu]);
+            Destroy(UIManager.Instance.AllActiveUIs[UIConstants.NonPooledUITypes.JoinRequestMenu]);
         });
     }
 
@@ -52,8 +51,8 @@ public class JoinRequestUI : MonoBehaviour , IMultiResponse
         }
     }
 
-    public void RegisterUI() => UIManager.Instance.AllActiveUIs.Add(UIConstants.AllTypes.JoinRequestMenu, gameObject);
-    public void UnregisterUI() => UIManager.Instance.AllActiveUIs.Remove(UIConstants.AllTypes.JoinRequestMenu);
+    public void RegisterUI() => UIManager.Instance.AllActiveUIs.Add(UIConstants.NonPooledUITypes.JoinRequestMenu, gameObject);
+    public void UnregisterUI() => UIManager.Instance.AllActiveUIs.Remove(UIConstants.NonPooledUITypes.JoinRequestMenu);
 
     public void Destroy()
     {

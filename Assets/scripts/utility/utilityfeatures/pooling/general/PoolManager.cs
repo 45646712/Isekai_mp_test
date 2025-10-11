@@ -4,7 +4,9 @@ using UnityEngine;
 public enum ObjectPoolType
 {
     SessionDetail,
-    RequestDetail
+    RequestDetail,
+    CropIcon,
+    CropCostIcon
 }
 
 public class PoolManager : MonoBehaviour

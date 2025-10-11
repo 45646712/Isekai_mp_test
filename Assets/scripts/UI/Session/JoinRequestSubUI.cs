@@ -1,8 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Threading;
-using Communications;
+using Extensions;
 using Constant;
 using Cysharp.Threading.Tasks;
 using TMPro;
@@ -12,8 +11,6 @@ using UnityEngine.UI;
 
 public class JoinRequestSubUI : MonoBehaviour , IResponse
 {
-    [SerializeField] private GameObject JoinRequestUI;
-
     [SerializeField] private Button UIButton;
     [SerializeField] private TMP_Text message;
     [SerializeField] private Button accept;
@@ -38,7 +35,7 @@ public class JoinRequestSubUI : MonoBehaviour , IResponse
         
         UIButton.onClick.AddListener(() =>
         {
-            JoinRequestUI ui = Instantiate(JoinRequestUI).GetComponent<JoinRequestUI>();
+            JoinRequestUI ui = Instantiate(UIManager.Instance.UIPrefabs[UIConstants.NonPooledUITypes.JoinRequestMenu]).GetComponent<JoinRequestUI>();
             ui.Init(evt);
             ui.Init(StoredRequests);
 
@@ -76,8 +73,8 @@ public class JoinRequestSubUI : MonoBehaviour , IResponse
         Destroy();
     }
 
-    public void RegisterUI() => UIManager.Instance.AllActiveUIs.Add(UIConstants.AllTypes.JoinRequestSubMenu, gameObject);
-    public void UnregisterUI() => UIManager.Instance.AllActiveUIs.Remove(UIConstants.AllTypes.JoinRequestSubMenu);
+    public void RegisterUI() => UIManager.Instance.AllActiveUIs.Add(UIConstants.NonPooledUITypes.JoinRequestSubMenu, gameObject);
+    public void UnregisterUI() => UIManager.Instance.AllActiveUIs.Remove(UIConstants.NonPooledUITypes.JoinRequestSubMenu);
     
     private void Destroy()
     {

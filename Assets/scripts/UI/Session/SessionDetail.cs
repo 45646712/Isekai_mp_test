@@ -1,21 +1,16 @@
 using System;
 using System.Collections;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 using AYellowpaper.SerializedCollections;
 using Constant;
 using Extensions;
-using Communications;
 using Cysharp.Threading.Tasks;
 using Models;
 using Newtonsoft.Json;
 using UnityEngine;
 using TMPro;
-using Unity.Netcode;
 using Unity.Services.Authentication;
 using UnityEngine.UI;
 using Unity.Services.Multiplayer;
-using Exception = System.Exception;
 
 public class SessionDetail : MonoBehaviour
 {

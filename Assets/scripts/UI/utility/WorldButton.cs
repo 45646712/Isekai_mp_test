@@ -1,61 +1,64 @@
 using System;
+using System.Linq;
+using AYellowpaper.SerializedCollections;
+using Constant;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class WorldButton : MonoBehaviour
+public class WorldButton : MonoBehaviour, IWorldUIObject
 {
-    [SerializeField] private Sprite[] Icons;
-    [SerializeField] private Image source;
-    [SerializeField] private Button button;
+    [field: SerializeField, SerializedDictionary("EnumIndex", "icons")] private SerializedDictionary<int, Material> icons;
     
-    private void Start()
+    private MeshCollider col;
+    private new MeshRenderer renderer;
+
+    private Action raycastEvt;
+    
+    private void Awake()
     {
-        GetComponent<Canvas>().worldCamera = Camera.main;
-        button.onClick.AddListener(OnClick);
+        renderer = GetComponent<MeshRenderer>();
+        col = GetComponent<MeshCollider>();
+    }
+
+    public void InvokeRaycastEvt()
+    {
+        if (!renderer.enabled)
+        {
+            return;
+        }
+        
+        raycastEvt?.Invoke();
     }
 
     private void LateUpdate()
     {
-        if (!source)
+        if (!renderer.enabled)
         {
             return;
         }
-
-        transform.forward = Camera.main.transform.forward; //billboarding
+        
+        transform.parent.forward = Camera.main.transform.forward;
     }
 
-    public void Init(int index, Action buttonEvt) //get enum -> int
+    public void Init(int index, Action evt) //get enum -> int
     {
-        button.onClick.RemoveAllListeners();
-
         if (index < 0)
         {
             return;
         }
 
-        button.onClick.AddListener(() => buttonEvt());
-        button.onClick.AddListener(OnClick);
-        source.sprite = Icons[index];
+        raycastEvt = evt;
+        renderer.material = icons[index];
     }
 
-    public void UpdateStatus(bool isActive)
-    {
-        if (!source.sprite)
-        {
-            source.enabled = false;
-            button.interactable = false;
-            return;
-        }
-        
-        source.enabled = isActive;
-        button.interactable = isActive;
-    }
+    public void UpdateStatus(bool isActive) => col.enabled = renderer.enabled = isActive;
     
-    public void OnClick()
+    public void Reset()
     {
-        button.onClick.RemoveAllListeners();
-        source.sprite = null;
-        source.enabled = false;
-        button.interactable = false;
+        raycastEvt = null;
+        
+        col.enabled = false;
+        renderer.enabled = false;
     }
 }

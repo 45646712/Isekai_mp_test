@@ -170,7 +170,7 @@ MonoBehaviour:
   - {fileID: 1081543166}
   - {fileID: 1698711295}
   - {fileID: 2046266392}
-  AllCropBaseData:
+  <AllCropBaseData>k__BackingField:
   - {fileID: 11400000, guid: 606404e5cd4cadc49a1d8f5a75132eb1, type: 2}
 --- !u!1 &104515017
 GameObject:
@@ -405,6 +405,10 @@ PrefabInstance:
     - target: {fileID: 6893696150183375044, guid: 80fdcec8f24c6234fb1bce2b592be205, type: 3}
       propertyPath: m_Name
       value: field1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6893696150183375044, guid: 80fdcec8f24c6234fb1bce2b592be205, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7021104550191820576, guid: 80fdcec8f24c6234fb1bce2b592be205, type: 3}
       propertyPath: Anchor
@@ -961,7 +965,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c505c16660cfd9c488ad6e0d0f33bb97, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sessionListUI: {fileID: 4300041106414377268, guid: 3a1f3dcb6ca59c844b25bc3aa435bd87, type: 3}
 --- !u!1 &882430656
 GameObject:
   m_ObjectHideFlags: 0
@@ -1310,6 +1313,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: field3
       objectReference: {fileID: 0}
+    - target: {fileID: 6893696150183375044, guid: 80fdcec8f24c6234fb1bce2b592be205, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -1406,6 +1413,10 @@ PrefabInstance:
     - target: {fileID: 6893696150183375044, guid: 80fdcec8f24c6234fb1bce2b592be205, type: 3}
       propertyPath: m_Name
       value: field4
+      objectReference: {fileID: 0}
+    - target: {fileID: 6893696150183375044, guid: 80fdcec8f24c6234fb1bce2b592be205, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -1661,6 +1672,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: field5
       objectReference: {fileID: 0}
+    - target: {fileID: 6893696150183375044, guid: 80fdcec8f24c6234fb1bce2b592be205, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -1726,6 +1741,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 13dca195494eb9f4f950c912350cbdc3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ItemSlotPrefab: {fileID: 0}
   AllItemBaseData:
   - {fileID: 11400000, guid: 662289e0ee8071245914220760393e61, type: 2}
 --- !u!1 &1835444828
@@ -1940,6 +1956,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: field6
       objectReference: {fileID: 0}
+    - target: {fileID: 6893696150183375044, guid: 80fdcec8f24c6234fb1bce2b592be205, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -2036,6 +2056,10 @@ PrefabInstance:
     - target: {fileID: 6893696150183375044, guid: 80fdcec8f24c6234fb1bce2b592be205, type: 3}
       propertyPath: m_Name
       value: field2
+      objectReference: {fileID: 0}
+    - target: {fileID: 6893696150183375044, guid: 80fdcec8f24c6234fb1bce2b592be205, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

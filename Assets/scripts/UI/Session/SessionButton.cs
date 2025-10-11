@@ -1,13 +1,12 @@
 using System;
+using Constant;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class SessionButton : MonoBehaviour
 {
-    [SerializeField] private GameObject sessionListUI;
-    
     private void Awake()
     {
-        GetComponent<Button>().onClick.AddListener(() => { Instantiate(sessionListUI); });
+        GetComponent<Button>().onClick.AddListener(() => { Instantiate(UIManager.Instance.UIPrefabs[UIConstants.NonPooledUITypes.SessionList]); });
     }
 }

@@ -1,15 +1,18 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using AYellowpaper.SerializedCollections;
 using Constant;
 using UnityEngine;
 
 public class UIManager : MonoBehaviour
 {
     public static UIManager Instance { get; private set; }
-    
+
+    [field: SerializeField, SerializedDictionary("UIType", "UI")] public SerializedDictionary<UIConstants.NonPooledUITypes, GameObject> UIPrefabs { get; private set; }
+
     public Stack<GameObject> AllActiveStepUIs { get; set; } = new();
-    public Dictionary<UIConstants.AllTypes, GameObject> AllActiveUIs { get; set; } = new();
+    public Dictionary<UIConstants.NonPooledUITypes, GameObject> AllActiveUIs { get; set; } = new();
     
     private void Awake()
     {

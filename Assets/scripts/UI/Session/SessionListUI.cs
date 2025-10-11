@@ -3,10 +3,9 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
-using Communications;
+using Extensions;
 using Constant;
 using Cysharp.Threading.Tasks;
-using Extensions;
 using TMPro;
 using Unity.Services.Authentication;
 using Unity.Services.CloudSave;
@@ -21,7 +20,6 @@ using PublicData = Constant.PlayerDataConstants.PublicDataType;
 
 public class SessionListUI : MonoBehaviour, IRefreshable
 {
-    [SerializeField] private GameObject sessionDetailUI;
     [SerializeField] private Transform listAnchor;
     [SerializeField] private Button tutorialButton;
     [SerializeField] private Button refreshButton;
@@ -166,12 +164,12 @@ public class SessionListUI : MonoBehaviour, IRefreshable
     public void RegisterUI()
     {
         UIManager.Instance.AllActiveStepUIs.Push(gameObject);
-        UIManager.Instance.AllActiveUIs.Add(UIConstants.AllTypes.SessionList, gameObject);
+        UIManager.Instance.AllActiveUIs.Add(UIConstants.NonPooledUITypes.SessionList, gameObject);
     }
 
     public void UnregisterUI()
     {
-        UIManager.Instance.AllActiveUIs.Remove(UIConstants.AllTypes.SessionList);
+        UIManager.Instance.AllActiveUIs.Remove(UIConstants.NonPooledUITypes.SessionList);
     }
 
     private void OnDestroy()

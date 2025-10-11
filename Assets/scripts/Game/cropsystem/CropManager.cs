@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using Constant;
 using Cysharp.Threading.Tasks;
 using Models;
@@ -17,9 +18,11 @@ public class CropManager : MonoBehaviour
     public static CropManager Instance;
     
     [field: SerializeField] public Field[] Fields { get; private set; }
-    [SerializeField] private CropSO[] AllCropBaseData;
+    [field: SerializeField] public CropSO[] AllCropBaseData { get; private set; }
 
     public List<CropSlot> AllCrops { get; private set; } = new();
+
+    private CancellationTokenSource source { get; } = new();
 
     private void Awake()
     {
@@ -36,40 +39,39 @@ public class CropManager : MonoBehaviour
         
         LoadData().Forget(); // need ~3 second buffer
     }
-
+    
     private async UniTask ValidateTimestamp(DateTimeOffset nextUpdateTime)
     {
-        while (this != null)
+        while (!source.Token.IsCancellationRequested)
         {
             if (nextUpdateTime == default)
             {
                 await LoadData(); //single check
-                break;
+                source.Cancel();
             }
             
             if (DateTimeOffset.UtcNow > nextUpdateTime)
             {
                 await LoadData();
-                break;
+                source.Cancel();
             }
 
             await UniTask.Yield();
         }
     }
 
-    public async UniTask Plant(int slotID, int baseDataID)
+    public async UniTask Plant(CropSlot slot, CropSO baseData)
     {
-        if (AllCrops[slotID].isOccupied)
+        if (slot.isOccupied)
         {
             return;
         }
 
-        CropSO baseData = AllCropBaseData.First(x => x.ID == baseDataID);
-        AllCrops[slotID].Init(baseData, DateTimeOffset.UtcNow.AddSeconds(baseData.MatureTime));
+        slot.Init(baseData, DateTimeOffset.UtcNow.AddSeconds(baseData.Costs[ItemConstants.ResourceType.Time]), CropConstants.CropStatus.Growing);
 
         await SaveData();
     }
-    
+
     public async UniTask Plant(List<int> slotIDs , int baseDataID)
     {
         //extract SO value
@@ -81,7 +83,7 @@ public class CropManager : MonoBehaviour
             }
 
             CropSO baseData = AllCropBaseData.First(x => x.ID == baseDataID);
-            AllCrops[element].Init(baseData, DateTimeOffset.UtcNow.AddSeconds(baseData.MatureTime));
+            AllCrops[element].Init(baseData, DateTimeOffset.UtcNow.AddSeconds(baseData.Costs[ItemConstants.ResourceType.Time]), CropConstants.CropStatus.Growing);
         }
         
         await SaveData();
@@ -91,12 +93,7 @@ public class CropManager : MonoBehaviour
     {
         try
         {
-            if (slotID < 0)
-            {
-                return;
-            }
-            
-            await InventoryManager.Instance.UpdateItem(ItemConstants.ItemCategory.Crop, AllCrops[slotID].data.ID, AllCrops[slotID].data.HarvestCount);
+            await InventoryManager.Instance.UpdateItem(ItemConstants.ItemType.Crop, AllCrops[slotID].data.ID, AllCrops[slotID].data.Rewards[ItemConstants.ResourceType.Item]);
             AllCrops[slotID].Reset();
             await SaveData();
         }
@@ -110,7 +107,7 @@ public class CropManager : MonoBehaviour
     {
         try
         {
-            await InventoryManager.Instance.UpdateItem(ItemConstants.ItemCategory.Crop, slotIDs.Select(x => (AllCrops[x].data.ID, AllCrops[x].data.HarvestCount)).ToList());
+            await InventoryManager.Instance.UpdateItem(ItemConstants.ItemType.Crop, slotIDs.Select(x => (AllCrops[x].data.ID, AllCrops[x].data.Rewards[ItemConstants.ResourceType.Item])).ToList());
             
             foreach (var element in slotIDs.Where(element => element >= 0))
             {
@@ -160,7 +157,7 @@ public class CropManager : MonoBehaviour
             }
             else
             {
-                AllCrops[element.SlotID].Init(baseData, element.MatureTime);
+                AllCrops[element.SlotID].Init(baseData, element.MatureTime, CropConstants.CropStatus.Growing);
             }
         }
         

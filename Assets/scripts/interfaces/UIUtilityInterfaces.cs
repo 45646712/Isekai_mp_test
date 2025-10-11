@@ -23,3 +23,8 @@ public interface IMultiResponse : IResponse
 {
     public void Init(Queue<IMessageReceivedEvent> evt); //init based on queued server responses
 }
+
+public interface IWorldUIObject
+{
+    public void InvokeRaycastEvt();
+}

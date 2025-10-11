@@ -1,3 +1,4 @@
+using System;
 using Constant;
 using UnityEngine;
 using UnityEngine.PlayerLoop;
@@ -10,7 +11,7 @@ namespace Models
         public struct ItemData
         {
             public int ID; // ID must > 0
-            public ItemConstants.Classification Classification;
+            public ItemConstants.ItemCategory Category;
             public string Name;
             public string Description;
             public int Price;
@@ -20,7 +21,7 @@ namespace Models
             public ItemData(ItemSO baseData, int amount)
             {
                 ID = baseData.ID;
-                Classification = baseData.Classification;
+                Category = baseData.Category;
                 Name = baseData.Name;
                 Description = baseData.Description;
                 Price = baseData.Price;
@@ -34,13 +35,13 @@ namespace Models
         public struct ItemUploadData
         {
             public int ID;
-            public ItemConstants.ItemCategory Category;
+            public ItemConstants.ItemType ItemType;
             public int Amount;
 
-            public ItemUploadData(ItemConstants.ItemCategory category, int id, int amount)
+            public ItemUploadData(ItemConstants.ItemType type, int id, int amount)
             {
                 ID = id;
-                Category = category;
+                ItemType = type;
                 Amount = amount;
             }
         }

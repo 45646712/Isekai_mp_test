@@ -37,7 +37,7 @@ public class Player_init : NetworkBehaviour
         {
             NetworkManager.Singleton.SceneManager.OnLoadComplete += (v1, v2, v3) =>
             {
-                GameObject cam = Instantiate(InputManager.Instance.IngameCamera);
+                GameObject cam = Instantiate(InputManager.Instance.CinemachinePrefab);
                 CinemachineCamera camCore = cam.GetComponent<CinemachineCamera>();
                 
                 camCore.Follow = gameObject.transform;

@@ -1,25 +1,33 @@
+using System;
 using UnityEngine;
 
 namespace Constant
 {
     public static class ItemConstants
     {
-        public enum ItemCategory
+        public enum ItemType // crop/fish/building/store ID -> itemID
         {
             Crop, //ID 1~
             Fish, //ID 5001~
             Building //ID 10001~
         }
 
-        public enum Classification
+        public enum ItemCategory
         {
-            Null = -1,
-            Materials,
+            Materials = 1,
             Resources,
             Valuables,
-            QuestItems,
+            Quest,
             Exotics,
             Others
+        }
+
+        public enum ResourceType
+        {
+            Exp,
+            Item,
+            Currency,
+            Time,
         }
     }
 }

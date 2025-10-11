@@ -6,9 +6,9 @@ namespace Constant
     {
         public enum CropStatus
         {
-            Null = -1,
-            Growing,
-            Matured
+            Null = 0,
+            Growing = 1,
+            Matured = 2
         }
     }
 }

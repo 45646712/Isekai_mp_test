@@ -9,7 +9,7 @@ using Unity.Services.CloudCode;
 using Unity.Services.CloudCode.Subscriptions;
 using UnityEngine;
 
-namespace Communications
+namespace Extensions
 {
     public static class Messaging
     {

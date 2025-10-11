@@ -11,13 +11,12 @@ public class Joystick : OnScreenStick, IPointerDownHandler, IPointerUpHandler
     [SerializeField] private RectTransform anchor;
     [SerializeField] private Image[] images;
 
-    private Vector2 originPos;
+    private Vector3 originPos; 
+    private Vector3 originPos2;
 
-    private void Start()
-    {
-        originPos = baseArea.position;
-    }
-
+    private void Start() => originPos = baseArea.position;
+    private void Update() => baseArea.position = originPos;
+    
     public new void OnPointerDown(PointerEventData data)
     {
         anchor.position = data.position;
@@ -31,11 +30,6 @@ public class Joystick : OnScreenStick, IPointerDownHandler, IPointerUpHandler
         UpdateUI(false);
 
         base.OnPointerUp(data);
-    }
-
-    private void Update()
-    {
-        baseArea.position = originPos;
     }
 
     private void UpdateUI(bool isEnable)

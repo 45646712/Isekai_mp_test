@@ -6,7 +6,7 @@ using UnityEngine.UI;
 public class ItemSO : ScriptableObject
 {
     [field: SerializeField] public int ID { get; private set; }
-    [field: SerializeField] public ItemConstants.Classification Classification { get; private set; }
+    [field: SerializeField] public ItemConstants.ItemCategory Category { get; private set; }
     [field: SerializeField] public string Name { get; private set; }
     [field: SerializeField] public string Description { get; private set; }
     [field: SerializeField] public int Price { get; private set; }
