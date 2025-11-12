@@ -1,6 +1,6 @@
 namespace Constant
 {
-    public class UIConstants
+    public static class UIConstants
     {
         public enum NonPooledUITypes
         {
@@ -8,7 +8,13 @@ namespace Constant
             JoinRequestSubMenu,
             JoinRequestMenu,
             ControlOverlay,
-            PlantCropUI
+            PlantCropUI,
+            BatchPlantCropUI,
+            CropDetailUI,
+            CropGrowingUI,
         }
+
+        public const string GeneralCancelButtonText = "Cancel";
+        public const string GeneralConfirmButtonText = "Confirm";
     }
 }

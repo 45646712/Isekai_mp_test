@@ -4,6 +4,7 @@ using UnityEngine.UI;
 
 public class CropCategoryIcon : MonoBehaviour
 {
+    public CropSO baseData { get; private set; }
     private Image icon;
     private Button button;
 
@@ -13,11 +14,12 @@ public class CropCategoryIcon : MonoBehaviour
         button = GetComponent<Button>();
     }
 
-    public void Init(Sprite icon, Action OnclickAction)
+    public void Init(CropSO data, Action OnclickAction)
     {
         button.onClick.RemoveAllListeners();
-        
-        this.icon.sprite = icon;
+
+        baseData = data;
+        icon.sprite = data.Icon;
         button.onClick.AddListener(() => OnclickAction?.Invoke());
     }
 }

@@ -9,7 +9,7 @@ public class UIManager : MonoBehaviour
 {
     public static UIManager Instance { get; private set; }
 
-    [field: SerializeField, SerializedDictionary("UIType", "UI")] public SerializedDictionary<UIConstants.NonPooledUITypes, GameObject> UIPrefabs { get; private set; }
+    [field: SerializeField, SerializedDictionary("UIType", "UI")] private SerializedDictionary<UIConstants.NonPooledUITypes, GameObject> UIPrefabs { get;  set; }
 
     public Stack<GameObject> AllActiveStepUIs { get; set; } = new();
     public Dictionary<UIConstants.NonPooledUITypes, GameObject> AllActiveUIs { get; set; } = new();
@@ -19,7 +19,17 @@ public class UIManager : MonoBehaviour
         Instance = this;
         DontDestroyOnLoad(gameObject);
     }
-    
+
+    public GameObject SpawnUI(UIConstants.NonPooledUITypes type)
+    {
+        if (AllActiveUIs.ContainsKey(type))
+        {
+            return null;
+        }
+        
+        return Instantiate(UIPrefabs[type]);
+    }
+
     public void CloseAllUI()
     {
         while (AllActiveStepUIs.TryPop(out GameObject element))

@@ -51,14 +51,11 @@ public class WorldButton : MonoBehaviour, IWorldUIObject
         raycastEvt = evt;
         renderer.material = icons[index];
     }
+    
+    public void Init(Action evt)
+    {
+        raycastEvt = evt;
+    }
 
     public void UpdateStatus(bool isActive) => col.enabled = renderer.enabled = isActive;
-    
-    public void Reset()
-    {
-        raycastEvt = null;
-        
-        col.enabled = false;
-        renderer.enabled = false;
-    }
 }

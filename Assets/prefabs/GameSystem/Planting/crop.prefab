@@ -176,6 +176,18 @@ PrefabInstance:
       value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 3652634369657364030, guid: 22a978ddf166bfd4cb633df705c14947, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3652634369657364030, guid: 22a978ddf166bfd4cb633df705c14947, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3652634369657364030, guid: 22a978ddf166bfd4cb633df705c14947, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3652634369657364030, guid: 22a978ddf166bfd4cb633df705c14947, type: 3}
       propertyPath: m_LocalRotation.w
       value: 0.7071068
       objectReference: {fileID: 0}
@@ -184,8 +196,20 @@ PrefabInstance:
       value: -0.7071068
       objectReference: {fileID: 0}
     - target: {fileID: 3652634369657364030, guid: 22a978ddf166bfd4cb633df705c14947, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3652634369657364030, guid: 22a978ddf166bfd4cb633df705c14947, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3652634369657364030, guid: 22a978ddf166bfd4cb633df705c14947, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
       value: -90
+      objectReference: {fileID: 0}
+    - target: {fileID: 3652634369657364030, guid: 22a978ddf166bfd4cb633df705c14947, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3652634369657364030, guid: 22a978ddf166bfd4cb633df705c14947, type: 3}
       propertyPath: m_ConstrainProportionsScale
@@ -203,6 +227,18 @@ PrefabInstance:
       propertyPath: 'Icons.Array.data[1]'
       value: 
       objectReference: {fileID: 2100000, guid: 12ab6d98f1ec5064a8d8b68311d9e080, type: 2}
+    - target: {fileID: 8971417950819137508, guid: 22a978ddf166bfd4cb633df705c14947, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 0.1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8971417950819137508, guid: 22a978ddf166bfd4cb633df705c14947, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 0.1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8971417950819137508, guid: 22a978ddf166bfd4cb633df705c14947, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 0.1
+      objectReference: {fileID: 0}
     - target: {fileID: 8971417950819137508, guid: 22a978ddf166bfd4cb633df705c14947, type: 3}
       propertyPath: m_LocalRotation.w
       value: 1
@@ -249,11 +285,15 @@ PrefabInstance:
       objectReference: {fileID: 2100000, guid: 12ab6d98f1ec5064a8d8b68311d9e080, type: 2}
     - target: {fileID: 9211574221938934956, guid: 22a978ddf166bfd4cb633df705c14947, type: 3}
       propertyPath: icons._serializedList.Array.size
-      value: 2
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 9211574221938934956, guid: 22a978ddf166bfd4cb633df705c14947, type: 3}
       propertyPath: icons._serializedList.Array.data[1].Key
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 9211574221938934956, guid: 22a978ddf166bfd4cb633df705c14947, type: 3}
+      propertyPath: icons._serializedList.Array.data[2].Key
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 9211574221938934956, guid: 22a978ddf166bfd4cb633df705c14947, type: 3}
       propertyPath: icons._serializedList.Array.data[0].Value
@@ -261,6 +301,10 @@ PrefabInstance:
       objectReference: {fileID: 2100000, guid: fc1a00bdacabda841873315ed0ebe62b, type: 2}
     - target: {fileID: 9211574221938934956, guid: 22a978ddf166bfd4cb633df705c14947, type: 3}
       propertyPath: icons._serializedList.Array.data[1].Value
+      value: 
+      objectReference: {fileID: 2100000, guid: e5dab605119c2164cb857d9d6ca1c399, type: 2}
+    - target: {fileID: 9211574221938934956, guid: 22a978ddf166bfd4cb633df705c14947, type: 3}
+      propertyPath: icons._serializedList.Array.data[2].Value
       value: 
       objectReference: {fileID: 2100000, guid: 12ab6d98f1ec5064a8d8b68311d9e080, type: 2}
     m_RemovedComponents: []

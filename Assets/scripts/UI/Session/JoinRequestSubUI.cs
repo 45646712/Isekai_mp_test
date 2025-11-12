@@ -35,7 +35,7 @@ public class JoinRequestSubUI : MonoBehaviour , IResponse
         
         UIButton.onClick.AddListener(() =>
         {
-            JoinRequestUI ui = Instantiate(UIManager.Instance.UIPrefabs[UIConstants.NonPooledUITypes.JoinRequestMenu]).GetComponent<JoinRequestUI>();
+            JoinRequestUI ui = UIManager.Instance.SpawnUI(UIConstants.NonPooledUITypes.JoinRequestMenu).GetComponent<JoinRequestUI>();
             ui.Init(evt);
             ui.Init(StoredRequests);
 

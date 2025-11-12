@@ -6,7 +6,8 @@ public enum ObjectPoolType
     SessionDetail,
     RequestDetail,
     CropIcon,
-    CropCostIcon
+    CropCostIcon,
+    BatchMapIcon
 }
 
 public class PoolManager : MonoBehaviour
@@ -34,6 +35,13 @@ public class PoolManager : MonoBehaviour
         return obj;
     }
     
-    public void Release(ObjectPoolType poolType, GameObject obj) => AllObjectPools[poolType].Instance.Release(obj);
+    public void Release(ObjectPoolType poolType, GameObject obj)
+    {
+        if (obj.activeInHierarchy)
+        {
+            AllObjectPools[poolType].Instance.Release(obj);
+        }
+    }
+
     public void Clear(ObjectPoolType poolType) => AllObjectPools[poolType].Instance.Clear();
 }

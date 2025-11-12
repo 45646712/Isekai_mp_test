@@ -5,6 +5,7 @@ using Constant;
 using Cysharp.Threading.Tasks;
 using Models;
 using Newtonsoft.Json;
+using Unity.Services.CloudCode;
 using UnityEngine;
 
 using ItemType = Constant.ItemConstants.ItemType;
@@ -35,49 +36,88 @@ public class InventoryManager : MonoBehaviour
         LoadData().Forget(); // need ~3 second buffer
     }
 
-    public async UniTask UpdateItem(ItemType type, int baseDataID, int amount) //expose
+    public async UniTask<bool> UpdateItem(ItemType type, int baseDataID, int amount, ItemConstants.ItemUpdateOperation ItemOp)
     {
         List<ItemData> items = AllItems[type];
 
         ItemSO baseData = AllItemBaseData.First(x => x.ID == baseDataID);
         int index = items.FindIndex(x => x.ID == baseData.ID);
-
+        
         if (index < 0)
         {
-            items.Add(new(baseData, amount));
+            items.Add(new(baseData, 0));
+            index = items.FindIndex(x => x.ID == baseData.ID);
         }
-        else
+        
+        ItemData instance = items[index];
+        
+        switch (ItemOp)
         {
-            ItemData temp = items[index];
-            temp.Amount += amount;
-            items[index] = temp;
-        }
+            case ItemConstants.ItemUpdateOperation.Add:
+                instance.Amount += amount;
+                break;
+            case ItemConstants.ItemUpdateOperation.Subtract:
+                if (items[index].Amount < amount)
+                {
+                    Debug.LogError(LoggerConstants.InsufficientResource_Item);
+                    return false;
+                }
 
+                instance.Amount -= amount;
+
+                break;
+        }
+        
+        items[index] = instance;
+        
         await SaveData();
+        
+        return true;
     }
 
-    public async UniTask UpdateItem(ItemType type, List<(int, int)> indexes) //expose
+    public async UniTask<bool> UpdateItem(ItemType type, List<(int, int)> indexes, ItemConstants.ItemUpdateOperation ItemOp)
     {
         List<ItemData> items = AllItems[type];
-
+        List<ItemData> instance = items;
+        
         foreach (var (ID, amount) in indexes)
         {
             ItemSO baseData = AllItemBaseData.First(x => x.ID == ID);
-            int index = items.FindIndex(x => x.ID == baseData.ID);
+            int index = instance.FindIndex(x => x.ID == baseData.ID);
 
             if (index < 0)
             {
-                items.Add(new(baseData, amount));
+                instance.Add(new(baseData, 0));
+                index = instance.FindIndex(x => x.ID == baseData.ID);
             }
-            else
+            
+            ItemData element = instance[index];
+            
+            switch (ItemOp)
             {
-                ItemData temp = items[index];
-                temp.Amount += amount;
-                items[index] = temp;
+                case ItemConstants.ItemUpdateOperation.Add:
+                    element.Amount += amount;
+                    instance[index] = element;
+                    break;
+                case ItemConstants.ItemUpdateOperation.Subtract:
+                    if (instance[index].Amount < amount)
+                    {
+                        Debug.LogError(LoggerConstants.InsufficientResource_Item);
+                        return false;
+                    }
+
+                    element.Amount -= amount;
+                    instance[index] = element;
+
+                    break;
             }
         }
 
+        items = instance;
+        
         await SaveData();
+
+        return true;
     }
 
     private async UniTask SaveData()

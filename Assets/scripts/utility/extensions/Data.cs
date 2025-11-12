@@ -1,14 +1,12 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
+using System.Linq;
 using Constant;
 using Cysharp.Threading.Tasks;
-using Models;
-using Newtonsoft.Json;
 using Unity.Services.CloudCode;
 using Unity.Services.CloudSave.Internal.Http;
 using Unity.Services.CloudSave.Models.Data.Player;
-
+using UnityEngine;
 using Access = Constant.PlayerDataConstants.DataAccessibility;
 using PublicData = Constant.PlayerDataConstants.PublicDataType;
 using ProtectedData = Constant.PlayerDataConstants.ProtectedDataType;
@@ -58,15 +56,88 @@ namespace Extensions
             Access.Private => new LoadAllOptions(new ProtectedReadAccessClassOptions()),
             _ => throw new InvalidOperationException()
         };
+
+        public static async UniTask<bool> UpdatePlayerStatData(this PlayerDataManager manager, Dictionary<ItemConstants.ResourceType,int> rewards, ItemConstants.ItemUpdateOperation ItemOp)
+        {
+            try
+            {
+                foreach (var (type, value) in rewards)
+                {
+                    switch (type, ItemOp)
+                    {
+                        case (ItemConstants.ResourceType.Exp, ItemConstants.ItemUpdateOperation.Add):
+                            manager.UpdateData(Access.Public, PublicData.Exp, manager.GetData<int, PublicData>(Access.Public, PublicData.Exp) + value);
+                            break;
+                        case (ItemConstants.ResourceType.Currency_Gold, ItemConstants.ItemUpdateOperation.Add):
+                            manager.UpdateData(Access.Protected, ProtectedData.BalanceGold, manager.GetData<int, ProtectedData>(Access.Protected, ProtectedData.BalanceGold) + value);
+                            break;
+                        case (ItemConstants.ResourceType.Currency_Gold, ItemConstants.ItemUpdateOperation.Subtract):
+                            int ExistingGold = manager.GetData<int, ProtectedData>(Access.Protected, ProtectedData.BalanceGold);
+                            if (ExistingGold < value)
+                            {
+                                Debug.LogError(LoggerConstants.InsufficientResource_Gold);
+                                return false;
+                            }
+
+                            manager.UpdateData(Access.Protected, ProtectedData.BalanceGold, ExistingGold - value);
+                            break;
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                Debug.LogError(e);
+                await manager.LoadAllData();
+                return false;
+            }
+
+            await manager.SaveAllData();
+            return true;
+        }
+
+        public static async UniTask<bool> UpdatePlayerStatData(this PlayerDataManager manager, List<Dictionary<ItemConstants.ResourceType,int>> rewards, ItemConstants.ItemUpdateOperation ItemOp)
+        {
+            try
+            {
+                foreach (var (type, value) in rewards.SelectMany(x=>x))
+                {
+                    switch (type, ItemOp)
+                    {
+                        case (ItemConstants.ResourceType.Exp, ItemConstants.ItemUpdateOperation.Add):
+                            manager.UpdateData(Access.Public, PublicData.Exp, manager.GetData<int, PublicData>(Access.Public, PublicData.Exp) + value);
+                            break;
+                        case (ItemConstants.ResourceType.Currency_Gold, ItemConstants.ItemUpdateOperation.Add):
+                            manager.UpdateData(Access.Protected, ProtectedData.BalanceGold, manager.GetData<int, ProtectedData>(Access.Protected, ProtectedData.BalanceGold) + value);
+                            break;
+                        case (ItemConstants.ResourceType.Currency_Gold, ItemConstants.ItemUpdateOperation.Subtract):
+                            int ExistingGold = manager.GetData<int, ProtectedData>(Access.Protected, ProtectedData.BalanceGold);
+                            if (ExistingGold < value)
+                            {
+                                Debug.LogError(LoggerConstants.InsufficientResource_Gold);
+                                return false;
+                            }
+
+                            manager.UpdateData(Access.Protected, ProtectedData.BalanceGold, ExistingGold - value);
+                            break;
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                Debug.LogError(e);
+                await manager.LoadAllData();
+                return false;
+            }
+
+            await manager.SaveAllData();
+            return true;
+        }
         
         public static async UniTask ValidateBasePlayerData(this PlayerDataManager manager)
         {
-            Dictionary<string, object> storedPublicData = PlayerDataManager.Instance.GetData(Access.Public);
-            Dictionary<string, object> storedProtectedData = PlayerDataManager.Instance.GetData(Access.Protected);
-
             foreach (PublicData element in PlayerDataConstants.GetEnumSet<PublicData>())
             {
-                if (!storedPublicData.TryGetValue(element.ToString(), out object value))
+                if (!PlayerDataManager.Instance.GetData(Access.Public).TryGetValue(element.ToString(), out object value))
                 {
                     switch (element)
                     {
@@ -88,7 +159,7 @@ namespace Extensions
 
             foreach (ProtectedData element in PlayerDataConstants.GetEnumSet<ProtectedData>())
             {
-                if (!storedProtectedData.TryGetValue(element.ToString(), out object value))
+                if (!PlayerDataManager.Instance.GetData(Access.Protected).TryGetValue(element.ToString(), out object value))
                 {
                     switch (element)
                     {

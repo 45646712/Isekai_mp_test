@@ -23,7 +23,7 @@ public class GameData
             throw new Exception($"Failed to save data for playerId {context.PlayerId}. Error: {ex.Message}");
         }
     }
-
+    
     /*[CloudCodeFunction("LoadGameData")]
     public async Task<object> LoadGameData(IExecutionContext context, IGameApiClient gameApiClient, string key)
     {

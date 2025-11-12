@@ -12,6 +12,13 @@ namespace Constant
             Building //ID 10001~
         }
 
+        public enum ItemUpdateOperation
+        {
+            Update,
+            Add,
+            Subtract
+        }
+        
         public enum ItemCategory
         {
             Materials = 1,
@@ -26,7 +33,7 @@ namespace Constant
         {
             Exp,
             Item,
-            Currency,
+            Currency_Gold,
             Time,
         }
     }

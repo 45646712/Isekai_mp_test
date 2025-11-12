@@ -4,6 +4,7 @@ using UnityEngine;
 using Constant;
 using Extensions;
 using Unity.Cinemachine;
+using UnityEngine.InputSystem.EnhancedTouch;
 
 public class InputManager : MonoBehaviour
 {
@@ -17,16 +18,18 @@ public class InputManager : MonoBehaviour
     private void Awake()
     {
         Instance = this;
+
+        EnhancedTouchSupport.Enable();
         
         playerInput = new PlayerInput();
         playerInput.Enable();
 
         playerInput.UI.Click.performed += this.GenerateRay; //generate raycast each time when clicking screen
     }
-    
+
     public void EnableControl()
     {
-        GameObject obj = Instantiate(UIManager.Instance.UIPrefabs[UIConstants.NonPooledUITypes.ControlOverlay]);
+        GameObject obj = UIManager.Instance.SpawnUI(UIConstants.NonPooledUITypes.ControlOverlay);
         UIManager.Instance.AllActiveUIs.Add(UIConstants.NonPooledUITypes.ControlOverlay, obj);
         
         Canvas inputCanvas = obj.GetComponent<Canvas>();
@@ -42,6 +45,8 @@ public class InputManager : MonoBehaviour
     
     private void OnDestroy()
     {
+        EnhancedTouchSupport.Disable();
+        
         playerInput.Disable();
         playerInput.Dispose();
     }

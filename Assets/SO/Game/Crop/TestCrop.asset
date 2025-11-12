@@ -21,7 +21,7 @@ MonoBehaviour:
     - Key: 2
       Value: 5
     - Key: 3
-      Value: 120
+      Value: 10
   <Rewards>k__BackingField:
     _serializedList:
     - Key: 0

@@ -41,6 +41,7 @@ public class PlayerDataManager : MonoBehaviour
     
     //for collection, parse in or set as json string
     public void UpdateData<T1, T2>(Access access, T2 type, T1 value) where T2 : Enum => PlayerData[access][type.ToString()] = value;
+    public void UpdateData(Access access, Dictionary<string, object> data) => PlayerData[access] = data;
     public async UniTask UpdateAndSaveData<T1, T2>(Access access, T2 type, T1 value) where T2 : Enum
     {
         PlayerData[access][type.ToString()] = value;

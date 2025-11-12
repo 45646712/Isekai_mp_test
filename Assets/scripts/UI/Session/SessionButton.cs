@@ -7,6 +7,6 @@ public class SessionButton : MonoBehaviour
 {
     private void Awake()
     {
-        GetComponent<Button>().onClick.AddListener(() => { Instantiate(UIManager.Instance.UIPrefabs[UIConstants.NonPooledUITypes.SessionList]); });
+        GetComponent<Button>().onClick.AddListener(() => { UIManager.Instance.SpawnUI(UIConstants.NonPooledUITypes.SessionList); }); 
     }
 }

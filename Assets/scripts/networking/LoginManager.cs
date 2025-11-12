@@ -1,22 +1,13 @@
 using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
-using Constant;
 using Cysharp.Threading.Tasks;
-using Extensions;
-using Newtonsoft.Json;
-using Unity.Cinemachine;
 using UnityEngine;
 using Unity.Netcode;
 using Unity.Services.Core;
 using Unity.Services.Authentication;
-using Unity.Services.CloudCode;
 using Unity.Services.CloudSave;
-using Unity.Services.CloudSave.Models;
-using Unity.Services.CloudSave.Models.Data.Player;
 //using GooglePlayGames;
 using UnityEngine.SceneManagement;
-using SaveOptions = Unity.Services.CloudSave.Models.Data.Player.SaveOptions;
 
 public class LoginManager : NetworkBehaviour
 {

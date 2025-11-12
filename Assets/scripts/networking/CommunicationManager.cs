@@ -56,7 +56,7 @@ public class CommunicationManager : NetworkBehaviour
                     break;
                 }
                 
-                Instantiate(UIManager.Instance.UIPrefabs[UIConstants.NonPooledUITypes.JoinRequestSubMenu]).GetComponent<JoinRequestSubUI>().Init(evt);
+                UIManager.Instance.SpawnUI(UIConstants.NonPooledUITypes.JoinRequestSubMenu).GetComponent<JoinRequestSubUI>().Init(evt);
                 break;
             case CommunicationConstants.MessageType.JoinDenied:
                 if (isJoinAccessRestricted)

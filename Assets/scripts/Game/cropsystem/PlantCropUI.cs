@@ -33,35 +33,28 @@ public class PlantCropUI : MonoBehaviour , IGeneric
     [SerializeField] private Button CancelButton;
     [SerializeField] public Button ConfirmButton;
 
-    public CropSlot CurrentSelectedSlot { get; set; }
+    private List<CropCategoryIcon> activeDetailIcons = new();
+    
+    public int SlotID { get; set; }
 
+    private int currentDetailIndex;
     private Category currentCategory;
     private Category maxCategory;
-    
-    private int CurrentSelectedCropID;
-    
+
     private void Awake()
     {
         maxCategory = UniversalUtility.GetEnumMaxIndex(currentCategory);
 
         previousCategory.onClick.AddListener(() =>
         {
-            if (currentCategory < 0) //safeguard
-            {
-                currentCategory = 0;
-                return;
-            }
+            if (currentCategory < 0) { return; } //safeguard
 
             currentCategory -= 1;
             ShowCategory(currentCategory);
         });
         nextCategory.onClick.AddListener(() =>
         {
-            if (currentCategory >= maxCategory) //safeguard
-            {
-                currentCategory = maxCategory;
-                return; 
-            }
+            if (currentCategory >= maxCategory) { return; } //safeguard
 
             currentCategory += 1;
             ShowCategory(currentCategory);
@@ -73,20 +66,25 @@ public class PlantCropUI : MonoBehaviour , IGeneric
         RegisterUI();
 
         ShowCategory(0);
-        InitCropDetail(CropManager.Instance.AllCropBaseData.First());
     }
 
     private void ShowCategory(Category category)
     {
+        currentDetailIndex = 0;
+        activeDetailIcons.Clear();
+        
         foreach (Transform element in cropIconAnchor.transform)
         {
             if (!element.gameObject.activeInHierarchy)
             {
                 continue;
             }
-            
+
             PoolManager.Instance.Release(ObjectPoolType.CropIcon, element.gameObject);
         }
+
+        previousCropDetail.onClick.RemoveAllListeners();
+        nextCropDetail.onClick.RemoveAllListeners();
         
         previousCategory.GetComponent<Image>().enabled = category != 0;
         nextCategory.GetComponent<Image>().enabled = category != maxCategory;
@@ -95,11 +93,37 @@ public class PlantCropUI : MonoBehaviour , IGeneric
 
         foreach (CropSO element in CropManager.Instance.AllCropBaseData.Where(x => category == 0 ? x : x.Category == category))
         {
-            PoolManager.Instance.Get(ObjectPoolType.CropIcon, cropIconAnchor).GetComponent<CropCategoryIcon>().Init(element.Icon, () => { InitCropDetail(element); });
+            CropCategoryIcon icon = PoolManager.Instance.Get(ObjectPoolType.CropIcon, cropIconAnchor).GetComponent<CropCategoryIcon>();
+            activeDetailIcons.Add(icon);
+            icon.Init(element, () =>
+            {
+                currentDetailIndex = activeDetailIcons.IndexOf(icon);
+                ShowCropDetail(element);
+            });
+        }
+        
+        previousCropDetail.onClick.AddListener(() =>
+        {
+            if (currentDetailIndex < 1) { return; } //safeguard
+            
+            currentDetailIndex -= 1;
+            ShowCropDetail(activeDetailIcons[currentDetailIndex].baseData);
+        });
+        nextCropDetail.onClick.AddListener(() =>
+        {
+            if (currentDetailIndex >= activeDetailIcons.Count - 1) { return; } //safeguard
+
+            currentDetailIndex += 1;
+            ShowCropDetail(activeDetailIcons[currentDetailIndex].baseData);
+        });
+        
+        if (activeDetailIcons.Count > 0)
+        {
+            ShowCropDetail(activeDetailIcons[currentDetailIndex].baseData);
         }
     }
 
-    private void InitCropDetail(CropSO data)
+    private void ShowCropDetail(CropSO data)
     {
         foreach (Transform element in cropCostIconAnchor.transform)
         {
@@ -113,7 +137,8 @@ public class PlantCropUI : MonoBehaviour , IGeneric
         
         detailButton.onClick.RemoveAllListeners();
 
-        CurrentSelectedCropID = data.ID;
+        previousCropDetail.GetComponent<Image>().enabled = currentDetailIndex > 0;
+        nextCropDetail.GetComponent<Image>().enabled = currentDetailIndex < activeDetailIcons.Count - 1;
 
         displayBackground.sprite = data.DetailBg;
         displayImage.sprite = data.DetailImage;
@@ -124,10 +149,11 @@ public class PlantCropUI : MonoBehaviour , IGeneric
             PoolManager.Instance.Get(ObjectPoolType.CropCostIcon, cropCostIconAnchor).GetComponent<CropCostIcon>().Init(type, value);
         }
         
-        detailButton.onClick.AddListener(() => { }); // show detail -> basedata.description
+        detailButton.onClick.AddListener(() => { UIManager.Instance.SpawnUI(UIConstants.NonPooledUITypes.CropDetailUI).GetComponent<CropDetailUI>().Init(data.Name, data.Description); }); 
+        
         ConfirmButton.onClick.AddListener(() =>
         {
-            CropManager.Instance.Plant(CurrentSelectedSlot, data).Forget();
+            CropManager.Instance.Plant(SlotID, data).Forget();
             Destroy();
         });
     }
@@ -139,6 +165,7 @@ public class PlantCropUI : MonoBehaviour , IGeneric
 
     private void OnDestroy()
     {
+        PoolManager.Instance.Clear(ObjectPoolType.CropIcon);
         UnregisterUI();
     }
 }

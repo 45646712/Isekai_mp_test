@@ -338,26 +338,6 @@ PrefabInstance:
       propertyPath: GlobalObjectIdHash
       value: 2370767504
       objectReference: {fileID: 0}
-    - target: {fileID: 157506967561416932, guid: 80fdcec8f24c6234fb1bce2b592be205, type: 3}
-      propertyPath: SceneMigrationSynchronization
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 157506967561416932, guid: 80fdcec8f24c6234fb1bce2b592be205, type: 3}
-      propertyPath: InScenePlacedSourceGlobalObjectIdHash
-      value: 2311351486
-      objectReference: {fileID: 0}
-    - target: {fileID: 1589599443928738444, guid: 80fdcec8f24c6234fb1bce2b592be205, type: 3}
-      propertyPath: m_LocalScale.x
-      value: 0.90000004
-      objectReference: {fileID: 0}
-    - target: {fileID: 1589599443928738444, guid: 80fdcec8f24c6234fb1bce2b592be205, type: 3}
-      propertyPath: m_LocalScale.y
-      value: 0.020000001
-      objectReference: {fileID: 0}
-    - target: {fileID: 1589599443928738444, guid: 80fdcec8f24c6234fb1bce2b592be205, type: 3}
-      propertyPath: m_LocalScale.z
-      value: 1.3000003
-      objectReference: {fileID: 0}
     - target: {fileID: 1589599443928738444, guid: 80fdcec8f24c6234fb1bce2b592be205, type: 3}
       propertyPath: m_LocalPosition.x
       value: -1.8000001
@@ -398,24 +378,11 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 4072647521541633710, guid: 80fdcec8f24c6234fb1bce2b592be205, type: 3}
-      propertyPath: m_IsTrigger
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 6893696150183375044, guid: 80fdcec8f24c6234fb1bce2b592be205, type: 3}
       propertyPath: m_Name
       value: field1
       objectReference: {fileID: 0}
-    - target: {fileID: 6893696150183375044, guid: 80fdcec8f24c6234fb1bce2b592be205, type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 7021104550191820576, guid: 80fdcec8f24c6234fb1bce2b592be205, type: 3}
-      propertyPath: Anchor
-      value: 
-      objectReference: {fileID: 0}
-    m_RemovedComponents:
-    - {fileID: 96184580293428848, guid: 80fdcec8f24c6234fb1bce2b592be205, type: 3}
+    m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []

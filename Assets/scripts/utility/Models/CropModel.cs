@@ -12,6 +12,7 @@ namespace Models
     {
         public struct CropData
         {
+            // basic data
             public int ID;
             public string Name;
             public ItemConstants.ItemCategory Category;
@@ -20,7 +21,7 @@ namespace Models
             public Dictionary<ItemConstants.ResourceType, int> Rewards;
             public Dictionary<CropConstants.CropStatus, Mesh> Appearance;
             public Dictionary<CropConstants.CropStatus, Material[]> Material;
-
+            
             // standalone indication
             public CropConstants.CropStatus Status;
             public DateTimeOffset MatureTime;
@@ -35,7 +36,7 @@ namespace Models
                 Rewards = baseData.Rewards;
                 Appearance = baseData.Appearance;
                 Material = baseData.Material;
-                
+
                 Status = status;
                 MatureTime = matureTime;
             }

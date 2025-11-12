@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Constant;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
@@ -10,12 +11,15 @@ public class CropSlot : MonoBehaviour
     [SerializeField] private WorldButton InteractButton;
     
     public CropModel.CropData data { get; private set; }
-
     public bool isOccupied { get; private set; }
 
+    private int slotID;
+    
     private void Start()
     {
         GetComponent<BoxCollider>().enabled = SessionManager.Instance.CurrentSession.IsHost;
+        
+        slotID = CropManager.Instance.AllCrops.IndexOf(this);
         
         SetInteractButton();
     }
@@ -23,7 +27,7 @@ public class CropSlot : MonoBehaviour
     public void Init(CropSO baseData, DateTimeOffset matureTime, CropConstants.CropStatus status = CropConstants.CropStatus.Null)
     {
         data = new(baseData, matureTime, status);
-        
+
         GetComponent<MeshFilter>().mesh = data.Appearance[status];
         
         if (data.Material.Count != 0)
@@ -41,8 +45,9 @@ public class CropSlot : MonoBehaviour
         data = new CropModel.CropData(CropConstants.CropStatus.Null);
         
         GetComponent<MeshFilter>().mesh = null;
-        GetComponent<MeshRenderer>().materials = Array.Empty<Material>();
 
+        SetInteractButton();
+        
         isOccupied = false;
     }
 
@@ -51,23 +56,24 @@ public class CropSlot : MonoBehaviour
         switch (data.Status)
         {
             case CropConstants.CropStatus.Null:
-                InteractButton.Init(0, () =>
-                {
-                    if (!UIManager.Instance.AllActiveUIs.ContainsKey(UIConstants.NonPooledUITypes.PlantCropUI))
-                    {
-                        Instantiate(UIManager.Instance.UIPrefabs[UIConstants.NonPooledUITypes.PlantCropUI]).GetComponent<PlantCropUI>().CurrentSelectedSlot = this;
-                    }
-                });
+                InteractButton.Init((int)data.Status, () => { UIManager.Instance.SpawnUI(UIConstants.NonPooledUITypes.PlantCropUI).GetComponent<PlantCropUI>().SlotID = slotID; });
                 break;
             case CropConstants.CropStatus.Growing:
-                InteractButton.Reset();
+                InteractButton.Init((int)data.Status, () =>
+                {
+                    CropSO baseData = Array.Find(CropManager.Instance.AllCropBaseData, x => x.ID == data.ID);
+                    UIManager.Instance.SpawnUI(UIConstants.NonPooledUITypes.CropGrowingUI).GetComponent<CropGrowingUI>().Init(baseData, slotID, data.MatureTime);
+                });
                 break;
             case CropConstants.CropStatus.Matured:
-                InteractButton.Init(1, () => { CropManager.Instance.Harvest(CropManager.Instance.AllCrops.IndexOf(this)).Forget(); });
+                InteractButton.Init((int)data.Status, () =>
+                {
+                    CropManager.Instance.Harvest(CropManager.Instance.AllCrops.IndexOf(this)).Forget();
+                });
                 break;
         }
     }
     
-    private void OnTriggerEnter(Collider col) => InteractButton.UpdateStatus(col.CompareTag("Player") && data.Status != CropConstants.CropStatus.Growing);
-    private void OnTriggerExit(Collider col) => InteractButton.UpdateStatus(!col.CompareTag("Player") || data.Status == CropConstants.CropStatus.Growing);
+    private void OnTriggerEnter(Collider col) => InteractButton.UpdateStatus(col.CompareTag("Player"));
+    private void OnTriggerExit(Collider col) => InteractButton.UpdateStatus(!col.CompareTag("Player"));
 }

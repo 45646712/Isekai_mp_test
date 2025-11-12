@@ -9,11 +9,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b58a3bc647e70774b8c7225eb3b51e7e, type: 3}
-  m_Name: UnityPlayerAccountSettings
+  m_Script: {fileID: 11500000, guid: 14069d842fc0c674d8ca28780a3d60e0, type: 3}
+  m_Name: poolobj_BatchMapIcon
   m_EditorClassIdentifier: 
-  clientId: 
-  scopeMask: 7
-  useCustomDeepLinkUri: 0
-  customScheme: 
-  customHost: 
+  <Prefab>k__BackingField: {fileID: 6208733994019082125, guid: b3ef1b5b56054f84eabbe5dc6075ffd3, type: 3}
+  <DefaultPoolSize>k__BackingField: 60
+  <MaxPoolSize>k__BackingField: 61
