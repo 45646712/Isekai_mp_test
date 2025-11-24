@@ -1,13 +1,14 @@
 using System;
+using System.Collections.Generic;
 using Constant;
+using Cysharp.Threading.Tasks;
 using Models;
+using Extensions;
 using Newtonsoft.Json;
 using Unity.Services.Multiplayer;
 
-using Access = Constant.PlayerDataConstants.DataAccessibility;
+using Access = Unity.Services.CloudCode.GeneratedBindings.Data.DataConstants_DataAccessibility;
 using PublicData = Constant.PlayerDataConstants.PublicDataType;
-using ProtectedData = Constant.PlayerDataConstants.ProtectedDataType;
-using PrivateData = Constant.PlayerDataConstants.PrivateDataType;
 
 namespace Extensions
 {
@@ -115,11 +116,20 @@ namespace Extensions
     
     static class SessionData
     {
-        public static void UpdateSessionHostInfo(this SessionManager manager)
+        public static async UniTask UpdateSessionHostInfo(this SessionManager manager)
         {
-            Int64 userID = PlayerDataManager.Instance.GetData<Int64, PublicData>(Access.Public, PublicData.UserID);
-            byte playerLevel = PlayerDataManager.Instance.GetData<byte, PublicData>(Access.Public, PublicData.Lv);
-            string playerName = PlayerDataManager.Instance.GetData<string, PublicData>(Access.Public, PublicData.Name);
+            List<string> targetKeys = new()
+            {
+                nameof(PublicData.UserID),
+                nameof(PublicData.Lv),
+                nameof(PublicData.Name)
+            };
+
+            Dictionary<string, object> data = await CloudCodeManager.Instance.LoadMultiPlayerData(Access.Public, targetKeys);
+
+            long userID = (long)data[nameof(PublicData.UserID)];
+            byte playerLevel = (byte)data[nameof(PublicData.Lv)];
+            string playerName = (string)data[nameof(PublicData.Name)];
 
             SessionModel.SessionHostInfo hostInfo = new SessionModel.SessionHostInfo(userID, playerLevel, playerName);
             string jsonSource = JsonConvert.SerializeObject(hostInfo);
@@ -129,16 +139,25 @@ namespace Extensions
             if (manager.CurrentSession is { IsHost: true })
             {
                 manager.CurrentSession.AsHost().SetProperty(SessionConstants.PropertyKeys.SessionHostInfo.ToString(), new SessionProperty(jsonSource));
-                manager.CurrentSession.AsHost().SavePropertiesAsync();
+                await manager.CurrentSession.AsHost().SavePropertiesAsync();
             }
         }
         
-        public static void UpdateSessionPlayerInfo(this SessionManager manager)
+        public static async UniTask UpdateSessionPlayerInfo(this SessionManager manager)
         {
-            Int64 userID = PlayerDataManager.Instance.GetData<Int64, PublicData>(Access.Public, PublicData.UserID);
-            byte playerLevel = PlayerDataManager.Instance.GetData<byte, PublicData>(Access.Public, PublicData.Lv);
-            string playerName = PlayerDataManager.Instance.GetData<string, PublicData>(Access.Public, PublicData.Name);
+            List<string> targetKeys = new()
+            {
+                nameof(PublicData.UserID),
+                nameof(PublicData.Lv),
+                nameof(PublicData.Name)
+            };
 
+            Dictionary<string, object> data = await CloudCodeManager.Instance.LoadMultiPlayerData(Access.Public, targetKeys);
+
+            long userID = (long)data[nameof(PublicData.UserID)];
+            byte playerLevel = (byte)data[nameof(PublicData.Lv)];
+            string playerName = (string)data[nameof(PublicData.Name)];
+            
             SessionModel.SessionPlayerInfo clientInfo = new SessionModel.SessionPlayerInfo(userID, playerLevel, playerName);
             string jsonSource = JsonConvert.SerializeObject(clientInfo);
 

@@ -3,47 +3,58 @@ using System.Collections.Generic;
 using Constant;
 using Cysharp.Threading.Tasks;
 using Extensions;
+using Newtonsoft.Json;
 using Unity.Services.CloudCode;
+using Unity.Services.CloudCode.GeneratedBindings.Data;
 using Unity.Services.CloudSave;
 using UnityEngine;
 
 public class GameDataManager : MonoBehaviour
 {
-    public static GameDataManager Instance;
+    public static GameDataManager instance;
 
-    private Dictionary<string, object> gameData { get; } = new();
-    
+    [SerializeField] private CropSO testso;
+
     private void Awake()
     {
-        Instance = this;
+        instance = this;
     }
-    
-    //for collection, get as string and then deserialize using json
-    public T GetGameData<T>(GameDataConstants.DataType type) => (T)gameData[type.ToString()];
 
-    //for collection, set as serialized json string
-    public void SetGameData<T>(GameDataConstants.DataType type, T value) => gameData[type.ToString()] = value;
-    
-    public async UniTask SetAndSaveGameData<T>(GameDataConstants.DataType type, T value)
-    { 
-        gameData[type.ToString()] = value;
-        await SaveAllData();
-    }
-    
-    public async UniTask SaveAllData()
+    public async UniTask testcall()
     {
-        await CloudCodeService.Instance.CallModuleEndpointAsync("Data", "GenerateUserID");
-        //await CloudSaveService.Instance.Data.Player.SaveAsync(publicData, new SaveOptions(new PublicWriteAccessClassOptions()));
-        //save using cloud code call
+        await CloudCodeManager.Instance.SaveGameData(DataConstants_GameDataType.Crop, $"{nameof(DataConstants_GameDataType.Crop)}_{testso.ID}", JsonConvert.SerializeObject(new Crop(testso)));
     }
+}
 
-    public async UniTask LoadAllData()
+public struct Crop // game data
+{
+    // general data
+    public int ID;
+    public string Name;
+    public ItemConstants.ItemCategory Category;
+    public string Description;
+    public Dictionary<ItemConstants.ResourceType, int> Costs; //time will be in seconds 
+    public Dictionary<ItemConstants.ResourceType, int> Rewards;
+    public Dictionary<CropConstants.CropStatus, string> Appearance; // mesh guid as string
+    public Dictionary<CropConstants.CropStatus, string[]> Material; // material guids as string array
+
+    //PlantCropUI use only
+    public string Icon; // sprite guid 
+    public string DetailBg; // sprite guid 
+    public string DetailImage; // sprite guid 
+    
+    public Crop(CropSO baseData)
     {
-        gameData.Clear();
-
-        foreach (var (key, value) in await CloudSaveService.Instance.Data.Custom.LoadAsync("",GameDataConstants.Keys))
-        {
-            gameData[key] = this.DeserializeData(key, value.Value);
-        }
+        ID = baseData.ID;
+        Name = baseData.Name;
+        Category = baseData.Category;
+        Description = baseData.Description;
+        Costs = baseData.Costs;
+        Rewards = baseData.Rewards;
+        Appearance = new() { { CropConstants.CropStatus.Growing, "test" } };
+        Material = new() { { CropConstants.CropStatus.Growing, new[] { "test1", "test2" } } };
+        Icon = "1";
+        DetailBg = "2";
+        DetailImage = "3";
     }
 }

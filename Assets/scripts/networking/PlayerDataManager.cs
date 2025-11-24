@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using System.Threading.Tasks;
 using Constant;
 using Cysharp.Threading.Tasks;
 using Extensions;
@@ -51,24 +52,21 @@ public class PlayerDataManager : MonoBehaviour
             { type.ToString(), value }
         };
 
-        await Player.SaveAsync(data, this.GetSaveOptions(access));
+        await Player.SaveAsync(data, null);
     }
 
     public async UniTask SaveAllData()
     {
-        await Player.SaveAsync(PlayerData[Access.Public], this.GetSaveOptions(Access.Public));
+        await Player.SaveAsync(PlayerData[Access.Public], null);
         await Player.SaveAsync(PlayerData[Access.Protected]);
     }
 
     public async UniTask<T1> LoadData<T1,T2>(Access access, T2 type) where T2 : Enum
     {
-        foreach (var (key, value) in await Player.LoadAsync(PlayerDataConstants.GetKey(type), this.GetLoadOptions(access)))
+        foreach (var (key, value) in await Player.LoadAsync(PlayerDataConstants.GetKey(type),null))
         {
             PlayerData[access][type.ToString()] = access switch
             {
-                Access.Public => this.DeserializeData<PublicData>(key, value.Value),
-                Access.Protected => this.DeserializeData<ProtectedData>(key, value.Value),
-                Access.Private => this.DeserializeData<PrivateData>(key, value.Value),
                 _ => null
             };
         }
@@ -80,6 +78,13 @@ public class PlayerDataManager : MonoBehaviour
         
         return (T1)data;
     }
+
+    public async UniTask<bool> UpdatePlayerStatData(Dictionary<ItemConstants.ResourceType, int> val,
+        ItemConstants.ItemUpdateOperation op)
+    {
+        await LoadAllData();
+        return false;
+    }
     
     public async UniTask LoadAllData()
     {
@@ -87,23 +92,7 @@ public class PlayerDataManager : MonoBehaviour
         {
             PlayerData[key].Clear();
         }
-
-        foreach (var (key, value) in await Player.LoadAllAsync(this.GetLoadAllOptions(Access.Public)))
-        {
-            PlayerData[Access.Public][key] = this.DeserializeData<PublicData>(key, value.Value);
-        }
-
-        foreach (var (key, value) in await Player.LoadAllAsync(this.GetLoadAllOptions(Access.Protected)))
-        {
-            PlayerData[Access.Protected][key] = this.DeserializeData<ProtectedData>(key, value.Value);
-        }
-
-        foreach (var (key, value) in await Player.LoadAllAsync(this.GetLoadAllOptions(Access.Private)))
-        {
-            PlayerData[Access.Private][key] = this.DeserializeData<PrivateData>(key, value.Value);
-        }
         
-        await this.ValidateBasePlayerData();
         
         SessionManager.Instance.UpdateSessionHostInfo();
     }

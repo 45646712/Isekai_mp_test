@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 3199752304557237780}
   - component: {fileID: 2286143103535880769}
   - component: {fileID: 6155565917873898921}
-  - component: {fileID: 1507627246418438782}
+  - component: {fileID: 1820879421043620890}
   m_Layer: 5
   m_Name: BatchPlanMap
   m_TagString: Untagged
@@ -129,7 +129,7 @@ MonoBehaviour:
   m_FlexibleWidth: -1
   m_FlexibleHeight: 400
   m_LayoutPriority: 1
---- !u!114 &1507627246418438782
+--- !u!114 &1820879421043620890
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -138,9 +138,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 232320190802705064}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8030dce81f92d4c4e8c67b68deee099d, type: 3}
+  m_Script: {fileID: 11500000, guid: 3e78f273c929d97429d35fc754ff96a2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  target: {fileID: 8372665739650804520}
+  zoomSpeed: 0.7
+  shrinkThreshold: 0.5
+  zoomThreshold: 2
 --- !u!1 &2130970542888789503
 GameObject:
   m_ObjectHideFlags: 0
@@ -743,9 +747,7 @@ MonoBehaviour:
   CancelButton: {fileID: 899990393754698205}
   ConfirmButtonText: {fileID: 1685979592988323792}
   CancelButtonText: {fileID: 5372772612390779437}
-  zoomSpeed: 0.7
-  shrinkThreshold: 0.5
-  zoomThreshold: 2
+  validClickDuration: 1
 --- !u!1 &3851332272995895858
 GameObject:
   m_ObjectHideFlags: 0

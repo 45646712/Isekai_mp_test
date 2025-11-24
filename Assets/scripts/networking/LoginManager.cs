@@ -1,10 +1,15 @@
 using System;
 using System.Collections.Generic;
+using Constant;
 using Cysharp.Threading.Tasks;
+using Extensions;
+using Unity.Mathematics;
 using UnityEngine;
 using Unity.Netcode;
 using Unity.Services.Core;
 using Unity.Services.Authentication;
+using Unity.Services.CloudCode;
+using Unity.Services.CloudCode.GeneratedBindings;
 using Unity.Services.CloudSave;
 //using GooglePlayGames;
 using UnityEngine.SceneManagement;
@@ -31,9 +36,12 @@ public class LoginManager : NetworkBehaviour
     {
         AuthenticationService.Instance.SignedIn += UniTask.Action(async () =>
         {
-            PlayerDataManager.Instance.Player = CloudSaveService.Instance.Data.Player;
+            CloudCodeManager.Instance.Init(); //init modules
             
-            await PlayerDataManager.Instance.LoadAllData();
+            await CloudCodeManager.Instance.ValidateAccountData();
+            await SessionManager.Instance.UpdateSessionHostInfo();
+            await GameDataManager.instance.testcall();
+            return;
             await CommunicationManager.Instance.Init();
             await SessionManager.Instance.StartHost();
             

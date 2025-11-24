@@ -154,8 +154,8 @@ public class CropManager : MonoBehaviour
             List<CropModel.CropData> validSlotData = slotIDs.Select(x => AllCrops[x].data).ToList();
             
             await InventoryManager.Instance.UpdateItem(ItemConstants.ItemType.Crop, validSlotData.Select(x => (x.ID, x.Rewards[ItemConstants.ResourceType.Item])).ToList(), ItemConstants.ItemUpdateOperation.Add);
-            await PlayerDataManager.Instance.UpdatePlayerStatData(validSlotData.Select(x => x.Rewards).ToList(), ItemConstants.ItemUpdateOperation.Add);
-            
+            //await PlayerDataManager.Instance.UpdatePlayerStatData(validSlotData.Select(x => x.Rewards).ToList(), ItemConstants.ItemUpdateOperation.Add);
+
             foreach (int element in slotIDs)
             {
                 AllCrops[element].Reset();

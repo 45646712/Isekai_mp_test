@@ -52,7 +52,7 @@ public class SessionListUI : MonoBehaviour, IRefreshable
         changeNicknameButton.onClick.AddListener(() =>
         {
             PlayerDataManager.Instance.UpdateAndSaveData(Access.Public, PublicData.Name, changeNicknameInputField.text).Forget();
-            SessionManager.Instance.UpdateSessionHostInfo();
+            SessionManager.Instance.UpdateSessionHostInfo().Forget();
         });
     }
 

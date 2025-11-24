@@ -1,39 +1,27 @@
-﻿using System;
-using System.Collections.Generic;
+using System;
+using System.Text.Json;
 using System.Linq;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using Unity.Services.CloudCode.Apis;
 using Unity.Services.CloudCode.Core;
-using Unity.Services.CloudCode.Shared;
 using Unity.Services.CloudSave.Model;
 
-namespace HelloWorld;
+using static Data.DataConstants;
+using static Data.CropModels;
+using static Data.CropConstants;
+
+namespace Data;
 
 public class GameData
 {
-    [CloudCodeFunction("SaveGameData")]
-    public async Task SaveGameData(IExecutionContext context, IGameApiClient gameApiClient, string key, object value)
+    public static async Task SaveGameData(IExecutionContext context, IGameApiClient gameApiClient, GameDataType type, string ID, string data)
     {
-        try
+        SetItemBatchBody body = type switch
         {
-            await gameApiClient.CloudSaveData.SetCustomItemAsync(context, context.AccessToken, context.ProjectId, context.PlayerId, new SetItemBody(key, value));
-        }
-        catch (ApiException ex)
-        {
-            throw new Exception($"Failed to save data for playerId {context.PlayerId}. Error: {ex.Message}");
-        }
+            GameDataType.Crop => new Crop(data).ConvertToGameData()
+        };
+
+        await gameApiClient.CloudSaveData.SetCustomItemBatchAsync(context, context.ServiceToken, context.ProjectId, ID, body);
     }
-    
-    /*[CloudCodeFunction("LoadGameData")]
-    public async Task<object> LoadGameData(IExecutionContext context, IGameApiClient gameApiClient, string key)
-    {
-        try
-        {
-            //var result = await gameApiClient.CloudSaveData.GetItemsAsync(context, context.AccessToken, context.ProjectId, context.PlayerId, new List<string> { key });
-        }
-        catch (ApiException ex)
-        {
-            throw new Exception($"Failed to get data for playerId {context.PlayerId}. Error: {ex.Message}");
-        }
-    }*/
 }

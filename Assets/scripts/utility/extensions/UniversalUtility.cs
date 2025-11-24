@@ -1,12 +1,27 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using UnityEngine;
+
+using PublicData = Constant.PlayerDataConstants.PublicDataType;
+using ProtectedData = Constant.PlayerDataConstants.ProtectedDataType;
 
 namespace Extensions
 {
     internal static class UniversalUtility
     {
+        public static object DeserializeData(string key, string value) => key switch
+        {
+            nameof(PublicData.UserID) => long.Parse(value),
+            nameof(PublicData.Name) => value,
+            nameof(PublicData.Lv) => byte.Parse(value),
+            nameof(PublicData.Exp) => int.Parse(value),
+            nameof(ProtectedData.Inventory) => value,
+            nameof(ProtectedData.BalanceGold) => int.Parse(value),
+            nameof(ProtectedData.CropData) => value,
+            nameof(ProtectedData.UnlockedCrops) => int.Parse(value),
+            _ => throw new InvalidOperationException()
+        };
+
         public static T GetEnumMaxIndex<T>(T EnumType) where T : Enum => Enum.GetValues(typeof(T)).Cast<T>().Max();
 
         public static (int, int) IndexOf2LayerList<T>(List<List<T>> data, T source) =>

@@ -9,7 +9,8 @@ using Utility = Extensions.UniversalUtility;
 
 public class BatchPlanSlot : MonoBehaviour
 {
-    [SerializeField, SerializedDictionary("crop status", "IconColor")] private SerializedDictionary<CropConstants.CropStatus, Color32> IconColor;
+    [SerializeField, SerializedDictionary("crop status", "IconColor")]
+    private SerializedDictionary<CropConstants.CropStatus, Color32> IconColor;
 
     [SerializeField] private Image Background;
     [SerializeField] private TMP_Text slotID;
@@ -17,13 +18,13 @@ public class BatchPlanSlot : MonoBehaviour
     [SerializeField] private TMP_Text cropTimer;
 
     [SerializeField] private float ActivateSize;
-    
+
     public CropSlot storedSlotData { get; private set; }
     public int SID { get; private set; }
-
+    
     private Transform parentAnchor;
     private TimeSpan timeDifference;
-
+    
     public void Init(CropSlot slot , Transform anchor)
     {
         parentAnchor = anchor;

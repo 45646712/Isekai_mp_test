@@ -4,6 +4,7 @@ using UnityEngine;
 using Constant;
 using Extensions;
 using Unity.Cinemachine;
+using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.EnhancedTouch;
 
 public class InputManager : MonoBehaviour

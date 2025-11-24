@@ -37,28 +37,5 @@ namespace Extensions
             
             hit.collider.gameObject.GetComponent<IWorldUIObject>().InvokeRaycastEvt();
         }
-
-        public static float ZoomAction(this InputManager manager)
-        {
-            if (Touch.activeTouches.Count < 2)
-            {
-                return 0; //single input , ignore
-            }
-
-            Touch touch0 = Touch.activeTouches[0];
-            Touch touch1 = Touch.activeTouches[1];
-
-            if (touch0.phase != TouchPhase.Moved && touch1.phase != TouchPhase.Moved)
-            {
-                return 0;
-            }
-
-            if (touch0.history.Count < 1 || touch1.history.Count < 1)
-            {
-                return 0;
-            }
-
-            return Mathf.Clamp(Vector2.Distance(touch0.screenPosition, touch1.screenPosition) - Vector2.Distance(touch0.history[0].screenPosition, touch1.history[0].screenPosition), -1, 1);
-        }
     }
 }

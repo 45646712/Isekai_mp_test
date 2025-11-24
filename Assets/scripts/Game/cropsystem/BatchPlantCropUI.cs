@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Constant;
@@ -21,7 +22,7 @@ public class BatchPlantCropUI : MonoBehaviour, IGeneric
     [SerializeField] private TMP_Text categoryText;
     [SerializeField] private Transform cropIconAnchor;
 
-    [Header("Detail")]
+    [Header("Detail")] 
     [SerializeField] private ScrollRect BatchPlanMap;
     [SerializeField] private Transform BatchPlanMapAnchor;
     [SerializeField] private Transform cropCostIconAnchor;
@@ -34,13 +35,9 @@ public class BatchPlantCropUI : MonoBehaviour, IGeneric
     [SerializeField] private TMP_Text ConfirmButtonText;
     [SerializeField] private TMP_Text CancelButtonText;
 
-    [Header("MapZoomValues")] 
-    [Range(0.5f, 1), SerializeField] private float zoomSpeed;
-    [Range(0.5f, 1), SerializeField] private float shrinkThreshold;
-    [Range(1, 3), SerializeField] private float zoomThreshold;
-
-    private float zoomValue;
-
+    [Header("Utility")]
+    [Range(0, 1), SerializeField] private float validClickDuration;
+    
     private List<List<BatchPlanSlot>> slots { get; } = new();
 
     private Category currentCategory;
@@ -50,7 +47,10 @@ public class BatchPlantCropUI : MonoBehaviour, IGeneric
 
     private BatchPlanSlot previousSelectedGrid;
     private BatchPlanSlot currentSelectedGrid;
-
+    
+    private float validClickTimer;
+    private int validatedClick;
+    
     private BatchPlanSlot CurrentSelectedGrid
     {
         get => currentSelectedGrid;
@@ -60,12 +60,13 @@ public class BatchPlantCropUI : MonoBehaviour, IGeneric
             {
                 previousSelectedGrid = currentSelectedGrid;
             }
-
+            
             currentSelectedGrid = value;
-            Test();
+            Plot();
+            validatedClick = -1;
         }
     }
-
+    
     private UnityAction OnCancel(PlanMode mode, List<int> selectedSlotIDs) => mode switch
     {
         PlanMode.Standby => () => { CropManager.Instance.Harvest(selectedSlotIDs).Forget(); },
@@ -77,7 +78,7 @@ public class BatchPlantCropUI : MonoBehaviour, IGeneric
         PlanMode.Standby => () =>
         {
             List<BatchPlanSlot> validSlots = slots.SelectMany(x => x.Where(y => !y.storedSlotData.isOccupied)).ToList();
-            
+
             if (validSlots.Count == 0)
             {
                 return;
@@ -103,29 +104,38 @@ public class BatchPlantCropUI : MonoBehaviour, IGeneric
         PlanMode.Harvest => () => { CropManager.Instance.Harvest(selectedSlotIDs).Forget(); },
         _ => throw new InvalidOperationException()
     };
-    
+
     private UnityAction OnInitiatedConfirm(PlanMode mode, BatchPlanSlot slot) => mode switch
     {
         PlanMode.Plant => () => { CropManager.Instance.Plant(slot.SID, currentSelectedBaseData).Forget(); },
-        PlanMode.Remove => () => { UIManager.Instance.SpawnUI(UIConstants.NonPooledUITypes.CropGrowingUI).GetComponent<CropGrowingUI>().Init(currentSelectedBaseData, slot.SID, slot.storedSlotData.data.MatureTime); },
+        PlanMode.Remove => () =>
+        {
+            UIManager.Instance.SpawnUI(UIConstants.NonPooledUITypes.CropGrowingUI).GetComponent<CropGrowingUI>()
+                .Init(currentSelectedBaseData, slot.SID, slot.storedSlotData.data.MatureTime);
+        },
         _ => throw new InvalidOperationException()
     };
-    
+
     private void Awake()
     {
         maxCategory = UniversalUtility.GetEnumMaxIndex(currentCategory);
-        zoomValue = (1 - shrinkThreshold) / (zoomThreshold - shrinkThreshold);
-
+        
         previousCategory.onClick.AddListener(() =>
         {
-            if (currentCategory < 0) { return; } //safeguard
+            if (currentCategory < 0)
+            {
+                return;
+            } //safeguard
 
             currentCategory -= 1;
             ShowCategory(currentCategory);
         });
         nextCategory.onClick.AddListener(() =>
         {
-            if (currentCategory >= maxCategory) { return; } //safeguard
+            if (currentCategory >= maxCategory)
+            {
+                return;
+            } //safeguard
 
             currentCategory += 1;
             ShowCategory(currentCategory);
@@ -159,18 +169,31 @@ public class BatchPlantCropUI : MonoBehaviour, IGeneric
                 slot.Init(slots[counter], BatchPlanMapAnchor);
 
                 button.onClick.RemoveAllListeners();
-                button.onClick.AddListener(() => { CurrentSelectedGrid = slot; });
+                button.onClick.AddListener(() => { ValidatePlot(slot); });
 
                 this.slots[i].Add(slot);
 
                 counter++;
             }
         }
-        
+
         InitializePlanMap();
     }
 
-    private void Test()
+    private void ValidatePlot(BatchPlanSlot slot)
+    {
+        if (validatedClick != slot.SID)
+        {
+            validatedClick = slot.SID;
+            validClickTimer = validClickDuration;
+            return;
+        }
+        
+        CurrentSelectedGrid = slot;
+        validClickTimer = 0;
+    }
+    
+    private void Plot()
     {
         CancelButton.onClick.RemoveAllListeners();
         ConfirmButton.onClick.RemoveAllListeners();
@@ -193,7 +216,7 @@ public class BatchPlantCropUI : MonoBehaviour, IGeneric
                 CancelButtonText.text = CropConstants.BatchPlanCancelText[mode];
                 ConfirmButtonText.text = CropConstants.BatchPlanInitConfirmText[mode];
 
-                CancelButton.onClick.AddListener(OnConfirm(mode, null));
+                CancelButton.onClick.AddListener(OnCancel(mode, null));
 
                 if (mode == PlanMode.Harvest)
                 {
@@ -212,16 +235,16 @@ public class BatchPlantCropUI : MonoBehaviour, IGeneric
             default:
                 status = previousSelectedGrid.storedSlotData.data.Status;
                 mode = this.GetPlanMode(status);
-                
-                var g1 = Utility.IndexOf2LayerList(slots, previousSelectedGrid);
-                var g2 = Utility.IndexOf2LayerList(slots, currentSelectedGrid);
 
-                var d1 = (x: Math.Min(g1.Item1, g2.Item1), y: Math.Min(g1.Item2, g2.Item2));
-                var d2 = (x: Math.Max(g1.Item1, g2.Item1), y: Math.Max(g1.Item2, g2.Item2));
+                (int,int) g1 = Utility.IndexOf2LayerList(slots, previousSelectedGrid);
+                (int,int) g2 = Utility.IndexOf2LayerList(slots, currentSelectedGrid);
 
-                for (int x = d1.x; x <= d2.x; x++)
+                (int, int) d1 = (Math.Min(g1.Item1, g2.Item1), Math.Min(g1.Item2, g2.Item2)); //d1.x , d1.y
+                (int, int) d2 = (Math.Max(g1.Item1, g2.Item1), Math.Max(g1.Item2, g2.Item2)); //d2.x , d2,y
+
+                for (int x = d1.Item1; x <= d2.Item1; x++)
                 {
-                    for (int y = d1.y; y <= d2.y; y++)
+                    for (int y = d1.Item2; y <= d2.Item2; y++)
                     {
                         selectedSlots.Add(slots[x][y]);
                     }
@@ -247,26 +270,18 @@ public class BatchPlantCropUI : MonoBehaviour, IGeneric
                 break;
         }
     }
-
+    
     private void Update()
     {
-        float ZoomInputValue = InputManager.Instance.ZoomAction();
-
-        BatchPlanMap.enabled = ZoomInputValue == 0;
-
-        if (ZoomInputValue == 0)
+        //double click checking
+        if (validClickTimer > 0)
         {
-            return;
+            validClickTimer -= Time.deltaTime;
         }
-        
-        zoomValue = ZoomInputValue switch
+        else if (validatedClick != -1 && validClickTimer <= 0)
         {
-            < 0 => Mathf.Clamp01(zoomValue -= Time.deltaTime * zoomSpeed),
-            > 0 => Mathf.Clamp01(zoomValue += Time.deltaTime * zoomSpeed),
-            _ => zoomValue
-        };
-
-        BatchPlanMapAnchor.localScale = Vector3.one * Mathf.Lerp(shrinkThreshold, zoomThreshold, zoomValue);
+            validatedClick = -1;
+        }
     }
 
     private void ShowCategory(Category category)
