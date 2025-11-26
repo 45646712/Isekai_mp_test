@@ -5,17 +5,31 @@ namespace Constant
 {
     public static class CropConstants
     {
+        public enum CropGameData
+        {
+            ID,
+            Name,
+            Category,
+            Description,
+            Costs,
+            Rewards,
+            Appearance,
+            Material,
+            Icon,
+            DetailBg,
+            DetailImage
+        }
+        
         public enum CropStatus
         {
             Null = 0,
             Growing = 1,
             Matured = 2
         }
-
+        
         public enum BatchPlantMode
         {
             Standby, // 0 selection
-            Initiated, // 1 selection
             Plant, //2 selections + first : empty slot
             Remove, //2 selections + first : growing slot
             Harvest //2 selections + first : harvest slot

@@ -1,11 +1,11 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json;
 using Cysharp.Threading.Tasks;
 using Extensions;
 using Unity.Services.CloudCode;
 using Unity.Services.CloudCode.GeneratedBindings;
-using Unity.Services.CloudSave.Internal;
 using UnityEngine;
 
 using GameDataType = Unity.Services.CloudCode.GeneratedBindings.Data.DataConstants_GameDataType;
@@ -46,9 +46,14 @@ public class CloudCodeManager : MonoBehaviour
 
     public async UniTask UpdatePlayerData(Access access, DataOp op, string key, int value) => await PlayerModule.UpdatePlayerData(access, op, key, value);
     public async UniTask UpdateMultiPlayerData(Access access, DataOp op, Dictionary<string, int> data) => await PlayerModule.UpdateMultiPlayerData(access, op, data);
-    
+
+    public async UniTask<T> LoadGameData<T>(GameDataType type, int ID) => JsonSerializer.Deserialize<T>(await GameModule.LoadGameData(type, ID));
+    public async UniTask<List<T>> LoadMultiGameData<T>(GameDataType type)
+    {
+        List<string> result = await GameModule.LoadMultiGameData(type);
+        
+        return result.Select(x => JsonSerializer.Deserialize<T>(x)).ToList();
+    }
+
     public async UniTask ValidateAccountData() => await AccountModule.ValidateAccountData();
-    
-    //dev only functions
-    public async UniTask SaveGameData(GameDataType type, string ID, string data) => await GameModule.SaveGameData(type, ID, data);
 }

@@ -13,28 +13,26 @@ namespace Unity.Services.CloudCode.GeneratedBindings
             k_Service = service;
         }
 
-        public async Task SaveGameData(Data.DataConstants_GameDataType type, string ID, string data)
-        {
-            await k_Service.CallModuleEndpointAsync(
-                "Data",
-                "SaveGameData",
-                new Dictionary<string, object>()
-                {
-                    {"type", type},
-                    {"ID", ID},
-                    {"data", data},
-                });
-        }
-
-        public async Task<string> LoadGameData(Data.DataConstants_DataAccessibility access, string key)
+        public async Task<string> LoadGameData(Data.DataConstants_GameDataType type, int ID)
         {
             return await k_Service.CallModuleEndpointAsync<string>(
                 "Data",
                 "LoadGameData",
                 new Dictionary<string, object>()
                 {
-                    {"access", access},
-                    {"key", key},
+                    {"type", type},
+                    {"ID", ID},
+                });
+        }
+
+        public async Task<List<string>> LoadMultiGameData(Data.DataConstants_GameDataType type)
+        {
+            return await k_Service.CallModuleEndpointAsync<List<string>>(
+                "Data",
+                "LoadMultiGameData",
+                new Dictionary<string, object>()
+                {
+                    {"type", type},
                 });
         }
     }

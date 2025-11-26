@@ -1,6 +1,6 @@
 namespace Data;
 
-public class ItemConstants
+public static class ItemConstants
 {
     public enum ItemType
     {

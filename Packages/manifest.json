@@ -1,5 +1,5 @@
 {
-"scopedRegistries": [
+  "scopedRegistries": [
     {
       "name": "Unity NuGet",
       "url": "https://unitynuget-registry.openupm.com",
@@ -8,7 +8,6 @@
       ]
     }
   ],
-
   "dependencies": {
     "com.unity.2d.sprite": "1.0.0",
     "com.unity.ai.navigation": "2.0.8",
@@ -29,6 +28,8 @@
     "com.unity.timeline": "1.8.7",
     "com.unity.toonshader": "0.11.1-preview",
     "com.unity.visualscripting": "1.9.7",
+    "org.nuget.scriban": "2.1.0",
+    "org.nuget.system.text.json": "10.0.0",
     "com.unity.modules.accessibility": "1.0.0",
     "com.unity.modules.ai": "1.0.0",
     "com.unity.modules.androidjni": "1.0.0",
@@ -60,7 +61,6 @@
     "com.unity.modules.video": "1.0.0",
     "com.unity.modules.vr": "1.0.0",
     "com.unity.modules.wind": "1.0.0",
-    "com.unity.modules.xr": "1.0.0",
-    "org.nuget.scriban": "2.1.0"
+    "com.unity.modules.xr": "1.0.0"
   }
 }

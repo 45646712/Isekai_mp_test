@@ -1,27 +1,34 @@
 using System;
+using System.Collections.Generic;
 using System.Text.Json;
 using System.Linq;
-using System.Text.Json.Serialization;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 using Unity.Services.CloudCode.Apis;
 using Unity.Services.CloudCode.Core;
+using Unity.Services.CloudCode.Shared;
 using Unity.Services.CloudSave.Model;
 
 using static Data.DataConstants;
-using static Data.CropModels;
 using static Data.CropConstants;
+using static Data.ItemConstants;
+using static Data.CropModels;
 
 namespace Data;
 
-public class GameData
-{
-    public static async Task SaveGameData(IExecutionContext context, IGameApiClient gameApiClient, GameDataType type, string ID, string data)
+public static class GameData
+{ 
+    public static async Task<string?> LoadGameData(IExecutionContext context, IGameApiClient gameApiClient, GameDataType type, int ID)
     {
-        SetItemBatchBody body = type switch
-        {
-            GameDataType.Crop => new Crop(data).ConvertToGameData()
-        };
+        ApiResponse<GetItemsResponse> result = await gameApiClient.CloudSaveData.GetCustomItemsAsync(context, context.AccessToken, context.ProjectId, type.ToString());
 
-        await gameApiClient.CloudSaveData.SetCustomItemBatchAsync(context, context.ServiceToken, context.ProjectId, ID, body);
+        return (string?)result.Data.Results.FirstOrDefault(x => x.Key == ID.ToString())?.Value;
+    }
+    
+    public static async Task<List<string>> LoadMultiGameData(IExecutionContext context, IGameApiClient gameApiClient, GameDataType type)
+    {
+        ApiResponse<GetItemsResponse> result = await gameApiClient.CloudSaveData.GetCustomItemsAsync(context, context.AccessToken, context.ProjectId, type.ToString());
+
+        return result.Data.Results.Select(x => (string)x.Value).ToList();
     }
 }

@@ -1,4 +1,6 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
+using System.Text.Json;
 using System.Threading.Tasks;
 using Unity.Services.CloudCode.Apis;
 using Unity.Services.CloudCode.Core;
@@ -10,9 +12,14 @@ namespace Data;
 
 public class GameDataEndpoints
 {
-    [CloudCodeFunction("SaveGameData")]
-    public async Task SaveGameData(IExecutionContext context, IGameApiClient gameApiClient, GameDataType type, string ID, string data) => await GameData.SaveGameData(context, gameApiClient, type, ID, data);
-    
     [CloudCodeFunction("LoadGameData")]
-    public async Task<string?> LoadPlayerData(IExecutionContext context, IGameApiClient gameApiClient, DataConstants.DataAccessibility access, string key) => (string?)await PlayerData.LoadPlayerData(context, gameApiClient, access, key);
+    public async Task<string?> LoadGameData(IExecutionContext context, IGameApiClient gameApiClient, GameDataType type, int ID) => await GameData.LoadGameData(context, gameApiClient, type, ID);
+    
+    [CloudCodeFunction("LoadMultiGameData")]
+    public async Task<List<string>?> LoadMultiGameData(IExecutionContext context, IGameApiClient gameApiClient, GameDataType type)
+    {
+        List<string> result = await GameData.LoadMultiGameData(context, gameApiClient, type);
+
+        return result.Count == 0 ? null : result.Select(x => x).ToList();
+    }
 }

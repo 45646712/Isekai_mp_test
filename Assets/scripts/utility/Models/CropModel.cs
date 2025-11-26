@@ -1,32 +1,51 @@
 using System;
 using System.Collections.Generic;
-using AYellowpaper.SerializedCollections;
-using Constant;
-using Unity.VisualScripting;
+using System.Text.Json.Serialization;
 using UnityEngine;
-using UnityEngine.PlayerLoop;
+using Constant;
+
+using static Constant.ItemConstants;
+using static Constant.CropConstants;
 
 namespace Models
 {
     public static class CropModel
     {
+        public struct Crop
+        {
+            // general data
+            [JsonInclude] public int ID;
+            [JsonInclude] public string Name;
+            [JsonInclude] public ItemCategory Category;
+            [JsonInclude] public string Description;
+            [JsonInclude] public Dictionary<ResourceType, int> Costs; //time will be in seconds 
+            [JsonInclude] public Dictionary<ResourceType, int> Rewards;
+            [JsonInclude] public Dictionary<CropStatus, string> Appearance; // mesh guid as string
+            [JsonInclude] public Dictionary<CropStatus, string[]> Material; // material guids as string array
+
+            //PlantCropUI use only
+            [JsonInclude] public string Icon; // sprite guid 
+            [JsonInclude] public string DetailBg; // sprite guid 
+            [JsonInclude] public string DetailImage; // sprite guid
+        }
+
         public struct CropData
         {
             // basic data
             public int ID;
             public string Name;
-            public ItemConstants.ItemCategory Category;
+            public ItemCategory Category;
             public string Description;
-            public Dictionary<ItemConstants.ResourceType, int> Costs;
-            public Dictionary<ItemConstants.ResourceType, int> Rewards;
-            public Dictionary<CropConstants.CropStatus, Mesh> Appearance;
-            public Dictionary<CropConstants.CropStatus, Material[]> Material;
+            public Dictionary<ResourceType, int> Costs;
+            public Dictionary<ResourceType, int> Rewards;
+            public Dictionary<CropStatus, Mesh> Appearance;
+            public Dictionary<CropStatus, Material[]> Material;
             
             // standalone indication
-            public CropConstants.CropStatus Status;
+            public CropStatus Status;
             public DateTimeOffset MatureTime;
             
-            public CropData(CropSO baseData, DateTimeOffset matureTime, CropConstants.CropStatus status = CropConstants.CropStatus.Growing)
+            public CropData(CropSO baseData, DateTimeOffset matureTime, CropStatus status = CropStatus.Growing)
             {
                 ID = baseData.ID;
                 Name = baseData.Name;
@@ -41,7 +60,7 @@ namespace Models
                 MatureTime = matureTime;
             }
 
-            public CropData(CropConstants.CropStatus status)
+            public CropData(CropStatus status)
             {
                 this = default;
                 Status = status;

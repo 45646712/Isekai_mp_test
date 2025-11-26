@@ -43,7 +43,7 @@ public static class Account
                 updatedPublicData[element] = element switch
                 {
                     nameof(PublicPlayerKeys.UserID) => await GenerateUserID(context, gameApiClient),
-                    nameof(PublicPlayerKeys.Name) => $"User_{await GenerateUserID(context, gameApiClient)}",
+                    nameof(PublicPlayerKeys.Name) => publicData.TryGetValue(nameof(PublicPlayerKeys.UserID), out object? value) ? $"User_{value}" : await GenerateUserID(context, gameApiClient),
                     nameof(PublicPlayerKeys.Lv) => (byte)1,
                     nameof(PublicPlayerKeys.Exp) => 0,
                     _ => throw new InvalidOperationException()

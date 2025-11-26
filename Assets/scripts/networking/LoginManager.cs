@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Constant;
 using Cysharp.Threading.Tasks;
 using Extensions;
+using Models;
 using Unity.Mathematics;
 using UnityEngine;
 using Unity.Netcode;
@@ -10,6 +11,7 @@ using Unity.Services.Core;
 using Unity.Services.Authentication;
 using Unity.Services.CloudCode;
 using Unity.Services.CloudCode.GeneratedBindings;
+using Unity.Services.CloudCode.GeneratedBindings.Data;
 using Unity.Services.CloudSave;
 //using GooglePlayGames;
 using UnityEngine.SceneManagement;
@@ -40,7 +42,10 @@ public class LoginManager : NetworkBehaviour
             
             await CloudCodeManager.Instance.ValidateAccountData();
             await SessionManager.Instance.UpdateSessionHostInfo();
-            await GameDataManager.instance.testcall();
+            CropModel.Crop result1 = await CloudCodeManager.Instance.LoadGameData<CropModel.Crop>(DataConstants_GameDataType.Crop, 4);
+            List<CropModel.Crop> result2 = await CloudCodeManager.Instance.LoadMultiGameData<CropModel.Crop>(DataConstants_GameDataType.Crop);
+            Debug.Log($"{result1.Description}");
+            Debug.Log($"{result2[0].Description} /// {result2[1].Description} /// {result2[2].Description}");
             return;
             await CommunicationManager.Instance.Init();
             await SessionManager.Instance.StartHost();

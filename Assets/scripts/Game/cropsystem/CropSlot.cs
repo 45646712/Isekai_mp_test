@@ -4,13 +4,13 @@ using System.Linq;
 using Constant;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
-using Models;
+using static Models.CropModel;
 
 public class CropSlot : MonoBehaviour
 {
     [SerializeField] private WorldButton InteractButton;
     
-    public CropModel.CropData data { get; private set; }
+    public CropData data { get; private set; }
     public bool isOccupied { get; private set; }
 
     private int slotID;
@@ -42,7 +42,7 @@ public class CropSlot : MonoBehaviour
     
     public void Reset()
     {
-        data = new CropModel.CropData(CropConstants.CropStatus.Null);
+        data = new CropData(CropConstants.CropStatus.Null);
         
         GetComponent<MeshFilter>().mesh = null;
 

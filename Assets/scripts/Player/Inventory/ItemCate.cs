@@ -4,7 +4,7 @@ using UnityEngine;
 
 using ItemData = Models.ItemModel.ItemData;
 
-public class ItemCategory : MonoBehaviour // for inventory UI components
+public class ItemCate : MonoBehaviour // for inventory UI components
 {
     [SerializeField] private ItemConstants.ItemType type;
     [SerializeField] private Transform spawnAnchor;
