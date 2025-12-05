@@ -6,7 +6,6 @@ using Unity.Services.CloudCode.Apis;
 using Unity.Services.CloudCode.Core;
 
 using static Data.DataConstants;
-using static Data.CropConstants;
 
 namespace Data;
 

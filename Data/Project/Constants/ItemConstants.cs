@@ -6,7 +6,9 @@ public static class ItemConstants
     {
         Crop,
         Fish,
-        Building
+        Building,
+        Consumables,
+        Other
     }
 
     public enum ItemCategory
@@ -23,7 +25,6 @@ public static class ItemConstants
     {
         Exp,
         Item,
-        Currency_Gold,
-        Time,
+        Currency_Gold
     }
 }

@@ -1,10 +1,13 @@
 using System;
+using Constant;
 using UnityEngine;
 using UnityEngine.UI;
 
+using static Models.CropModel;
+
 public class CropCategoryIcon : MonoBehaviour
 {
-    public CropSO baseData { get; private set; }
+    public CropBaseData baseData { get; private set; }
     private Image icon;
     private Button button;
 
@@ -14,12 +17,12 @@ public class CropCategoryIcon : MonoBehaviour
         button = GetComponent<Button>();
     }
 
-    public void Init(CropSO data, Action OnclickAction)
+    public void Init(CropBaseData data, Action OnclickAction)
     {
         button.onClick.RemoveAllListeners();
 
         baseData = data;
-        icon.sprite = data.Icon;
+        icon.sprite = (Sprite)AssetManager.Instance.AllAssets[AssetConstants.AssetType.Sprite].GetAsset(data.Icon);
         button.onClick.AddListener(() => OnclickAction?.Invoke());
     }
 }

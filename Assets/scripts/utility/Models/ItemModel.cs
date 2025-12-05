@@ -1,4 +1,5 @@
 using System;
+using System.Text.Json.Serialization;
 using Constant;
 using UnityEngine;
 using UnityEngine.PlayerLoop;
@@ -8,6 +9,27 @@ namespace Models
 {
     public static class ItemModel
     {
+        public class ItemBaseData
+        {
+            // general data
+            [JsonInclude] public int ID;
+            [JsonInclude] public string Name;
+            [JsonInclude] public ItemConstants.ItemCategory Category;
+            [JsonInclude] public string Description;
+            [JsonInclude] public int Price;
+            [JsonInclude] public string Icon; // sprite guid 
+        
+            //dev function use only
+            public ItemBaseData(int ID, string Name, ItemConstants.ItemCategory Category, string Description, string Icon)
+            {
+                this.ID = ID;
+                this.Name = Name;
+                this.Category = Category;
+                this.Description = Description;
+                this.Icon = Icon;
+            }
+        }
+        
         public struct ItemData
         {
             public int ID; // ID must > 0
@@ -16,9 +38,9 @@ namespace Models
             public string Description;
             public int Price;
             public int Amount;
-            public Sprite Icon;
+            public string Icon;
 
-            public ItemData(ItemSO baseData, int amount)
+            public ItemData(ItemBaseData baseData, int amount)
             {
                 ID = baseData.ID;
                 Category = baseData.Category;

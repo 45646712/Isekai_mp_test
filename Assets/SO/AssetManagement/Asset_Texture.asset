@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d90d0f41942108a40a8a1e11576a7f8f, type: 3}
+  m_Name: Asset_Texture
+  m_EditorClassIdentifier: 
+  <source>k__BackingField:
+  - GUID: 16eb4223-38ee-4429-9246-925edd7eadb9
+    Asset: {fileID: 2800000, guid: 9ec3bf95cb9d09549999dc739eab3a7a, type: 3}
+  - GUID: bc98c9f1-a94a-42ed-bd09-a9f4c1a4e85a
+    Asset: {fileID: 2800000, guid: 3405369a58cd8d441a27e1a36cee0d77, type: 3}
+  - GUID: 3d35afa2-e40d-4551-9fc7-f85521f43f31
+    Asset: {fileID: 2800000, guid: 4d56bf74a2d239b4bad5661be78fbf07, type: 3}

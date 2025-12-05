@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text.Json.Serialization;
 using UnityEngine;
 using Constant;
@@ -11,14 +12,15 @@ namespace Models
 {
     public static class CropModel
     {
-        public struct Crop
+        public class CropBaseData
         {
             // general data
             [JsonInclude] public int ID;
             [JsonInclude] public string Name;
             [JsonInclude] public ItemCategory Category;
             [JsonInclude] public string Description;
-            [JsonInclude] public Dictionary<ResourceType, int> Costs; //time will be in seconds 
+            [JsonInclude] public int TimeNeeded; // in seconds
+            [JsonInclude] public Dictionary<ResourceType, int> Costs;
             [JsonInclude] public Dictionary<ResourceType, int> Rewards;
             [JsonInclude] public Dictionary<CropStatus, string> Appearance; // mesh guid as string
             [JsonInclude] public Dictionary<CropStatus, string[]> Material; // material guids as string array
@@ -29,53 +31,49 @@ namespace Models
             [JsonInclude] public string DetailImage; // sprite guid
         }
 
-        public struct CropData
+        public class CropData
         {
-            // basic data
-            public int ID;
-            public string Name;
-            public ItemCategory Category;
-            public string Description;
-            public Dictionary<ResourceType, int> Costs;
-            public Dictionary<ResourceType, int> Rewards;
-            public Dictionary<CropStatus, Mesh> Appearance;
-            public Dictionary<CropStatus, Material[]> Material;
-            
-            // standalone indication
-            public CropStatus Status;
-            public DateTimeOffset MatureTime;
-            
-            public CropData(CropSO baseData, DateTimeOffset matureTime, CropStatus status = CropStatus.Growing)
+            public string Name { get; private set; }
+            public ItemCategory Category { get; private set; }
+            public string Description { get; private set; }
+            public int TimeNeeded { get; private set; }
+            public Dictionary<CropStatus, Mesh> Appearance { get; private set; }
+            public Dictionary<CropStatus, Material[]> Material { get; private set; }
+
+            public CropStatus Status { get; private set; }
+            public DateTimeOffset MatureTime { get; private set; } //execute as usual , validate on cloudcode
+
+            public CropData(CropBaseData baseData, CropStatus status = CropStatus.Growing)
             {
-                ID = baseData.ID;
+                AssetSO allMesh = AssetManager.Instance.AllAssets[AssetConstants.AssetType.Mesh];
+                AssetSO allMaterial = AssetManager.Instance.AllAssets[AssetConstants.AssetType.Material];
+
                 Name = baseData.Name;
                 Category = baseData.Category;
                 Description = baseData.Description;
-                Costs = baseData.Costs;
-                Rewards = baseData.Rewards;
-                Appearance = baseData.Appearance;
-                Material = baseData.Material;
+                TimeNeeded = baseData.TimeNeeded;
+                Appearance = baseData.Appearance.ToDictionary(x => x.Key, x => (Mesh)allMesh.GetAsset(x.Value));
+                Material = baseData.Material.ToDictionary(x => x.Key, x => x.Value.Select(y => (Material)allMaterial.GetAsset(y)).ToArray());
 
                 Status = status;
-                MatureTime = matureTime;
+
+                if (status != CropStatus.Null)
+                {
+                    MatureTime = DateTimeOffset.UtcNow.AddSeconds(baseData.Costs[ResourceType.Time]);
+                }
             }
 
-            public CropData(CropStatus status)
-            {
-                this = default;
-                Status = status;
-            }
+            public CropData(CropStatus status) => Status = status;
         }
-
-        public struct CropUploadData
+        
+        //temp
+        public class CropUploadData
         {
-            public int SlotID;
             public int CropID;
             public DateTimeOffset MatureTime; //in epoch timestamp , standalone indication
 
-            public CropUploadData(int slotID, int cropID, DateTimeOffset matureTime) //constructor
+            public CropUploadData(int cropID, DateTimeOffset matureTime) //constructor
             {
-                SlotID = slotID;
                 CropID = cropID;
                 MatureTime = matureTime;
             }

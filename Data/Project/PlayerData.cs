@@ -93,13 +93,18 @@ public static class PlayerData
 
         result = op switch
         {
-            DataOperations.Add => (int)result + value,
-            DataOperations.Subtract => (int)result - value,
-            DataOperations.Multiply => (int)result * value,
-            DataOperations.Divide => (int)result / value,
+            DataOperations.Add => (long)result + value,
+            DataOperations.Subtract => (long)result - value,
+            DataOperations.Multiply => (long)result * value,
+            DataOperations.Divide => (long)result / value,
             DataOperations.Update => value,
-            _ => throw new InvalidOperationException()
+            _ => throw new InvalidOperationException("invalid data operation!")
         };
+
+        if ((long)result < 0)
+        {
+            throw new InvalidOperationException("Insufficient balance!");
+        }
 
         await SavePlayerData(context, gameApiClient, access, key, result);
     }
@@ -108,7 +113,7 @@ public static class PlayerData
     {
         Dictionary<string, object> updatedData = new();
         Dictionary<string, object>? result = await LoadMultiPlayerData(context, gameApiClient, access, data.Select(x => x.Key).ToList());
-        
+
         if (result == null)
         {
             return;
@@ -118,13 +123,18 @@ public static class PlayerData
         {
             updatedData[key] = op switch
             {
-                DataOperations.Add => (int)value + data[key],
-                DataOperations.Subtract => (int)value - data[key],
-                DataOperations.Multiply => (int)value * data[key],
-                DataOperations.Divide => (int)value / data[key],
+                DataOperations.Add => (long)value + data[key],
+                DataOperations.Subtract => (long)value - data[key],
+                DataOperations.Multiply => (long)value * data[key],
+                DataOperations.Divide => (long)value / data[key],
                 DataOperations.Update => data[key],
-                _ => throw new InvalidOperationException()
+                _ => throw new InvalidOperationException("invalid data operation!")
             };
+
+            if ((long)updatedData[key] < 0)
+            {
+                throw new InvalidOperationException("Insufficient balance!");
+            }
         }
         
         await SaveMultiPlayerData(context, gameApiClient, access, updatedData);

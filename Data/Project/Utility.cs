@@ -1,7 +1,7 @@
 ﻿using System;
 using Microsoft.Extensions.DependencyInjection;
-using Unity.Services.CloudCode.Apis;
 using Unity.Services.CloudCode.Core;
+using Unity.Services.CloudCode.Apis;
 
 using static Data.DataConstants;
 
@@ -13,12 +13,12 @@ public static class Utility
     {
         nameof(PublicPlayerKeys.UserID) => long.Parse(value),
         nameof(PublicPlayerKeys.Name) => value,
-        nameof(PublicPlayerKeys.Lv) => byte.Parse(value),
-        nameof(PublicPlayerKeys.Exp) => int.Parse(value),
+        nameof(PublicPlayerKeys.Lv) => long.Parse(value),
+        nameof(PublicPlayerKeys.Exp) => long.Parse(value),
         nameof(ProtectedPlayerKeys.Inventory) => value,
-        nameof(ProtectedPlayerKeys.BalanceGold) => int.Parse(value),
+        nameof(ProtectedPlayerKeys.Currency_Gold) => long.Parse(value),
         nameof(ProtectedPlayerKeys.CropData) => value,
-        nameof(ProtectedPlayerKeys.UnlockedCrops) => int.Parse(value),
+        nameof(ProtectedPlayerKeys.UnlockedCrops) => long.Parse(value),
         _ => throw new InvalidOperationException()
     };
 }

@@ -7,13 +7,6 @@ namespace Constant
 {
     public static class PlayerDataConstants
     {
-        public enum DataAccessibility
-        {
-            Public,
-            Protected,
-            Private
-        }
-
         public enum PublicDataType //public data 
         {
             UserID, //int64

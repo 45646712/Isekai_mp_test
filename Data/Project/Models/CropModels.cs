@@ -10,13 +10,14 @@ namespace Data;
 
 public static class CropModels
 {
-    public struct Crop
+    public class CropBaseData
     {
         // general data
         [JsonInclude] public int ID;
         [JsonInclude] public string Name;
         [JsonInclude] public ItemCategory Category;
         [JsonInclude] public string Description;
+        [JsonInclude] public int TimeNeeded; // in seconds
         [JsonInclude] public Dictionary<ResourceType, int> Costs; //time will be in seconds 
         [JsonInclude] public Dictionary<ResourceType, int> Rewards;
         [JsonInclude] public Dictionary<CropStatus, string> Appearance; // mesh guid as string
@@ -28,32 +29,31 @@ public static class CropModels
         [JsonInclude] public string DetailImage; // sprite guid
 
         //dev function use only
-        public Crop(int ID, string Name, ItemCategory Category, string Description, Dictionary<ResourceType, int> Costs, Dictionary<ResourceType, int> Rewards, Dictionary<CropStatus, string> Appearance, Dictionary<CropStatus, string[]> Material, string Icon, string DetailBg, string DetailImage)
+        public CropBaseData(int ID, string Name, ItemCategory Category, string Description, int TimeNeeded, Dictionary<ResourceType, int> Costs, Dictionary<ResourceType, int> Rewards, Dictionary<CropStatus, string> Appearance, Dictionary<CropStatus, string[]> Material, string Icon, string DetailBg, string DetailImage)
         {
             this.ID = ID;
             this.Name = Name;
             this.Category = Category;
             this.Description = Description;
+            this.TimeNeeded = TimeNeeded;
             this.Costs = Costs;
             this.Rewards = Rewards;
             this.Appearance = Appearance;
             this.Material = Material;
-            
+
             this.Icon = Icon;
             this.DetailBg = DetailBg;
             this.DetailImage = DetailImage;
         }
     }
 
-    public struct CropUploadData
+    public class CropUploadData
     {
-        public int SlotID;
-        public int CropID;
-        public DateTimeOffset MatureTime; //in epoch timestamp , standalone indication
+        [JsonInclude] public int CropID;
+        [JsonInclude] public DateTimeOffset MatureTime; //in epoch timestamp , standalone indication
 
-        public CropUploadData(int slotID, int cropID, DateTimeOffset matureTime) //constructor
+        public CropUploadData(int cropID, DateTimeOffset matureTime) //constructor
         {
-            SlotID = slotID;
             CropID = cropID;
             MatureTime = matureTime;
         }

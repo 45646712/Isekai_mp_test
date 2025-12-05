@@ -1234,6 +1234,62 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Asset: {fileID: -944628639613478452, guid: 73b78189c0183b74ab8f88206f84f94b, type: 3}
   m_ActionId: 32b35790-4ed0-4e9a-aa41-69ac6d629449
+--- !u!1 &1387378981
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1387378982}
+  - component: {fileID: 1387378983}
+  m_Layer: 0
+  m_Name: AssetManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1387378982
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1387378981}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2104351422}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1387378983
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1387378981}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 884a4ebd24b91ab429f1b9daf6fabdb1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  <AllAssets>k__BackingField:
+    _serializedList:
+    - Key: 0
+      Value: {fileID: 11400000, guid: d2a0a680da8774a42a375000dac54aab, type: 2}
+    - Key: 1
+      Value: {fileID: 11400000, guid: 4b2ed26ce4ed7664fa12d7e94905ffb9, type: 2}
+    - Key: 2
+      Value: {fileID: 11400000, guid: b07d92ff5b0578b488add7a04403b520, type: 2}
+    - Key: 4
+      Value: {fileID: 11400000, guid: 623ab2760663c584fabe18b964f638d0, type: 2}
+    - Key: 3
+      Value: {fileID: 11400000, guid: 3af02ce9890387043899f097f42bf1ca, type: 2}
 --- !u!1 &1390792525
 GameObject:
   m_ObjectHideFlags: 0
@@ -2740,6 +2796,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 1387378982}
   - {fileID: 1628124858}
   - {fileID: 1617869400}
   - {fileID: 1035883683}

@@ -2,12 +2,14 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
+using Constant;
 using Cysharp.Threading.Tasks;
 using Extensions;
 using Unity.Services.CloudCode;
 using Unity.Services.CloudCode.GeneratedBindings;
 using UnityEngine;
 
+using ItemType = Unity.Services.CloudCode.GeneratedBindings.Data.ItemConstants_ItemType;
 using GameDataType = Unity.Services.CloudCode.GeneratedBindings.Data.DataConstants_GameDataType;
 using Access = Unity.Services.CloudCode.GeneratedBindings.Data.DataConstants_DataAccessibility;
 using DataOp = Unity.Services.CloudCode.GeneratedBindings.Data.DataConstants_DataOperations;
@@ -15,11 +17,13 @@ using DataOp = Unity.Services.CloudCode.GeneratedBindings.Data.DataConstants_Dat
 public class CloudCodeManager : MonoBehaviour
 {
     public static CloudCodeManager Instance;
-    
-    public AccountEndpointsBindings AccountModule { get; private set; }
-    public PlayerDataEndpointsBindings PlayerModule { get; private set; }
-    public GameDataEndpointsBindings GameModule { get; private set; }
 
+    private AccountEndpointsBindings AccountModule;
+    private PlayerDataEndpointsBindings PlayerModule;
+    private GameDataEndpointsBindings GameModule;
+    private CropEndpointsBindings CropModule;
+    private ItemEndpointsBindings ItemModule;
+    
     private void Awake()
     {
         Instance = this;
@@ -30,6 +34,8 @@ public class CloudCodeManager : MonoBehaviour
         AccountModule = new(CloudCodeService.Instance);
         PlayerModule = new(CloudCodeService.Instance);
         GameModule = new(CloudCodeService.Instance);
+        CropModule = new(CloudCodeService.Instance);
+        ItemModule = new(CloudCodeService.Instance);
     }
 
     //remap functions to cloudcode (with serialization)
@@ -56,4 +62,15 @@ public class CloudCodeManager : MonoBehaviour
     }
 
     public async UniTask ValidateAccountData() => await AccountModule.ValidateAccountData();
+
+    public async UniTask Plant(int slotID, int gameDataID) => await CropModule.Plant(slotID, gameDataID);
+    public async UniTask MultiPlant(List<int> slotIDs, int gameDataID) => await CropModule.MultiPlant(slotIDs, gameDataID);
+    public async UniTask Harvest(int slotID) => await CropModule.Harvest(slotID);
+    public async UniTask MultiHarvest(List<int> slotIDs) => await CropModule.MultiHarvest(slotIDs);
+    public async UniTask Remove(int slotID) => await CropModule.Remove(slotID);
+    public async UniTask MultiRemove(List<int> slotIDs) => await CropModule.MultiRemove(slotIDs);
+    //public async UniTask<DateTimeOffset> GetNextMatureTime() => await CropModule.GetNextMatureTime();
+    
+    public async UniTask UpdateItem(DataOp op, ItemType type, int itemID, int amount) => await ItemModule.UpdateItem(op, type, itemID, amount);
+    public async UniTask UpdateMultiItem(DataOp op, ItemType type, Dictionary<int, int> data) => await ItemModule.UpdateMultiItem(op, type, data.ToDictionary(x => x.ToString(), x => x.Value));
 }

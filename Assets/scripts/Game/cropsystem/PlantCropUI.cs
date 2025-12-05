@@ -5,9 +5,13 @@ using AYellowpaper.SerializedCollections;
 using Constant;
 using Cysharp.Threading.Tasks;
 using Extensions;
+using Models;
 using TMPro;
+using Unity.Services.CloudCode.GeneratedBindings.Data;
 using UnityEngine;
 using UnityEngine.UI;
+using static Constant.AssetConstants;
+using static Models.CropModel;
 
 using Category = Constant.ItemConstants.ItemCategory;
 
@@ -65,10 +69,10 @@ public class PlantCropUI : MonoBehaviour , IGeneric
     {
         RegisterUI();
 
-        ShowCategory(0);
+        ShowCategory(0).Forget();
     }
 
-    private void ShowCategory(Category category)
+    private async UniTask ShowCategory(Category category)
     {
         currentDetailIndex = 0;
         activeDetailIcons.Clear();
@@ -91,7 +95,9 @@ public class PlantCropUI : MonoBehaviour , IGeneric
 
         categoryText.text = (int)category == 0 ? "All" : category.ToString();
 
-        foreach (CropSO element in CropManager.Instance.AllCropBaseData.Where(x => category == 0 ? x : x.Category == category))
+        List<CropBaseData> result = await CloudCodeManager.Instance.LoadMultiGameData<CropBaseData>(DataConstants_GameDataType.Crop);
+
+        foreach (CropBaseData element in category == 0 ? result : result.Where(x => x.Category == category))
         {
             CropCategoryIcon icon = PoolManager.Instance.Get(ObjectPoolType.CropIcon, cropIconAnchor).GetComponent<CropCategoryIcon>();
             activeDetailIcons.Add(icon);
@@ -123,7 +129,7 @@ public class PlantCropUI : MonoBehaviour , IGeneric
         }
     }
 
-    private void ShowCropDetail(CropSO data)
+    private void ShowCropDetail(CropBaseData data)
     {
         foreach (Transform element in cropCostIconAnchor.transform)
         {
@@ -140,8 +146,8 @@ public class PlantCropUI : MonoBehaviour , IGeneric
         previousCropDetail.GetComponent<Image>().enabled = currentDetailIndex > 0;
         nextCropDetail.GetComponent<Image>().enabled = currentDetailIndex < activeDetailIcons.Count - 1;
 
-        displayBackground.sprite = data.DetailBg;
-        displayImage.sprite = data.DetailImage;
+        displayBackground.sprite = (Sprite)AssetManager.Instance.AllAssets[AssetType.Sprite].GetAsset(data.DetailBg);
+        displayImage.sprite = (Sprite)AssetManager.Instance.AllAssets[AssetType.Sprite].GetAsset(data.DetailImage);
         displayName.text = $"No.{data.ID} {data.Name}";
         
         foreach (var (type, value) in data.Costs)
@@ -153,7 +159,7 @@ public class PlantCropUI : MonoBehaviour , IGeneric
         
         ConfirmButton.onClick.AddListener(() =>
         {
-            CropManager.Instance.Plant(SlotID, data).Forget();
+            CropManager.Instance.Plant(SlotID, data.ID).Forget();
             Destroy();
         });
     }

@@ -56,8 +56,8 @@ public class PlayerDataEndpoints
     }
     
     [CloudCodeFunction("UpdatePlayerData")]
-    public async Task UpdatePlayerDataEndpoint(IExecutionContext context, IGameApiClient gameApiClient, DataAccessibility access, DataOperations op, string key, int value) => await UpdatePlayerData(context, gameApiClient, access, op, key, value);
+    public async Task UpdatePlayerData(IExecutionContext context, IGameApiClient gameApiClient, DataAccessibility access, DataOperations op, string key, int value) => await UpdatePlayerData(context, gameApiClient, access, op, key, value);
     
     [CloudCodeFunction("UpdateMultiPlayerData")]
-    public async Task UpdateMultiPlayerDataEndpoint(IExecutionContext context, IGameApiClient gameApiClient, DataAccessibility access, DataOperations op, Dictionary<string, int> data) => await UpdateMultiPlayerData(context, gameApiClient, access, op, data);
+    public async Task UpdateMultiPlayerData(IExecutionContext context, IGameApiClient gameApiClient, DataAccessibility access, DataOperations op, Dictionary<string, int> data) => await UpdateMultiPlayerData(context, gameApiClient, access, op, data);
 }

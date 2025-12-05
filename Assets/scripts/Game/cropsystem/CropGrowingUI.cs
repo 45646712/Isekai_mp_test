@@ -5,7 +5,8 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-using Utility = Extensions.UniversalUtility;
+using static Models.CropModel;
+using static Extensions.UniversalUtility;
 
 public class CropGrowingUI : MonoBehaviour, IGeneric
 {
@@ -26,11 +27,11 @@ public class CropGrowingUI : MonoBehaviour, IGeneric
         RegisterUI();
     }
 
-    public void Init(CropSO data , int slotID , DateTimeOffset matureTime)
+    public void Init(CropBaseData data , int slotID , DateTimeOffset matureTime)
     {
         cropName.text = data.Name;
-        cropBackground.sprite = data.DetailBg;
-        cropImage.sprite = data.DetailImage;
+        cropBackground.sprite = (Sprite)AssetManager.Instance.AllAssets[AssetConstants.AssetType.Sprite].GetAsset(data.DetailBg);
+        cropImage.sprite = (Sprite)AssetManager.Instance.AllAssets[AssetConstants.AssetType.Sprite].GetAsset(data.DetailImage);
         
         this.matureTime = matureTime;
 
@@ -57,7 +58,7 @@ public class CropGrowingUI : MonoBehaviour, IGeneric
         bool isGrowing = timeDifference > TimeSpan.Zero;
         
         cancelButton.gameObject.SetActive(isGrowing);
-        cropTimer.text = isGrowing ? $"{CropConstants.CropAwaitText}{Utility.FormatTime(timeDifference)}" : $"{CropConstants.CropMaturedText}";
+        cropTimer.text = isGrowing ? $"{CropConstants.CropAwaitText}{FormatTime(timeDifference)}" : $"{CropConstants.CropMaturedText}";
         confirmButtonText.text = isGrowing ? "Confirm" : "Harvest";
     }
 

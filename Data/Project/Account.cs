@@ -26,7 +26,7 @@ public static class Account
         
         List<string> protectedKeys = new()
         {
-            nameof(ProtectedPlayerKeys.BalanceGold),
+            nameof(ProtectedPlayerKeys.Currency_Gold),
             nameof(ProtectedPlayerKeys.UnlockedCrops)
         };
 
@@ -67,7 +67,7 @@ public static class Account
             {
                 updatedProtectedData[element] = element switch
                 {
-                    nameof(ProtectedPlayerKeys.BalanceGold) => 0,
+                    nameof(ProtectedPlayerKeys.Currency_Gold) => 0,
                     nameof(ProtectedPlayerKeys.UnlockedCrops) => 20,
                     _ => throw new InvalidOperationException()
                 };
@@ -77,7 +77,7 @@ public static class Account
         {
             updatedProtectedData = new()
             {
-                { nameof(ProtectedPlayerKeys.BalanceGold), 0 },
+                { nameof(ProtectedPlayerKeys.Currency_Gold), 0 },
                 { nameof(ProtectedPlayerKeys.UnlockedCrops), 20 }
             };
         }

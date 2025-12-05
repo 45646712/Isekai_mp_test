@@ -24,7 +24,7 @@ public static class DataConstants
     public enum ProtectedPlayerKeys
     {
         Inventory, //string
-        BalanceGold, //int
+        Currency_Gold, //int
         CropData, //string
         UnlockedCrops
     }

@@ -16,10 +16,10 @@ public static class Crop_FastSave
 {
     public static async Task Dev_BatchSaveCropData(IExecutionContext context, IGameApiClient gameApiClient)
     {
-        Crop crop1 = new Crop(1, "Test_Grass", ItemCategory.Materials, "test purpose", new()
+        CropBaseData crop1 = new CropBaseData(1, "Test_Grass", ItemCategory.Materials, "test purpose", 10,
+            new()
             {
-                { ResourceType.Currency_Gold, 5 },
-                { ResourceType.Time, 10 }
+                { ResourceType.Currency_Gold, 5 }
             }, new()
             {
                 { ResourceType.Exp, 2 },
@@ -27,17 +27,20 @@ public static class Crop_FastSave
             },
             new()
             {
-                { CropStatus.Growing, "1" },
-                { CropStatus.Matured, "2" }
+                { CropStatus.Growing, "4a0f991f-f543-4297-ad74-0c4fa7b45252" },
+                { CropStatus.Matured, "5cd25a19-b298-4aec-a2af-a3322fc70e4b" }
             }, new()
             {
-                { CropStatus.Growing, new[] { "1" } }
-            }, "1", "2", "3");
+                { CropStatus.Growing, new string[] { } }
+            },
+            "d18e9b36-7025-4d3d-9ca2-33baffcc5dd5",
+            "c91d2c40-f5f8-4f30-bb2f-1f4725cdccf7",
+            "32bc23ea-f68c-4e2a-b64c-997f8773a7c6");
 
-        Crop crop2 = new Crop(2, "Test_Grass2", ItemCategory.Materials, "test purpose2", new()
+        CropBaseData crop2 = new CropBaseData(2, "Test_Grass2", ItemCategory.Materials, "test purpose2", 11,
+            new()
             {
-                { ResourceType.Currency_Gold, 6 },
-                { ResourceType.Time, 11 }
+                { ResourceType.Currency_Gold, 6 }
             }, new()
             {
                 { ResourceType.Exp, 3 },
@@ -45,17 +48,20 @@ public static class Crop_FastSave
             },
             new()
             {
-                { CropStatus.Growing, "1" },
-                { CropStatus.Matured, "2" }
+                { CropStatus.Growing, "4a0f991f-f543-4297-ad74-0c4fa7b45252" },
+                { CropStatus.Matured, "5cd25a19-b298-4aec-a2af-a3322fc70e4b" }
             }, new()
             {
-                { CropStatus.Growing, new[] { "1" } }
-            }, "11", "12", "13");
+                { CropStatus.Growing, new string[] { } }
+            },
+            "d18e9b36-7025-4d3d-9ca2-33baffcc5dd5",
+            "c91d2c40-f5f8-4f30-bb2f-1f4725cdccf7",
+            "32bc23ea-f68c-4e2a-b64c-997f8773a7c6");
 
-        Crop crop3 = new Crop(3, "Test_Grass3", ItemCategory.Materials, "test purpose3", new()
+        CropBaseData crop3 = new CropBaseData(3, "Test_Grass3", ItemCategory.Materials, "test purpose3", 12,
+            new()
             {
-                { ResourceType.Currency_Gold, 7 },
-                { ResourceType.Time, 12 }
+                { ResourceType.Currency_Gold, 7 }
             }, new()
             {
                 { ResourceType.Exp, 4 },
@@ -63,17 +69,20 @@ public static class Crop_FastSave
             },
             new()
             {
-                { CropStatus.Growing, "1" },
-                { CropStatus.Matured, "2" }
+                { CropStatus.Growing, "4a0f991f-f543-4297-ad74-0c4fa7b45252" },
+                { CropStatus.Matured, "5cd25a19-b298-4aec-a2af-a3322fc70e4b" }
             }, new()
             {
-                { CropStatus.Growing, new[] { "1" } }
-            }, "21", "22", "23");
+                { CropStatus.Growing, new string[] { } }
+            }, 
+            "d18e9b36-7025-4d3d-9ca2-33baffcc5dd5",
+            "c91d2c40-f5f8-4f30-bb2f-1f4725cdccf7", 
+            "32bc23ea-f68c-4e2a-b64c-997f8773a7c6");
 
-        Crop crop4 = new Crop(4, "Test_Grass4", ItemCategory.Materials, "test purpose4", new()
+        CropBaseData crop4 = new CropBaseData(4, "Test_Grass4", ItemCategory.Materials, "test purpose4", 13,
+            new()
             {
-                { ResourceType.Currency_Gold, 8 },
-                { ResourceType.Time, 13 }
+                { ResourceType.Currency_Gold, 8 }
             }, new()
             {
                 { ResourceType.Exp, 5 },
@@ -81,17 +90,20 @@ public static class Crop_FastSave
             },
             new()
             {
-                { CropStatus.Growing, "1" },
-                { CropStatus.Matured, "2" }
+                { CropStatus.Growing, "4a0f991f-f543-4297-ad74-0c4fa7b45252" },
+                { CropStatus.Matured, "5cd25a19-b298-4aec-a2af-a3322fc70e4b" }
             }, new()
             {
-                { CropStatus.Growing, new[] { "1" } }
-            }, "31", "32", "33");
-        
-        Crop crop5 = new Crop(5, "Test_Grass5", ItemCategory.Materials, "test purpose5", new()
+                { CropStatus.Growing, new string[] { } }
+            },
+            "d18e9b36-7025-4d3d-9ca2-33baffcc5dd5",
+            "c91d2c40-f5f8-4f30-bb2f-1f4725cdccf7",
+            "32bc23ea-f68c-4e2a-b64c-997f8773a7c6");
+
+        CropBaseData crop5 = new CropBaseData(5, "Test_Grass5", ItemCategory.Materials, "test purpose5", 14,
+            new()
             {
-                { ResourceType.Currency_Gold, 9 },
-                { ResourceType.Time, 14 }
+                { ResourceType.Currency_Gold, 9 }
             }, new()
             {
                 { ResourceType.Exp, 6 },
@@ -99,12 +111,15 @@ public static class Crop_FastSave
             },
             new()
             {
-                { CropStatus.Growing, "1" },
-                { CropStatus.Matured, "2" }
+                { CropStatus.Growing, "4a0f991f-f543-4297-ad74-0c4fa7b45252" },
+                { CropStatus.Matured, "5cd25a19-b298-4aec-a2af-a3322fc70e4b" }
             }, new()
             {
-                { CropStatus.Growing, new[] { "1" } }
-            }, "41", "42", "43");
+                { CropStatus.Growing, new string[] { } }
+            },
+            "d18e9b36-7025-4d3d-9ca2-33baffcc5dd5",
+            "c91d2c40-f5f8-4f30-bb2f-1f4725cdccf7",
+            "32bc23ea-f68c-4e2a-b64c-997f8773a7c6");
 
         SetItemBatchBody query = new SetItemBatchBody(new()
         {

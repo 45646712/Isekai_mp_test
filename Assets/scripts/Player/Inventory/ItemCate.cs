@@ -4,7 +4,7 @@ using UnityEngine;
 
 using ItemData = Models.ItemModel.ItemData;
 
-public class ItemCate : MonoBehaviour // for inventory UI components
+public class ItemCate : MonoBehaviour // for inventory UI components (inventory->category tabs)
 {
     [SerializeField] private ItemConstants.ItemType type;
     [SerializeField] private Transform spawnAnchor;
@@ -13,7 +13,7 @@ public class ItemCate : MonoBehaviour // for inventory UI components
 
     public void Init()
     {
-        data = InventoryManager.Instance.AllItems[type];
+        //data = InventoryManager.Instance.AllItems[type];
 
         foreach (ItemData element in data)
         {

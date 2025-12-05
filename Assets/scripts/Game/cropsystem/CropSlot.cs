@@ -24,12 +24,12 @@ public class CropSlot : MonoBehaviour
         SetInteractButton();
     }
 
-    public void Init(CropSO baseData, DateTimeOffset matureTime, CropConstants.CropStatus status = CropConstants.CropStatus.Null)
+    public void Init(CropBaseData baseData, CropConstants.CropStatus status = CropConstants.CropStatus.Null)
     {
-        data = new(baseData, matureTime, status);
+        data = new(baseData, status);
 
         GetComponent<MeshFilter>().mesh = data.Appearance[status];
-        
+
         if (data.Material.Count != 0)
         {
             GetComponent<MeshRenderer>().materials = data.Material[status];
@@ -39,7 +39,7 @@ public class CropSlot : MonoBehaviour
 
         isOccupied = true;
     }
-    
+
     public void Reset()
     {
         data = new CropData(CropConstants.CropStatus.Null);
@@ -61,8 +61,8 @@ public class CropSlot : MonoBehaviour
             case CropConstants.CropStatus.Growing:
                 InteractButton.Init((int)data.Status, () =>
                 {
-                    CropSO baseData = Array.Find(CropManager.Instance.AllCropBaseData, x => x.ID == data.ID);
-                    UIManager.Instance.SpawnUI(UIConstants.NonPooledUITypes.CropGrowingUI).GetComponent<CropGrowingUI>().Init(baseData, slotID, data.MatureTime);
+                    //CropSO baseData = Array.Find(CropManager.Instance.AllCropBaseData, x => x.ID == data.ID);
+                    //UIManager.Instance.SpawnUI(UIConstants.NonPooledUITypes.CropGrowingUI).GetComponent<CropGrowingUI>().Init(baseData, slotID, data.MatureTime);
                 });
                 break;
             case CropConstants.CropStatus.Matured:

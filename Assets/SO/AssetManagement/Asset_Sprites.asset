@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d90d0f41942108a40a8a1e11576a7f8f, type: 3}
+  m_Name: Asset_Sprites
+  m_EditorClassIdentifier: 
+  <source>k__BackingField:
+  - GUID: d18e9b36-7025-4d3d-9ca2-33baffcc5dd5
+    Asset: {fileID: 1860999125, guid: 513f5917f35cb854f8d6aef1828fe085, type: 3}
+  - GUID: ace9457f-b18c-4a24-ab99-a5a56c277243
+    Asset: {fileID: 1165698203, guid: 513f5917f35cb854f8d6aef1828fe085, type: 3}
+  - GUID: c91d2c40-f5f8-4f30-bb2f-1f4725cdccf7
+    Asset: {fileID: 397850172, guid: a9e357aad019daa41a7bffa586a11435, type: 3}
+  - GUID: 32bc23ea-f68c-4e2a-b64c-997f8773a7c6
+    Asset: {fileID: -1206832827, guid: a9e357aad019daa41a7bffa586a11435, type: 3}
+  - GUID: 400fc10a-d80b-4441-ada9-8e69d70d0fb8
+    Asset: {fileID: -2096265027, guid: a9e357aad019daa41a7bffa586a11435, type: 3}
+  - GUID: 90c2ef7a-d3dc-43e6-8e51-14cdb00dabdb
+    Asset: {fileID: -1129576209, guid: a9e357aad019daa41a7bffa586a11435, type: 3}

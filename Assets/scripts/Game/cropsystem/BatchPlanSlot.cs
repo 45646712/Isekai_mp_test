@@ -32,7 +32,7 @@ public class BatchPlanSlot : MonoBehaviour
         SID = CropManager.Instance.AllCrops.IndexOf(storedSlotData);
         
         slotID.text = SID.ToString();
-        cropName.text = storedSlotData.data.ID < 1 ? string.Empty : CropConstants.BatchPlanIconIDText + storedSlotData.data.ID;
+        //cropName.text = storedSlotData.data.ID < 1 ? string.Empty : CropConstants.BatchPlanIconIDText + storedSlotData.data.ID;
         Background.color = IconColor[storedSlotData.data.Status];
     }
     

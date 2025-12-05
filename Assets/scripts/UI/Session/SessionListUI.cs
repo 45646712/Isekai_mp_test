@@ -8,6 +8,7 @@ using Constant;
 using Cysharp.Threading.Tasks;
 using TMPro;
 using Unity.Services.Authentication;
+using Unity.Services.CloudCode.GeneratedBindings.Data;
 using Unity.Services.CloudSave;
 using Unity.Services.CloudSave.Models;
 using Unity.Services.CloudSave.Models.Data.Player;
@@ -15,7 +16,6 @@ using Unity.Services.Multiplayer;
 using UnityEngine;
 using UnityEngine.UI;
 
-using Access = Constant.PlayerDataConstants.DataAccessibility;
 using PublicData = Constant.PlayerDataConstants.PublicDataType;
 
 public class SessionListUI : MonoBehaviour, IRefreshable
@@ -51,7 +51,7 @@ public class SessionListUI : MonoBehaviour, IRefreshable
         
         changeNicknameButton.onClick.AddListener(() =>
         {
-            PlayerDataManager.Instance.UpdateAndSaveData(Access.Public, PublicData.Name, changeNicknameInputField.text).Forget();
+            CloudCodeManager.Instance.SavePlayerData(DataConstants_DataAccessibility.Public, nameof(PublicData.Name), changeNicknameInputField.text).Forget();
             SessionManager.Instance.UpdateSessionHostInfo().Forget();
         });
     }
