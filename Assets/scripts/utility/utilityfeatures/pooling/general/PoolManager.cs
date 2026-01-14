@@ -6,6 +6,7 @@ public enum ObjectPoolType
     SessionDetail,
     RequestDetail,
     CropIcon,
+    CropButton,
     CropCostIcon,
     BatchMapIcon
 }
@@ -31,6 +32,16 @@ public class PoolManager : MonoBehaviour
     {
         GameObject obj = AllObjectPools[poolType].Instance.Get();
         obj.transform.SetParent(parent,false);
+        
+        return obj;
+    }
+    
+    public GameObject Get(ObjectPoolType poolType, Transform parent, Vector3 position)
+    {
+        GameObject obj = AllObjectPools[poolType].Instance.Get();
+        obj.transform.SetParent(parent,false);
+        obj.transform.position = position;
+        obj.transform.rotation = Quaternion.identity;
         
         return obj;
     }

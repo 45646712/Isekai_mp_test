@@ -200,6 +200,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -368,7 +369,6 @@ MonoBehaviour:
       Value: {fileID: -1206832827, guid: a9e357aad019daa41a7bffa586a11435, type: 3}
     - Key: 2
       Value: {fileID: -2096265027, guid: a9e357aad019daa41a7bffa586a11435, type: 3}
-    - Key: 3
-      Value: {fileID: -1129576209, guid: a9e357aad019daa41a7bffa586a11435, type: 3}
+  TimeResourceIcon: {fileID: -1129576209, guid: a9e357aad019daa41a7bffa586a11435, type: 3}
   image: {fileID: 7000070297332135321}
   text: {fileID: 8690872148988597105}

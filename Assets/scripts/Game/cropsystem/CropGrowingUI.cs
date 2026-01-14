@@ -27,19 +27,19 @@ public class CropGrowingUI : MonoBehaviour, IGeneric
         RegisterUI();
     }
 
-    public void Init(CropBaseData data , int slotID , DateTimeOffset matureTime)
+    public void Init(CropSlot slot)
     {
-        cropName.text = data.Name;
-        cropBackground.sprite = (Sprite)AssetManager.Instance.AllAssets[AssetConstants.AssetType.Sprite].GetAsset(data.DetailBg);
-        cropImage.sprite = (Sprite)AssetManager.Instance.AllAssets[AssetConstants.AssetType.Sprite].GetAsset(data.DetailImage);
-        
-        this.matureTime = matureTime;
+        cropName.text = slot.data.Name;
+        cropBackground.sprite = slot.data.DetailBg;
+        cropImage.sprite = slot.data.DetailImage;
+
+        matureTime = slot.data.MatureTime;
 
         confirmButton.onClick.AddListener(() =>
         {
             if (matureTime.Subtract(DateTimeOffset.Now) <= TimeSpan.Zero)
             {
-                CropManager.Instance.Harvest(slotID).Forget();
+                CropManager.Instance.Harvest(slot.slotID).Forget();
             }
 
             Destroy();
@@ -47,7 +47,7 @@ public class CropGrowingUI : MonoBehaviour, IGeneric
         
         cancelButton.onClick.AddListener(() =>
         {
-            CropManager.Instance.Remove(slotID).Forget();
+            CropManager.Instance.Remove(slot.slotID).Forget();
             Destroy();
         });
     }

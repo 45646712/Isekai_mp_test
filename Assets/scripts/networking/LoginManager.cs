@@ -9,6 +9,7 @@ using Unity.Netcode;
 using Unity.Services.Core;
 using Unity.Services.Authentication;
 using Unity.Services.CloudCode.GeneratedBindings.Data;
+using Unity.Services.CloudSave;
 using UnityEngine.SceneManagement;
 
 //using GooglePlayGames;
@@ -40,8 +41,6 @@ public class LoginManager : NetworkBehaviour
             await SessionManager.Instance.UpdateSessionHostInfo();
             await CommunicationManager.Instance.Init();
             await SessionManager.Instance.StartHost();
-            
-            NetworkManager.Singleton.SceneManager.LoadScene("v1test", LoadSceneMode.Single);
         });
 
         AuthenticationService.Instance.SignInFailed += Debug.LogError;

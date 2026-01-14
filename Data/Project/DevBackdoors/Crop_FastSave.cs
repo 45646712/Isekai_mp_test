@@ -31,7 +31,8 @@ public static class Crop_FastSave
                 { CropStatus.Matured, "5cd25a19-b298-4aec-a2af-a3322fc70e4b" }
             }, new()
             {
-                { CropStatus.Growing, new string[] { } }
+                { CropStatus.Growing, new string[] { } },
+                { CropStatus.Matured, new string[] { } }
             },
             "d18e9b36-7025-4d3d-9ca2-33baffcc5dd5",
             "c91d2c40-f5f8-4f30-bb2f-1f4725cdccf7",
@@ -52,7 +53,8 @@ public static class Crop_FastSave
                 { CropStatus.Matured, "5cd25a19-b298-4aec-a2af-a3322fc70e4b" }
             }, new()
             {
-                { CropStatus.Growing, new string[] { } }
+                { CropStatus.Growing, new string[] { } },
+                { CropStatus.Matured, new string[] { } }
             },
             "d18e9b36-7025-4d3d-9ca2-33baffcc5dd5",
             "c91d2c40-f5f8-4f30-bb2f-1f4725cdccf7",
@@ -73,7 +75,8 @@ public static class Crop_FastSave
                 { CropStatus.Matured, "5cd25a19-b298-4aec-a2af-a3322fc70e4b" }
             }, new()
             {
-                { CropStatus.Growing, new string[] { } }
+                { CropStatus.Growing, new string[] { } },
+                { CropStatus.Matured, new string[] { } }
             }, 
             "d18e9b36-7025-4d3d-9ca2-33baffcc5dd5",
             "c91d2c40-f5f8-4f30-bb2f-1f4725cdccf7", 
@@ -94,7 +97,8 @@ public static class Crop_FastSave
                 { CropStatus.Matured, "5cd25a19-b298-4aec-a2af-a3322fc70e4b" }
             }, new()
             {
-                { CropStatus.Growing, new string[] { } }
+                { CropStatus.Growing, new string[] { } },
+                { CropStatus.Matured, new string[] { } }
             },
             "d18e9b36-7025-4d3d-9ca2-33baffcc5dd5",
             "c91d2c40-f5f8-4f30-bb2f-1f4725cdccf7",
@@ -115,7 +119,8 @@ public static class Crop_FastSave
                 { CropStatus.Matured, "5cd25a19-b298-4aec-a2af-a3322fc70e4b" }
             }, new()
             {
-                { CropStatus.Growing, new string[] { } }
+                { CropStatus.Growing, new string[] { } },
+                { CropStatus.Matured, new string[] { } }
             },
             "d18e9b36-7025-4d3d-9ca2-33baffcc5dd5",
             "c91d2c40-f5f8-4f30-bb2f-1f4725cdccf7",

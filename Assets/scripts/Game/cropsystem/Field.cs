@@ -12,8 +12,18 @@ public class Field : MonoBehaviour
     
     [SerializeField] private BatchPlantTerminal terminal;
 
-    private void Start()
+    private void Awake()
     {
-        terminal.Init(Crops);
+        terminal.gameObject.SetActive(false);
+    }
+
+    public void Init()
+    {
+        terminal.gameObject.SetActive(true);
+
+        if (SessionManager.Instance.CurrentSession.IsHost)
+        {
+            terminal.Init(Crops);
+        }
     }
 }

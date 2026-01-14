@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
-using Constant;
 using Cysharp.Threading.Tasks;
 using Extensions;
 using Unity.Services.CloudCode;
@@ -53,6 +52,8 @@ public class CloudCodeManager : MonoBehaviour
     public async UniTask UpdatePlayerData(Access access, DataOp op, string key, int value) => await PlayerModule.UpdatePlayerData(access, op, key, value);
     public async UniTask UpdateMultiPlayerData(Access access, DataOp op, Dictionary<string, int> data) => await PlayerModule.UpdateMultiPlayerData(access, op, data);
 
+    public async UniTask<string> LoadRawGameData(GameDataType type, int ID) => await GameModule.LoadGameData(type, ID);
+    public async UniTask<List<string>> LoadMultiRawGameData(GameDataType type) => await GameModule.LoadMultiGameData(type);
     public async UniTask<T> LoadGameData<T>(GameDataType type, int ID) => JsonSerializer.Deserialize<T>(await GameModule.LoadGameData(type, ID));
     public async UniTask<List<T>> LoadMultiGameData<T>(GameDataType type)
     {
@@ -69,8 +70,12 @@ public class CloudCodeManager : MonoBehaviour
     public async UniTask MultiHarvest(List<int> slotIDs) => await CropModule.MultiHarvest(slotIDs);
     public async UniTask Remove(int slotID) => await CropModule.Remove(slotID);
     public async UniTask MultiRemove(List<int> slotIDs) => await CropModule.MultiRemove(slotIDs);
-    //public async UniTask<DateTimeOffset> GetNextMatureTime() => await CropModule.GetNextMatureTime();
-    
+    public async UniTask<DateTimeOffset> TrackCropUpdate()
+    {
+        string result = await CropModule.TrackCropUpdate();
+        return string.IsNullOrEmpty(result) ? default : JsonSerializer.Deserialize<DateTimeOffset>(result);
+    }
+
     public async UniTask UpdateItem(DataOp op, ItemType type, int itemID, int amount) => await ItemModule.UpdateItem(op, type, itemID, amount);
     public async UniTask UpdateMultiItem(DataOp op, ItemType type, Dictionary<int, int> data) => await ItemModule.UpdateMultiItem(op, type, data.ToDictionary(x => x.ToString(), x => x.Value));
 }

@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace Constant
 {
-    public static class PlayerDataConstants
+    public static class DataConstants
     {
         public enum PublicDataType //public data 
         {
@@ -20,7 +20,8 @@ namespace Constant
             Inventory, //string
             BalanceGold, //int
             CropData, //string
-            UnlockedCrops,
+            UnlockedCropSlots,
+            UnlockedFishSlots
         }
 
         public enum PrivateDataType //private data

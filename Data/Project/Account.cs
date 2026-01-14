@@ -27,63 +27,24 @@ public static class Account
         List<string> protectedKeys = new()
         {
             nameof(ProtectedPlayerKeys.Currency_Gold),
-            nameof(ProtectedPlayerKeys.UnlockedCrops)
+            nameof(ProtectedPlayerKeys.UnlockedCropSlots),
+            nameof(ProtectedPlayerKeys.UnlockedFishSlots)
         };
 
-        Dictionary<string, object>? publicData = await LoadMultiPlayerData(context, gameApiClient, DataAccessibility.Public, publicKeys);
-        Dictionary<string, object>? protectedData = await LoadMultiPlayerData(context, gameApiClient, DataAccessibility.Protected, protectedKeys);
+        Dictionary<string, object> publicData = await LoadMultiPlayerData(context, gameApiClient, DataAccessibility.Public, publicKeys) ?? new();
+        Dictionary<string, object> protectedData = await LoadMultiPlayerData(context, gameApiClient, DataAccessibility.Protected, protectedKeys) ?? new();
+        
+        publicData.TryAdd(nameof(PublicPlayerKeys.UserID), await GenerateUserID(context, gameApiClient));
+        publicData.TryAdd(nameof(PublicPlayerKeys.Name), $"User_{publicData[nameof(PublicPlayerKeys.UserID)]}");
+        publicData.TryAdd(nameof(PublicPlayerKeys.Lv), (byte)1);
+        publicData.TryAdd(nameof(PublicPlayerKeys.Exp), 0);
+        
+        protectedData.TryAdd(nameof(ProtectedPlayerKeys.Currency_Gold), 0);
+        protectedData.TryAdd(nameof(ProtectedPlayerKeys.UnlockedCropSlots), 5);
+        protectedData.TryAdd(nameof(ProtectedPlayerKeys.UnlockedFishSlots), 2);
 
-        Dictionary<string, object> updatedPublicData = new();
-        Dictionary<string, object> updatedProtectedData = new();
-
-        if (publicData != null)
-        {
-            foreach (string element in publicKeys.Where(element => !publicData.ContainsKey(element)))
-            {
-                updatedPublicData[element] = element switch
-                {
-                    nameof(PublicPlayerKeys.UserID) => await GenerateUserID(context, gameApiClient),
-                    nameof(PublicPlayerKeys.Name) => publicData.TryGetValue(nameof(PublicPlayerKeys.UserID), out object? value) ? $"User_{value}" : await GenerateUserID(context, gameApiClient),
-                    nameof(PublicPlayerKeys.Lv) => (byte)1,
-                    nameof(PublicPlayerKeys.Exp) => 0,
-                    _ => throw new InvalidOperationException()
-                };
-            }
-        }
-        else
-        {
-            updatedPublicData = new()
-            {
-                { nameof(PublicPlayerKeys.UserID), await GenerateUserID(context, gameApiClient) },
-                { nameof(PublicPlayerKeys.Name), $"User_{await GenerateUserID(context, gameApiClient)}" },
-                { nameof(PublicPlayerKeys.Lv), (byte)1 },
-                { nameof(PublicPlayerKeys.Exp), 0 }
-            };
-        }
-
-        if (protectedData != null)
-        {
-            foreach (string element in protectedKeys.Where(element => !protectedData.ContainsKey(element)))
-            {
-                updatedProtectedData[element] = element switch
-                {
-                    nameof(ProtectedPlayerKeys.Currency_Gold) => 0,
-                    nameof(ProtectedPlayerKeys.UnlockedCrops) => 20,
-                    _ => throw new InvalidOperationException()
-                };
-            }
-        }
-        else
-        {
-            updatedProtectedData = new()
-            {
-                { nameof(ProtectedPlayerKeys.Currency_Gold), 0 },
-                { nameof(ProtectedPlayerKeys.UnlockedCrops), 20 }
-            };
-        }
-
-        await SaveMultiPlayerData(context, gameApiClient, DataAccessibility.Public, updatedPublicData);
-        await SaveMultiPlayerData(context, gameApiClient, DataAccessibility.Protected, updatedProtectedData);
+        await SaveMultiPlayerData(context, gameApiClient, DataAccessibility.Public, publicData);
+        await SaveMultiPlayerData(context, gameApiClient, DataAccessibility.Protected, protectedData);
     }
 
     private static async Task<Int64> GenerateUserID(IExecutionContext context, IGameApiClient gameApiClient)
@@ -93,7 +54,7 @@ public static class Account
             QueryIndexBody query = new QueryIndexBody(new List<FieldFilter> { new("UserID", Int64.MaxValue, FieldFilter.OpEnum.LE) }, new List<string> { "UserID" }, 0, 1);
 
             ApiResponse<QueryIndexResponse> result = await gameApiClient.CloudSaveData.QueryPublicPlayerDataAsync(context, context.ServiceToken, context.ProjectId, query);
-            
+
             return result.Data.Results.Count == 0 ? 10000000 : (Int64)result.Data.Results.First().Data.First().Value + 1;
         }
         catch (ApiException ex)

@@ -199,6 +199,7 @@ MonoBehaviour:
   m_VerticalAlignment: 1024
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -351,10 +352,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a887817e5ebfeda47babe2177d1b8bc3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  IndicatorPrefab: {fileID: 2748539295253430502, guid: 10b2082d68dec914ea531fc38e830e9c, type: 3}
+  IndicatorAnchor: {fileID: 9173186181837300522}
   contentParent: {fileID: 0}
   scrollbar: {fileID: 3615932814158001488}
   title: {fileID: 1032070454113335063}
-  indicators: []
   pageTitle:
     _serializedList: []
 --- !u!1 &4031515552038481052

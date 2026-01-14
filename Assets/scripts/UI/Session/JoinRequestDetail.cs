@@ -12,7 +12,7 @@ using Unity.Services.CloudSave.Models.Data.Player;
 using UnityEngine;
 using UnityEngine.UI;
 
-using PublicData = Constant.PlayerDataConstants.PublicDataType;
+using static Constant.DataConstants;
 
 public class JoinRequestDetail : MonoBehaviour
 {
@@ -34,13 +34,13 @@ public class JoinRequestDetail : MonoBehaviour
     {
         sendTarget = evt.Message;
 
-        List<PublicData> query = new() { PublicData.UserID, PublicData.Lv, PublicData.Name };
+        List<PublicDataType> query = new() { PublicDataType.UserID, PublicDataType.Lv, PublicDataType.Name };
         
-        Dictionary<string, Item> targetInfo = await CloudSaveService.Instance.Data.Player.LoadAsync(PlayerDataConstants.GetKeys(query), new LoadOptions(new PublicReadAccessClassOptions(evt.Message)));
+        Dictionary<string, Item> targetInfo = await CloudSaveService.Instance.Data.Player.LoadAsync(GetKeys(query), new LoadOptions(new PublicReadAccessClassOptions(evt.Message)));
 
-        Int64 UID = targetInfo[PlayerDataConstants.PublicDataType.UserID.ToString()].Value.GetAs<Int64>();
-        byte playerLevel = targetInfo[PlayerDataConstants.PublicDataType.Lv.ToString()].Value.GetAs<byte>();
-        string playerName = targetInfo[PlayerDataConstants.PublicDataType.Name.ToString()].Value.GetAs<string>();
+        Int64 UID = targetInfo[PublicDataType.UserID.ToString()].Value.GetAs<Int64>();
+        byte playerLevel = targetInfo[PublicDataType.Lv.ToString()].Value.GetAs<byte>();
+        string playerName = targetInfo[PublicDataType.Name.ToString()].Value.GetAs<string>();
         
         nickname.text = $"Lv.{playerLevel} {playerName}";
         userID.text = $"UserID : {UID}";

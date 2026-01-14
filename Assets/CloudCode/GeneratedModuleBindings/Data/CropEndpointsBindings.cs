@@ -81,11 +81,11 @@ namespace Unity.Services.CloudCode.GeneratedBindings
                 });
         }
 
-        public async Task<System.DateTimeOffset> GetNextMatureTime()
+        public async Task<string> TrackCropUpdate()
         {
-            return await k_Service.CallModuleEndpointAsync<System.DateTimeOffset>(
+            return await k_Service.CallModuleEndpointAsync<string>(
                 "Data",
-                "GetNextMatureTime",
+                "TrackCropUpdate",
                 new Dictionary<string, object>()
                 {
                 });

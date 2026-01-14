@@ -9,8 +9,7 @@ using Utility = Extensions.UniversalUtility;
 
 public class BatchPlanSlot : MonoBehaviour
 {
-    [SerializeField, SerializedDictionary("crop status", "IconColor")]
-    private SerializedDictionary<CropConstants.CropStatus, Color32> IconColor;
+    [SerializeField, SerializedDictionary("crop status", "IconColor")] private SerializedDictionary<CropConstants.CropStatus, Color32> IconColor;
 
     [SerializeField] private Image Background;
     [SerializeField] private TMP_Text slotID;
@@ -20,19 +19,30 @@ public class BatchPlanSlot : MonoBehaviour
     [SerializeField] private float ActivateSize;
 
     public CropSlot storedSlotData { get; private set; }
-    public int SID { get; private set; }
     
     private Transform parentAnchor;
     private TimeSpan timeDifference;
-    
-    public void Init(CropSlot slot , Transform anchor)
+
+    public void Init(CropSlot slot, Transform anchor, int progress)
     {
         parentAnchor = anchor;
         storedSlotData = slot;
-        SID = CropManager.Instance.AllCrops.IndexOf(storedSlotData);
+
+        slotID.text = (storedSlotData.slotID + 1).ToString();
         
-        slotID.text = SID.ToString();
-        //cropName.text = storedSlotData.data.ID < 1 ? string.Empty : CropConstants.BatchPlanIconIDText + storedSlotData.data.ID;
+        if (slot.slotID >= progress)
+        {
+            GetComponent<Button>().interactable = false;
+
+            Background.color = IconColor[CropConstants.CropStatus.Locked];
+            cropName.text = String.Empty;
+            cropTimer.text = "Locked";
+
+            enabled = false;
+            return;
+        }
+        
+        cropName.text = storedSlotData.data.ID < 1 ? string.Empty : CropConstants.BatchPlanIconIDText + storedSlotData.data.ID;
         Background.color = IconColor[storedSlotData.data.Status];
     }
     

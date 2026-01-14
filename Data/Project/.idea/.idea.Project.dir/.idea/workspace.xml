@@ -8,79 +8,88 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="52cc1a30-4039-486a-9c9d-0d1e565ec1a3" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/../../Assets/Editor.meta" beforeDir="false" afterPath="$PROJECT_DIR$/../../Assets/Editor.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../Assets/Editor/EditorGUIscripts.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../Assets/Editor/EditorGUIscripts/SObutton.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../Assets/Editor/EditorGUIscripts/SObutton.cs.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../Assets/SO/Game/Crop.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../Assets/SO/Game/Crop/TestCrop.asset" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../Assets/SO/Game/Crop/TestCrop.asset.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../Assets/SO/characters/Inventory.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../Assets/SO/characters/Inventory/grass_test.asset" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../Assets/SO/characters/Inventory/grass_test.asset.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../Assets/SO/utility/GUID.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../Assets/SO/utility/GUID/GUIDSO.asset" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../Assets/SO/utility/GUID/GUIDSO.asset.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../Assets/Settings/PC_RPAsset.asset" beforeDir="false" afterPath="$PROJECT_DIR$/../../Assets/Settings/PC_RPAsset.asset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Assets/CloudCode/GeneratedModuleBindings/Data/CropEndpointsBindings.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../../Assets/CloudCode/GeneratedModuleBindings/Data/CropEndpointsBindings.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Assets/CloudCode/GeneratedModuleBindings/Data/System.DateTimeOffset.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Assets/CloudCode/GeneratedModuleBindings/Data/System.DateTimeOffset.cs.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Assets/CloudCode/GeneratedModuleBindings/Data/System.DayOfWeek.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Assets/CloudCode/GeneratedModuleBindings/Data/System.DayOfWeek.cs.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Assets/CloudCode/GeneratedModuleBindings/Data/System.TimeSpan.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Assets/CloudCode/GeneratedModuleBindings/Data/System.TimeSpan.cs.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Assets/SO/AssetManagement/Asset_Sprites.asset" beforeDir="false" afterPath="$PROJECT_DIR$/../../Assets/SO/AssetManagement/Asset_Sprites.asset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Assets/Settings/Mobile_RPAsset.asset" beforeDir="false" afterPath="$PROJECT_DIR$/../../Assets/Settings/Mobile_RPAsset.asset" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../../Assets/Settings/UniversalRenderPipelineGlobalSettings.asset" beforeDir="false" afterPath="$PROJECT_DIR$/../../Assets/Settings/UniversalRenderPipelineGlobalSettings.asset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../Assets/plugins/utility/SerializedCollections/Runtime/Scripts/SerializedDictionary.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../../Assets/plugins/utility/SerializedCollections/Runtime/Scripts/SerializedDictionary.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Assets/networking/DefaultNetworkPrefabs.asset" beforeDir="false" afterPath="$PROJECT_DIR$/../../Assets/networking/DefaultNetworkPrefabs.asset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Assets/plugins/utility/SerializedCollections/Editor/Assets/KeysGeneratorSelectorWindow.uxml" beforeDir="false" afterPath="$PROJECT_DIR$/../../Assets/plugins/utility/SerializedCollections/Editor/Assets/KeysGeneratorSelectorWindow.uxml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Assets/prefabs/GameSystem/Planting/crop.prefab" beforeDir="false" afterPath="$PROJECT_DIR$/../../Assets/prefabs/GameSystem/Planting/crop.prefab" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Assets/prefabs/GameSystem/Planting/field.prefab" beforeDir="false" afterPath="$PROJECT_DIR$/../../Assets/prefabs/GameSystem/Planting/field.prefab" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Assets/prefabs/UI/GameSystem/cropsystem/BatchPlantCropUI.prefab" beforeDir="false" afterPath="$PROJECT_DIR$/../../Assets/prefabs/UI/GameSystem/cropsystem/BatchPlantCropUI.prefab" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Assets/prefabs/UI/GameSystem/cropsystem/BatchPlantMapSlotUI.prefab" beforeDir="false" afterPath="$PROJECT_DIR$/../../Assets/prefabs/UI/GameSystem/cropsystem/BatchPlantMapSlotUI.prefab" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Assets/prefabs/UI/GameSystem/cropsystem/CropCostIcon.prefab" beforeDir="false" afterPath="$PROJECT_DIR$/../../Assets/prefabs/UI/GameSystem/cropsystem/CropCostIcon.prefab" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Assets/prefabs/UI/GameSystem/cropsystem/PlantCropUI.prefab" beforeDir="false" afterPath="$PROJECT_DIR$/../../Assets/prefabs/UI/GameSystem/cropsystem/PlantCropUI.prefab" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Assets/prefabs/UI/Network/Session/SessionListUI.prefab" beforeDir="false" afterPath="$PROJECT_DIR$/../../Assets/prefabs/UI/Network/Session/SessionListUI.prefab" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Assets/prefabs/UI/utility/pagination/pagination.prefab" beforeDir="false" afterPath="$PROJECT_DIR$/../../Assets/prefabs/UI/utility/pagination/pagination.prefab" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../../Assets/scene/title.unity" beforeDir="false" afterPath="$PROJECT_DIR$/../../Assets/scene/title.unity" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Assets/scene/v1test.unity" beforeDir="false" afterPath="$PROJECT_DIR$/../../Assets/scene/v1test.unity" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../../Assets/scripts/Game/cropsystem/BatchPlanSlot.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../../Assets/scripts/Game/cropsystem/BatchPlanSlot.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../../Assets/scripts/Game/cropsystem/BatchPlantCropUI.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../../Assets/scripts/Game/cropsystem/BatchPlantCropUI.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../Assets/scripts/Game/cropsystem/CropCategoryIcon.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../../Assets/scripts/Game/cropsystem/CropCategoryIcon.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Assets/scripts/Game/cropsystem/BatchPlantTerminal.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../../Assets/scripts/Game/cropsystem/BatchPlantTerminal.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Assets/scripts/Game/cropsystem/CropCostIcon.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../../Assets/scripts/Game/cropsystem/CropCostIcon.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../../Assets/scripts/Game/cropsystem/CropGrowingUI.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../../Assets/scripts/Game/cropsystem/CropGrowingUI.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../../Assets/scripts/Game/cropsystem/CropManager.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../../Assets/scripts/Game/cropsystem/CropManager.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../../Assets/scripts/Game/cropsystem/CropSlot.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../../Assets/scripts/Game/cropsystem/CropSlot.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Assets/scripts/Game/cropsystem/Field.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../../Assets/scripts/Game/cropsystem/Field.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../../Assets/scripts/Game/cropsystem/PlantCropUI.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../../Assets/scripts/Game/cropsystem/PlantCropUI.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../Assets/scripts/Input/Generated/PlayerInput.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../../Assets/scripts/Input/Generated/PlayerInput.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../Assets/scripts/Player/Inventory/InventoryManager.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../../Assets/scripts/Player/Inventory/InventoryManager.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../Assets/scripts/Player/Inventory/ItemCate.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../../Assets/scripts/Player/Inventory/ItemCate.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../Assets/scripts/SOsource/CropSO.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../Assets/scripts/SOsource/CropSO.cs.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../Assets/scripts/SOsource/GUIDSO.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../Assets/scripts/SOsource/GUIDSO.cs.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../Assets/scripts/SOsource/ItemSO.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../Assets/scripts/SOsource/ItemSO.cs.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Assets/scripts/UI/Manager/UIManager.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../../Assets/scripts/UI/Manager/UIManager.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Assets/scripts/UI/Session/JoinRequestDetail.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../../Assets/scripts/UI/Session/JoinRequestDetail.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../../Assets/scripts/UI/Session/SessionListUI.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../../Assets/scripts/UI/Session/SessionListUI.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Assets/scripts/UI/utility/Pagination.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../../Assets/scripts/UI/utility/Pagination.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../../Assets/scripts/networking/CloudCodeManager.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../../Assets/scripts/networking/CloudCodeManager.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../Assets/scripts/networking/LoginManager.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../../Assets/scripts/networking/LoginManager.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../Assets/scripts/networking/PlayerDataManager.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../Assets/scripts/networking/PlayerDataManager.cs.meta" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/../../Assets/scripts/utility/Models/CropModel.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../../Assets/scripts/utility/Models/CropModel.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../Assets/scripts/utility/Models/ItemModel.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../../Assets/scripts/utility/Models/ItemModel.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../../Assets/scripts/utility/constants/CropConstants.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../../Assets/scripts/utility/constants/CropConstants.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../Assets/scripts/utility/constants/PlayerDataConstants.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../../Assets/scripts/utility/constants/PlayerDataConstants.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../Assets/sourceAssets/UIsources/icon/cropsystem/grass.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../Assets/sourceAssets/UIsources/icon/cropsystem/grass.png.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../Assets/sourceAssets/UIsources/icon/cropsystem/growing.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../Assets/sourceAssets/UIsources/icon/cropsystem/growing.png.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../Assets/sourceAssets/UIsources/icon/cropsystem/imageedit_2_5991938689.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../Assets/sourceAssets/UIsources/icon/cropsystem/imageedit_2_5991938689.png.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Assets/scripts/utility/constants/GameDataConstants.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Assets/scripts/utility/constants/GameDataConstants.cs.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Assets/scripts/utility/constants/ItemConstants.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../../Assets/scripts/utility/constants/ItemConstants.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Assets/scripts/utility/constants/PlayerDataConstants.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Assets/scripts/utility/constants/PlayerDataConstants.cs.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Assets/scripts/utility/constants/UIConstants.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../../Assets/scripts/utility/constants/UIConstants.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Assets/scripts/utility/extensions/Session.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../../Assets/scripts/utility/extensions/Session.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Assets/scripts/utility/extensions/UniversalUtility.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../../Assets/scripts/utility/extensions/UniversalUtility.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Assets/sourceAssets/UIsources/icon/utility/imageedit_0_8253600991.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Assets/sourceAssets/UIsources/icon/utility/imageedit_0_8253600991.png.meta" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/../../Communications/Project/bin/Release/net6.0/linux-x64/Communications.dll" beforeDir="false" afterPath="$PROJECT_DIR$/../../Communications/Project/bin/Release/net6.0/linux-x64/Communications.dll" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Communications/Project/obj/Communications.csproj.nuget.dgspec.json" beforeDir="false" afterPath="$PROJECT_DIR$/../../Communications/Project/obj/Communications.csproj.nuget.dgspec.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../../Communications/Project/obj/Release/net6.0/linux-x64/Communications.AssemblyInfo.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../../Communications/Project/obj/Release/net6.0/linux-x64/Communications.AssemblyInfo.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../../Communications/Project/obj/Release/net6.0/linux-x64/Communications.AssemblyInfoInputs.cache" beforeDir="false" afterPath="$PROJECT_DIR$/../../Communications/Project/obj/Release/net6.0/linux-x64/Communications.AssemblyInfoInputs.cache" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../../Communications/Project/obj/Release/net6.0/linux-x64/Communications.dll" beforeDir="false" afterPath="$PROJECT_DIR$/../../Communications/Project/obj/Release/net6.0/linux-x64/Communications.dll" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../../Communications/Project/obj/Release/net6.0/linux-x64/Communications.sourcelink.json" beforeDir="false" afterPath="$PROJECT_DIR$/../../Communications/Project/obj/Release/net6.0/linux-x64/Communications.sourcelink.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../../Communications/Project/obj/Release/net6.0/linux-x64/ref/Communications.dll" beforeDir="false" afterPath="$PROJECT_DIR$/../../Communications/Project/obj/Release/net6.0/linux-x64/ref/Communications.dll" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../../Communications/Project/obj/Release/net6.0/linux-x64/refint/Communications.dll" beforeDir="false" afterPath="$PROJECT_DIR$/../../Communications/Project/obj/Release/net6.0/linux-x64/refint/Communications.dll" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Communications/Project/obj/project.assets.json" beforeDir="false" afterPath="$PROJECT_DIR$/../../Communications/Project/obj/project.assets.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Communications/Project/obj/project.nuget.cache" beforeDir="false" afterPath="$PROJECT_DIR$/../../Communications/Project/obj/project.nuget.cache" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.Project.dir/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.Project.dir/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Account.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Account.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Constants/CropConstants.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Constants/CropConstants.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Constants/DataConstants.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Constants/DataConstants.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Constants/ItemConstants.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Constants/ItemConstants.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Crop.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Crop.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/DevBackdoors/Crop_FastSave.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DevBackdoors/Crop_FastSave.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Endpoints/GameDataEndpoints.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Endpoints/GameDataEndpoints.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Endpoints/CropEndpoints.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Endpoints/CropEndpoints.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Endpoints/PlayerDataEndpoints.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Endpoints/PlayerDataEndpoints.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/GameData.cs" beforeDir="false" afterPath="$PROJECT_DIR$/GameData.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Models/CropModels.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Models/CropModels.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/PlayerData.cs" beforeDir="false" afterPath="$PROJECT_DIR$/PlayerData.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Utility.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Utility.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/Release/net6.0/any/Data.deps.json" beforeDir="false" afterPath="$PROJECT_DIR$/bin/Release/net6.0/any/Data.deps.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/bin/Release/net6.0/any/Data.dll" beforeDir="false" afterPath="$PROJECT_DIR$/bin/Release/net6.0/any/Data.dll" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/Release/net6.0/linux-x64/Data.deps.json" beforeDir="false" afterPath="$PROJECT_DIR$/bin/Release/net6.0/linux-x64/Data.deps.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/bin/Release/net6.0/linux-x64/Data.dll" beforeDir="false" afterPath="$PROJECT_DIR$/bin/Release/net6.0/linux-x64/Data.dll" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/obj/Data.csproj.nuget.dgspec.json" beforeDir="false" afterPath="$PROJECT_DIR$/obj/Data.csproj.nuget.dgspec.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/obj/Debug/net6.0/Data.AssemblyInfo.cs" beforeDir="false" afterPath="$PROJECT_DIR$/obj/Debug/net6.0/Data.AssemblyInfo.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/obj/Debug/net6.0/Data.AssemblyInfoInputs.cache" beforeDir="false" afterPath="$PROJECT_DIR$/obj/Debug/net6.0/Data.AssemblyInfoInputs.cache" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/obj/Debug/net6.0/Data.assets.cache" beforeDir="false" afterPath="$PROJECT_DIR$/obj/Debug/net6.0/Data.assets.cache" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/obj/Debug/net6.0/Data.csproj.AssemblyReference.cache" beforeDir="false" afterPath="$PROJECT_DIR$/obj/Debug/net6.0/Data.csproj.AssemblyReference.cache" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/obj/Release/net6.0/any/Data.AssemblyInfo.cs" beforeDir="false" afterPath="$PROJECT_DIR$/obj/Release/net6.0/any/Data.AssemblyInfo.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/obj/Release/net6.0/any/Data.AssemblyInfoInputs.cache" beforeDir="false" afterPath="$PROJECT_DIR$/obj/Release/net6.0/any/Data.AssemblyInfoInputs.cache" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/obj/Release/net6.0/any/Data.assets.cache" beforeDir="false" afterPath="$PROJECT_DIR$/obj/Release/net6.0/any/Data.assets.cache" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/obj/Release/net6.0/any/Data.csproj.AssemblyReference.cache" beforeDir="false" afterPath="$PROJECT_DIR$/obj/Release/net6.0/any/Data.csproj.AssemblyReference.cache" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/obj/Release/net6.0/any/Data.csproj.CoreCompileInputs.cache" beforeDir="false" afterPath="$PROJECT_DIR$/obj/Release/net6.0/any/Data.csproj.CoreCompileInputs.cache" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/obj/Release/net6.0/any/Data.dll" beforeDir="false" afterPath="$PROJECT_DIR$/obj/Release/net6.0/any/Data.dll" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/obj/Release/net6.0/any/Data.sourcelink.json" beforeDir="false" afterPath="$PROJECT_DIR$/obj/Release/net6.0/any/Data.sourcelink.json" afterDir="false" />
@@ -88,6 +97,8 @@
       <change beforePath="$PROJECT_DIR$/obj/Release/net6.0/any/refint/Data.dll" beforeDir="false" afterPath="$PROJECT_DIR$/obj/Release/net6.0/any/refint/Data.dll" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/obj/Release/net6.0/linux-x64/Data.AssemblyInfo.cs" beforeDir="false" afterPath="$PROJECT_DIR$/obj/Release/net6.0/linux-x64/Data.AssemblyInfo.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/obj/Release/net6.0/linux-x64/Data.AssemblyInfoInputs.cache" beforeDir="false" afterPath="$PROJECT_DIR$/obj/Release/net6.0/linux-x64/Data.AssemblyInfoInputs.cache" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/obj/Release/net6.0/linux-x64/Data.assets.cache" beforeDir="false" afterPath="$PROJECT_DIR$/obj/Release/net6.0/linux-x64/Data.assets.cache" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/obj/Release/net6.0/linux-x64/Data.csproj.AssemblyReference.cache" beforeDir="false" afterPath="$PROJECT_DIR$/obj/Release/net6.0/linux-x64/Data.csproj.AssemblyReference.cache" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/obj/Release/net6.0/linux-x64/Data.csproj.CoreCompileInputs.cache" beforeDir="false" afterPath="$PROJECT_DIR$/obj/Release/net6.0/linux-x64/Data.csproj.CoreCompileInputs.cache" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/obj/Release/net6.0/linux-x64/Data.dll" beforeDir="false" afterPath="$PROJECT_DIR$/obj/Release/net6.0/linux-x64/Data.dll" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/obj/Release/net6.0/linux-x64/Data.sourcelink.json" beforeDir="false" afterPath="$PROJECT_DIR$/obj/Release/net6.0/linux-x64/Data.sourcelink.json" afterDir="false" />
@@ -95,15 +106,14 @@
       <change beforePath="$PROJECT_DIR$/obj/Release/net6.0/linux-x64/refint/Data.dll" beforeDir="false" afterPath="$PROJECT_DIR$/obj/Release/net6.0/linux-x64/refint/Data.dll" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/obj/project.assets.json" beforeDir="false" afterPath="$PROJECT_DIR$/obj/project.assets.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/obj/project.nuget.cache" beforeDir="false" afterPath="$PROJECT_DIR$/obj/project.nuget.cache" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/obj/project.packagespec.json" beforeDir="false" afterPath="$PROJECT_DIR$/obj/project.packagespec.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/obj/rider.project.model.nuget.info" beforeDir="false" afterPath="$PROJECT_DIR$/obj/rider.project.model.nuget.info" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/obj/rider.project.restore.info" beforeDir="false" afterPath="$PROJECT_DIR$/obj/rider.project.restore.info" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../../Packages/manifest.json" beforeDir="false" afterPath="$PROJECT_DIR$/../../Packages/manifest.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../../Packages/packages-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/../../Packages/packages-lock.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../../ProjectSettings/EditorBuildSettings.asset" beforeDir="false" afterPath="$PROJECT_DIR$/../../ProjectSettings/EditorBuildSettings.asset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../ProjectSettings/GraphicsSettings.asset" beforeDir="false" afterPath="$PROJECT_DIR$/../../ProjectSettings/GraphicsSettings.asset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../ProjectSettings/ProjectVersion.txt" beforeDir="false" afterPath="$PROJECT_DIR$/../../ProjectSettings/ProjectVersion.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../ProjectSettings/ShaderGraphSettings.asset" beforeDir="false" afterPath="$PROJECT_DIR$/../../ProjectSettings/ShaderGraphSettings.asset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../ProjectSettings/VirtualProjectsConfig.json" beforeDir="false" afterPath="$PROJECT_DIR$/../../ProjectSettings/VirtualProjectsConfig.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../ProjectSettings/ProjectSettings.asset" beforeDir="false" afterPath="$PROJECT_DIR$/../../ProjectSettings/ProjectSettings.asset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../ProjectSettings/URPProjectSettings.asset" beforeDir="false" afterPath="$PROJECT_DIR$/../../ProjectSettings/URPProjectSettings.asset" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -147,6 +157,7 @@
     &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
     &quot;Publish to IIS.Data: FolderProfile.executor&quot;: &quot;Run&quot;,
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
     &quot;git-widget-placeholder&quot;: &quot;master&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
@@ -202,6 +213,33 @@
       <workItem from="1764877350104" duration="1555000" />
       <workItem from="1764913554671" duration="726000" />
       <workItem from="1764914307390" duration="1576000" />
+      <workItem from="1764955840534" duration="358000" />
+      <workItem from="1764956525449" duration="811000" />
+      <workItem from="1765005996330" duration="5883000" />
+      <workItem from="1765016610241" duration="1653000" />
+      <workItem from="1765018278042" duration="239000" />
+      <workItem from="1765018525256" duration="577000" />
+      <workItem from="1765019116433" duration="2301000" />
+      <workItem from="1765027779276" duration="150000" />
+      <workItem from="1765028108184" duration="3383000" />
+      <workItem from="1765133203631" duration="651000" />
+      <workItem from="1765168963846" duration="10343000" />
+      <workItem from="1765254884547" duration="2751000" />
+      <workItem from="1765344900881" duration="5315000" />
+      <workItem from="1765434792140" duration="199000" />
+      <workItem from="1765443519570" duration="2464000" />
+      <workItem from="1765450745130" duration="58000" />
+      <workItem from="1765451488968" duration="857000" />
+      <workItem from="1765464854698" duration="599000" />
+      <workItem from="1765507141982" duration="3598000" />
+      <workItem from="1765781277077" duration="3532000" />
+      <workItem from="1765789580350" duration="6314000" />
+      <workItem from="1765863919602" duration="1802000" />
+      <workItem from="1766132996071" duration="1077000" />
+      <workItem from="1766376298251" duration="16012000" />
+      <workItem from="1766459828019" duration="1201000" />
+      <workItem from="1766940039190" duration="751000" />
+      <workItem from="1767003379871" duration="1869000" />
     </task>
     <servers />
   </component>

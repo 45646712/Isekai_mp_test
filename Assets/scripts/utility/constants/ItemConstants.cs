@@ -21,7 +21,8 @@ namespace Constant
         
         public enum ItemCategory
         {
-            Materials = 1,
+            All,
+            Materials,
             Resources,
             Valuables,
             Quest,
@@ -33,8 +34,7 @@ namespace Constant
         {
             Exp,
             Item,
-            Currency_Gold,
-            Time,
+            Currency_Gold
         }
     }
 }

@@ -26,6 +26,6 @@ public static class GameData
     {
         ApiResponse<GetItemsResponse> result = await gameApiClient.CloudSaveData.GetCustomItemsAsync(context, context.AccessToken, context.ProjectId, type.ToString());
 
-        return result.Data.Results.Select(x => (string)x.Value).ToList();
+        return result.Data.Results.OrderBy(x => x.Key).Select(x => (string)x.Value).ToList();
     }
 }

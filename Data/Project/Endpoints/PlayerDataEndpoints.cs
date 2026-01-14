@@ -45,7 +45,12 @@ public class PlayerDataEndpoints
     }
 
     [CloudCodeFunction("LoadPlayerData")]
-    public async Task<string?> LoadPlayerData(IExecutionContext context, IGameApiClient gameApiClient, DataAccessibility access, string key) => (string?)await PlayerData.LoadPlayerData(context, gameApiClient, access, key);
+    public async Task<string?> LoadPlayerData(IExecutionContext context, IGameApiClient gameApiClient, DataAccessibility access, string key)
+    {
+        object? result = await PlayerData.LoadPlayerData(context, gameApiClient, access, key);
+        
+        return result?.ToString();
+    }
 
     [CloudCodeFunction("LoadMultiPlayerData")]
     public async Task<Dictionary<string,string?>?> LoadMultiPlayerData(IExecutionContext context, IGameApiClient gameApiClient, DataAccessibility access, List<string> keys)

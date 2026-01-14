@@ -13,22 +13,14 @@ public class UIManager : MonoBehaviour
 
     public Stack<GameObject> AllActiveStepUIs { get; set; } = new();
     public Dictionary<UIConstants.NonPooledUITypes, GameObject> AllActiveUIs { get; set; } = new();
-    
+
     private void Awake()
     {
         Instance = this;
         DontDestroyOnLoad(gameObject);
     }
 
-    public GameObject SpawnUI(UIConstants.NonPooledUITypes type)
-    {
-        if (AllActiveUIs.ContainsKey(type))
-        {
-            return null;
-        }
-        
-        return Instantiate(UIPrefabs[type]);
-    }
+    public GameObject SpawnUI(UIConstants.NonPooledUITypes type) => AllActiveUIs.ContainsKey(type) ? null : Instantiate(UIPrefabs[type]);
 
     public void CloseAllUI()
     {

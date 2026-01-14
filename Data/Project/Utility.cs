@@ -2,6 +2,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using Unity.Services.CloudCode.Core;
 using Unity.Services.CloudCode.Apis;
+using Unity.Services.CloudCode.Apis.Admin;
 
 using static Data.DataConstants;
 
@@ -18,7 +19,8 @@ public static class Utility
         nameof(ProtectedPlayerKeys.Inventory) => value,
         nameof(ProtectedPlayerKeys.Currency_Gold) => long.Parse(value),
         nameof(ProtectedPlayerKeys.CropData) => value,
-        nameof(ProtectedPlayerKeys.UnlockedCrops) => long.Parse(value),
+        nameof(ProtectedPlayerKeys.UnlockedCropSlots) => long.Parse(value),
+        nameof(ProtectedPlayerKeys.UnlockedFishSlots) => long.Parse(value),
         _ => throw new InvalidOperationException()
     };
 }
@@ -28,5 +30,6 @@ public class ModuleConfig : ICloudCodeSetup
     public void Setup(ICloudCodeConfig config)
     {
         config.Dependencies.AddSingleton(GameApiClient.Create());
+        config.Dependencies.AddSingleton(AdminApiClient.Create());
     }
 }

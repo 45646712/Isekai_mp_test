@@ -16,7 +16,7 @@ using Unity.Services.Multiplayer;
 using UnityEngine;
 using UnityEngine.UI;
 
-using PublicData = Constant.PlayerDataConstants.PublicDataType;
+using static Constant.DataConstants;
 
 public class SessionListUI : MonoBehaviour, IRefreshable
 {
@@ -51,7 +51,7 @@ public class SessionListUI : MonoBehaviour, IRefreshable
         
         changeNicknameButton.onClick.AddListener(() =>
         {
-            CloudCodeManager.Instance.SavePlayerData(DataConstants_DataAccessibility.Public, nameof(PublicData.Name), changeNicknameInputField.text).Forget();
+            CloudCodeManager.Instance.SavePlayerData(DataConstants_DataAccessibility.Public, nameof(PublicDataType.Name), changeNicknameInputField.text).Forget();
             SessionManager.Instance.UpdateSessionHostInfo().Forget();
         });
     }
@@ -68,7 +68,7 @@ public class SessionListUI : MonoBehaviour, IRefreshable
     {
         Query query = new Query(new List<FieldFilter>
         {
-            new(PlayerDataConstants.PublicDataType.UserID.ToString(), userID, FieldFilter.OpOptions.EQ, false)
+            new(PublicDataType.UserID.ToString(), userID, FieldFilter.OpOptions.EQ, false)
         }, null, 0, 1);
 
         List<EntityData> result = await CloudSaveService.Instance.Data.Player.QueryAsync(query, new QueryOptions());

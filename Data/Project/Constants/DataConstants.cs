@@ -26,12 +26,13 @@ public static class DataConstants
         Inventory, //string
         Currency_Gold, //int
         CropData, //string
-        UnlockedCrops
+        UnlockedCropSlots,
+        UnlockedFishSlots
     }
     
     public enum PrivatePlayerKeys
     {
-        
+        NextCropUpdateTime //DToffset
     }
     
     public enum DataOperations

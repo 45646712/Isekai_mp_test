@@ -2,11 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
-
-using static Models.CropModel;
-using PublicData = Constant.PlayerDataConstants.PublicDataType;
-using ProtectedData = Constant.PlayerDataConstants.ProtectedDataType;
-using GameDataType = Unity.Services.CloudCode.GeneratedBindings.Data.DataConstants_GameDataType;
+using UnityEngine;
+using static Constant.DataConstants;
 
 namespace Extensions
 {
@@ -14,14 +11,15 @@ namespace Extensions
     {
         public static object DeserializeData(string key, string value) => key switch
         {
-            nameof(PublicData.UserID) => long.Parse(value),
-            nameof(PublicData.Name) => value,
-            nameof(PublicData.Lv) => byte.Parse(value),
-            nameof(PublicData.Exp) => int.Parse(value),
-            nameof(ProtectedData.Inventory) => value,
-            nameof(ProtectedData.BalanceGold) => int.Parse(value),
-            nameof(ProtectedData.CropData) => value,
-            nameof(ProtectedData.UnlockedCrops) => int.Parse(value),
+            nameof(PublicDataType.UserID) => long.Parse(value),
+            nameof(PublicDataType.Name) => value,
+            nameof(PublicDataType.Lv) => byte.Parse(value),
+            nameof(PublicDataType.Exp) => int.Parse(value),
+            nameof(ProtectedDataType.Inventory) => value,
+            nameof(ProtectedDataType.BalanceGold) => int.Parse(value),
+            nameof(ProtectedDataType.CropData) => value is null ? null : JsonSerializer.Deserialize<Dictionary<int, string>>(value),
+            nameof(ProtectedDataType.UnlockedCropSlots) => int.Parse(value),
+            nameof(ProtectedDataType.UnlockedFishSlots) => int.Parse(value),
             _ => throw new InvalidOperationException()
         };
 
@@ -42,12 +40,12 @@ namespace Extensions
             
             TimeSpan duration = TimeSpan.FromSeconds(seconds);
 
-            return duration.Seconds switch
+            return duration.TotalSeconds switch
             {
-                > 86400 => @$"{duration:d\:h\:m\:s}",
-                > 3600 => @$"{duration:h\:m\:s\}",
-                > 60 => @$"{duration:m\:s\}",
-                > 0 => $"{duration}s",
+                > 86400 => @$"{duration:d\d\:h\h\:m\m\:s\s}",
+                > 3600 => @$"{duration:h\h\:m\m\:s\s}",
+                > 60 => @$"{duration:m\m\:s\s}",
+                > 0 => $"{duration.TotalSeconds}s",
                 _ => throw new InvalidOperationException()
             };
         }

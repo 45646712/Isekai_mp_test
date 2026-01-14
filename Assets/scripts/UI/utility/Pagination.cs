@@ -8,15 +8,19 @@ using UnityEngine.UI;
 
 public class Pagination : MonoBehaviour
 {
+    [SerializeField] private GameObject IndicatorPrefab;
+    [SerializeField] private Transform IndicatorAnchor;
+    
     [SerializeField] private GameObject contentParent;
     [SerializeField] private Scrollbar scrollbar;
     
     [SerializeField] private TMP_Text title;
-    [SerializeField] private List<LayoutElement> indicators;
 
     [field: SerializeField, SerializedDictionary("Index", "Title")]
     private SerializedDictionary<int, string> pageTitle = new();
 
+    private List<LayoutElement> indicators = new();
+    
     private float pageIndex => 1f / contentParent.transform.childCount;
 
     private Vector2 normalSize = new(60,15);
@@ -24,12 +28,18 @@ public class Pagination : MonoBehaviour
 
     private void Start()
     {
+        for (int i = 0; i < pageTitle.Count; i++)
+        {
+            LayoutElement obj = Instantiate(IndicatorPrefab, IndicatorAnchor).GetComponent<LayoutElement>();
+            indicators.Add(obj);
+        }
+        
         scrollbar.onValueChanged.AddListener(UpdatePage);
         
         UpdatePage(0); //initialization
     }
 
-    public void UpdatePage(float value)
+    private void UpdatePage(float value)
     {
         int page = (int)Math.Round(Mathf.Clamp01(value) / pageIndex);
 

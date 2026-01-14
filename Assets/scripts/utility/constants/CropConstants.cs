@@ -7,9 +7,10 @@ namespace Constant
     {
         public enum CropStatus
         {
-            Null = 0,
-            Growing = 1,
-            Matured = 2
+            Locked = -1,
+            Null,
+            Growing, 
+            Matured, 
         }
         
         public enum BatchPlantMode

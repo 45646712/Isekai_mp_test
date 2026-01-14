@@ -14,9 +14,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   <source>k__BackingField:
   - GUID: d18e9b36-7025-4d3d-9ca2-33baffcc5dd5
-    Asset: {fileID: 1860999125, guid: 513f5917f35cb854f8d6aef1828fe085, type: 3}
-  - GUID: ace9457f-b18c-4a24-ab99-a5a56c277243
     Asset: {fileID: 1165698203, guid: 513f5917f35cb854f8d6aef1828fe085, type: 3}
+  - GUID: ace9457f-b18c-4a24-ab99-a5a56c277243
+    Asset: {fileID: 1860999125, guid: 513f5917f35cb854f8d6aef1828fe085, type: 3}
   - GUID: c91d2c40-f5f8-4f30-bb2f-1f4725cdccf7
     Asset: {fileID: 397850172, guid: a9e357aad019daa41a7bffa586a11435, type: 3}
   - GUID: 32bc23ea-f68c-4e2a-b64c-997f8773a7c6

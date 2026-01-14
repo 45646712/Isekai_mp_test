@@ -1,7 +1,7 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json;
 using Constant;
 using Cysharp.Threading.Tasks;
 using Extensions;
@@ -10,13 +10,19 @@ using Unity.Services.CloudCode.GeneratedBindings.Data;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
+
+using static Constant.DataConstants;
+using static Constant.ItemConstants;
+using static Constant.CropConstants;
 using static Models.CropModel;
-using Utility = Extensions.UniversalUtility;
-using Category = Constant.ItemConstants.ItemCategory;
-using PlanMode = Constant.CropConstants.BatchPlantMode;
+using static Extensions.UniversalUtility;
 
 public class BatchPlantCropUI : MonoBehaviour, IGeneric
 {
+    [Header("Search")] 
+    [SerializeField] private TMP_InputField searchInput;
+    [SerializeField] private Button searchButton;
+    
     [Header("Category")] 
     [SerializeField] private Button previousCategory;
     [SerializeField] private Button nextCategory;
@@ -41,8 +47,8 @@ public class BatchPlantCropUI : MonoBehaviour, IGeneric
     
     private List<List<BatchPlanSlot>> slots { get; } = new();
 
-    private Category currentCategory;
-    private Category maxCategory;
+    private ItemCategory currentCategory;
+    private ItemCategory maxCategory;
 
     private CropBaseData currentSelectedBaseData;
 
@@ -67,18 +73,28 @@ public class BatchPlantCropUI : MonoBehaviour, IGeneric
             validatedClick = -1;
         }
     }
-    
-    private UnityAction OnCancel(PlanMode mode, List<int> selectedSlotIDs) => mode switch
+
+    private CropBaseData CurrentSelectedBaseData
     {
-        PlanMode.Standby => () => { CropManager.Instance.Harvest(selectedSlotIDs).Forget(); },
+        get => currentSelectedBaseData;
+        set
+        {
+            InitializePlanMap();
+            currentSelectedBaseData = value;
+        }
+    }
+    
+    private UnityAction OnCancel(BatchPlantMode mode) => mode switch
+    {
+        BatchPlantMode.Standby => () => { CropManager.Instance.Harvest(slots.SelectMany(x => x.Where(y => y.storedSlotData.data.Status == CropStatus.Matured).Select(y => y.storedSlotData.slotID)).ToList()).Forget(); },
         _ => InitializePlanMap
     };
 
-    private UnityAction OnConfirm(PlanMode mode, List<int> selectedSlotIDs) => mode switch
+    private UnityAction OnConfirm(BatchPlantMode mode, List<int> selectedSlotIDs) => mode switch
     {
-        PlanMode.Standby => () =>
+        BatchPlantMode.Standby => () =>
         {
-            List<BatchPlanSlot> validSlots = slots.SelectMany(x => x.Where(y => !y.storedSlotData.isOccupied)).ToList();
+            List<BatchPlanSlot> validSlots = slots.SelectMany(x => x.Where(y => y.storedSlotData.data.Status == CropStatus.Null)).ToList();
 
             if (validSlots.Count == 0)
             {
@@ -96,61 +112,52 @@ public class BatchPlantCropUI : MonoBehaviour, IGeneric
             CancelButton.onClick.AddListener(InitializePlanMap);
             ConfirmButton.onClick.AddListener(() =>
             {
-                CropManager.Instance.Plant(selectedSlotIDs, currentSelectedBaseData.ID).Forget();
+                CropManager.Instance.Plant(validSlots.Select(x => x.storedSlotData.slotID).ToList(), CurrentSelectedBaseData.ID).Forget();
                 InitializePlanMap();
             });
         },
-        PlanMode.Plant => () => { CropManager.Instance.Plant(selectedSlotIDs, currentSelectedBaseData.ID).Forget(); },
-        PlanMode.Remove => () => { CropManager.Instance.Remove(selectedSlotIDs).Forget(); },
-        PlanMode.Harvest => () => { CropManager.Instance.Harvest(selectedSlotIDs).Forget(); },
+        BatchPlantMode.Plant => () => { CropManager.Instance.Plant(selectedSlotIDs, CurrentSelectedBaseData.ID).Forget(); },
+        BatchPlantMode.Remove => () => { CropManager.Instance.Remove(selectedSlotIDs).Forget(); },
+        BatchPlantMode.Harvest => () => { CropManager.Instance.Harvest(selectedSlotIDs).Forget(); },
         _ => throw new InvalidOperationException()
     };
 
-    private UnityAction OnInitiatedConfirm(PlanMode mode, BatchPlanSlot slot) => mode switch
+    private UnityAction OnInitiatedConfirm(BatchPlantMode mode, BatchPlanSlot slot) => mode switch
     {
-        PlanMode.Plant => () => { CropManager.Instance.Plant(slot.SID, currentSelectedBaseData.ID).Forget(); },
-        PlanMode.Remove => () =>
-        {
-            UIManager.Instance.SpawnUI(UIConstants.NonPooledUITypes.CropGrowingUI).GetComponent<CropGrowingUI>().Init(currentSelectedBaseData, slot.SID, slot.storedSlotData.data.MatureTime);
-        },
+        BatchPlantMode.Plant => () => { CropManager.Instance.Plant(slot.storedSlotData.slotID, CurrentSelectedBaseData.ID).Forget(); }, 
+        BatchPlantMode.Remove => () => { UIManager.Instance.SpawnUI(UIConstants.NonPooledUITypes.CropGrowingUI).GetComponent<CropGrowingUI>().Init(slot.storedSlotData); },
         _ => throw new InvalidOperationException()
     };
 
     private void Awake()
     {
-        maxCategory = UniversalUtility.GetEnumMaxIndex(currentCategory);
+        maxCategory = GetEnumMaxIndex(currentCategory);
         
         previousCategory.onClick.AddListener(() =>
         {
-            if (currentCategory < 0)
-            {
-                return;
-            } //safeguard
-
             currentCategory -= 1;
-            ShowCategory(currentCategory);
+            ShowCategory(currentCategory).Forget();
         });
         nextCategory.onClick.AddListener(() =>
         {
-            if (currentCategory >= maxCategory)
-            {
-                return;
-            } //safeguard
-
             currentCategory += 1;
-            ShowCategory(currentCategory);
+            ShowCategory(currentCategory).Forget();
         });
+
+        searchButton.onClick.AddListener(() => { ShowCategory(ItemCategory.All, true).Forget(); });
     }
 
-    private void Start()
+    private async UniTaskVoid Start()
     {
         RegisterUI();
-
-        ShowCategory(0);
+        
+        await ShowCategory(ItemCategory.All);
     }
     
-    public void Init(CropSlot[] slots)
+    public async UniTaskVoid Init(CropSlot[] slots)
     {
+        int result = (int)await CloudCodeManager.Instance.LoadPlayerData(DataConstants_DataAccessibility.Protected, nameof(ProtectedDataType.UnlockedCropSlots));
+        
         int rows = BatchPlanMapAnchor.GetComponent<GridLayoutGroup>().constraintCount;
         int columns = slots.Length / rows;
 
@@ -166,7 +173,7 @@ public class BatchPlantCropUI : MonoBehaviour, IGeneric
                 Button button = obj.GetComponent<Button>();
                 BatchPlanSlot slot = obj.GetComponent<BatchPlanSlot>();
 
-                slot.Init(slots[counter], BatchPlanMapAnchor);
+                slot.Init(slots[counter], BatchPlanMapAnchor, result);
 
                 button.onClick.RemoveAllListeners();
                 button.onClick.AddListener(() => { ValidatePlot(slot); });
@@ -182,9 +189,9 @@ public class BatchPlantCropUI : MonoBehaviour, IGeneric
 
     private void ValidatePlot(BatchPlanSlot slot)
     {
-        if (validatedClick != slot.SID)
+        if (validatedClick != slot.storedSlotData.slotID)
         {
-            validatedClick = slot.SID;
+            validatedClick = slot.storedSlotData.slotID;
             validClickTimer = validClickDuration;
             return;
         }
@@ -201,8 +208,8 @@ public class BatchPlantCropUI : MonoBehaviour, IGeneric
         List<BatchPlanSlot> selectedSlots = new();
         List<int> selectedSlotIDs = new();
 
-        CropConstants.CropStatus status;
-        PlanMode mode;
+        CropStatus status;
+        BatchPlantMode mode;
         
         switch (previousSelectedGrid == null, currentSelectedGrid == null)
         {
@@ -213,21 +220,21 @@ public class BatchPlantCropUI : MonoBehaviour, IGeneric
                 status = currentSelectedGrid.storedSlotData.data.Status;
                 mode = this.GetPlanMode(status);
                 
-                CancelButtonText.text = CropConstants.BatchPlanCancelText[mode];
-                ConfirmButtonText.text = CropConstants.BatchPlanInitConfirmText[mode];
+                CancelButtonText.text = BatchPlanCancelText[mode];
+                ConfirmButtonText.text = BatchPlanInitConfirmText[mode];
 
-                CancelButton.onClick.AddListener(OnCancel(mode, null));
+                CancelButton.onClick.AddListener(OnCancel(mode));
 
-                if (mode == PlanMode.Harvest)
+                if (mode == BatchPlantMode.Harvest)
                 {
-                    ConfirmButton.onClick.AddListener(OnConfirm(mode, slots.SelectMany(x => x.Select(y => y.SID)).ToList()) + InitializePlanMap);
+                    ConfirmButton.onClick.AddListener(OnConfirm(mode, slots.SelectMany(x => x.Where(y => y.storedSlotData.data.Status == CropStatus.Matured).Select(y => y.storedSlotData.slotID)).ToList()) + InitializePlanMap);
                 }
                 else
                 {
                     ConfirmButton.onClick.AddListener(OnInitiatedConfirm(mode, currentSelectedGrid) + InitializePlanMap);
                 }
                 
-                if (mode == PlanMode.Plant)
+                if (mode == BatchPlantMode.Plant)
                 {
                     ShowCost();
                 }
@@ -236,8 +243,8 @@ public class BatchPlantCropUI : MonoBehaviour, IGeneric
                 status = previousSelectedGrid.storedSlotData.data.Status;
                 mode = this.GetPlanMode(status);
 
-                (int,int) g1 = Utility.IndexOf2LayerList(slots, previousSelectedGrid);
-                (int,int) g2 = Utility.IndexOf2LayerList(slots, currentSelectedGrid);
+                (int,int) g1 = IndexOf2LayerList(slots, previousSelectedGrid);
+                (int,int) g2 = IndexOf2LayerList(slots, currentSelectedGrid);
 
                 (int, int) d1 = (Math.Min(g1.Item1, g2.Item1), Math.Min(g1.Item2, g2.Item2)); //d1.x , d1.y
                 (int, int) d2 = (Math.Max(g1.Item1, g2.Item1), Math.Max(g1.Item2, g2.Item2)); //d2.x , d2,y
@@ -250,19 +257,23 @@ public class BatchPlantCropUI : MonoBehaviour, IGeneric
                     }
                 }
 
-                selectedSlotIDs = mode != PlanMode.Harvest
-                    ? selectedSlots.Select(x => x.SID).ToList()
-                    : slots.SelectMany(x => x.Select(y => y.SID)).ToList();
+                selectedSlotIDs = mode switch
+                {
+                    BatchPlantMode.Plant => selectedSlots.Where(x => x.storedSlotData.data.Status == CropStatus.Null).Select(x => x.storedSlotData.slotID).ToList(),
+                    BatchPlantMode.Harvest => slots.SelectMany(x => x.Where(y => y.storedSlotData.data.Status == CropStatus.Matured).Select(y => y.storedSlotData.slotID)).ToList(),
+                    BatchPlantMode.Remove => selectedSlots.Select(x => x.storedSlotData.slotID).ToList(),
+                    _ => throw new InvalidOperationException()
+                };
 
-                if (status == CropConstants.CropStatus.Null)
+                if (status == CropStatus.Null)
                 {
                     ShowCost(selectedSlots);
                 }
                 
-                CancelButtonText.text = CropConstants.BatchPlanCancelText[mode];
-                ConfirmButtonText.text = CropConstants.BatchPlanConfirmText[mode];
+                CancelButtonText.text = BatchPlanCancelText[mode];
+                ConfirmButtonText.text = BatchPlanConfirmText[mode];
                 
-                CancelButton.onClick.AddListener(OnCancel(mode, selectedSlotIDs) + InitializePlanMap);
+                CancelButton.onClick.AddListener(OnCancel(mode) + InitializePlanMap);
                 ConfirmButton.onClick.AddListener(OnConfirm(mode, selectedSlotIDs) + InitializePlanMap);
                 
                 previousSelectedGrid = null;
@@ -284,7 +295,7 @@ public class BatchPlantCropUI : MonoBehaviour, IGeneric
         }
     }
 
-    private async void ShowCategory(Category category)
+    private async UniTask ShowCategory(ItemCategory category, bool isSearch = false)
     {
         foreach (Transform element in cropIconAnchor.transform)
         {
@@ -295,23 +306,37 @@ public class BatchPlantCropUI : MonoBehaviour, IGeneric
 
             PoolManager.Instance.Release(ObjectPoolType.CropIcon, element.gameObject);
         }
-        
-        previousCategory.GetComponent<Image>().enabled = category != 0;
-        nextCategory.GetComponent<Image>().enabled = category != maxCategory;
 
-        categoryText.text = (int)category == 0 ? "All" : category.ToString();
+        previousCategory.GetComponent<Image>().enabled = category > ItemCategory.All;
+        nextCategory.GetComponent<Image>().enabled = category < maxCategory;
+
+        categoryText.text = category.ToString();
 
         List<CropBaseData> result = await CloudCodeManager.Instance.LoadMultiGameData<CropBaseData>(DataConstants_GameDataType.Crop);
+        List<CropBaseData> query = result;
         
-        foreach (CropBaseData element in category == 0 ? result : result.Where(x => x.Category == category))
+        if (isSearch)
         {
-            PoolManager.Instance.Get(ObjectPoolType.CropIcon, cropIconAnchor).GetComponent<CropCategoryIcon>().Init(element, () => { currentSelectedBaseData = element; });
+            query = searchInput.text.All(char.IsDigit) 
+                ? result.FindAll(x => x.ID.ToString().Contains(searchInput.text, StringComparison.OrdinalIgnoreCase))
+                : result.FindAll(x => x.Name.Contains(searchInput.text, StringComparison.OrdinalIgnoreCase));
         }
 
-        if (currentSelectedBaseData == null)
-        {
-            currentSelectedBaseData = result.FirstOrDefault();
+        if (category != ItemCategory.All)
+        { 
+            query = result.Where(x => x.Category == category).ToList();
         }
+        
+        InitializePlanMap();
+        
+        foreach (CropBaseData element in query)
+        {
+            GameObject icon = PoolManager.Instance.Get(ObjectPoolType.CropIcon, cropIconAnchor);
+            icon.GetComponent<CropCategoryIcon>().Init(element, () => { CurrentSelectedBaseData = element; });
+            icon.transform.SetAsLastSibling();
+        }
+
+        CurrentSelectedBaseData ??= query.FirstOrDefault(); // =to apply directly or ??= to not apply
     }
 
     private void ShowCost() 
@@ -321,27 +346,25 @@ public class BatchPlantCropUI : MonoBehaviour, IGeneric
             PoolManager.Instance.Release(ObjectPoolType.CropCostIcon, element.gameObject);
         }
         
-        foreach (var (type, value) in currentSelectedBaseData.Costs)
+        foreach (var (type, value) in CurrentSelectedBaseData.Costs)
         {
             PoolManager.Instance.Get(ObjectPoolType.CropCostIcon, cropCostIconAnchor).GetComponent<CropCostIcon>().Init(type, value);
         }
+        
+        PoolManager.Instance.Get(ObjectPoolType.CropCostIcon, cropCostIconAnchor).GetComponent<CropCostIcon>().InitTime(CurrentSelectedBaseData.TimeNeeded);
     }
     
     private void ShowCost(List<BatchPlanSlot> selectedSlots) 
     {
-        Dictionary<ItemConstants.ResourceType, int> costs = new();
+        Dictionary<ResourceType, int> costs = new();
 
-        int totalValidSlots = selectedSlots.Count(x => !x.storedSlotData.isOccupied);
+        int totalValidSlots = selectedSlots.Count(x => x.storedSlotData.data.Status == CropStatus.Null);
         
-        foreach (var (type, value) in currentSelectedBaseData.Costs)
+        foreach (var (type, value) in CurrentSelectedBaseData.Costs)
         {
-            costs[type] = type switch
-            {
-                ItemConstants.ResourceType.Time => value,
-                _ => costs.TryGetValue(type, out var cost) ? cost += value * totalValidSlots : value * totalValidSlots
-            };
+            costs[type] = costs.TryGetValue(type, out var cost) ? cost + value * totalValidSlots : value * totalValidSlots;
         }
-
+        
         foreach (Transform element in cropCostIconAnchor)
         {
             PoolManager.Instance.Release(ObjectPoolType.CropCostIcon, element.gameObject);
@@ -351,20 +374,20 @@ public class BatchPlantCropUI : MonoBehaviour, IGeneric
         {
             PoolManager.Instance.Get(ObjectPoolType.CropCostIcon, cropCostIconAnchor).GetComponent<CropCostIcon>().Init(type, value);
         }
+
+        PoolManager.Instance.Get(ObjectPoolType.CropCostIcon, cropCostIconAnchor).GetComponent<CropCostIcon>().InitTime(CurrentSelectedBaseData.TimeNeeded);
     }
 
     private void InitializePlanMap()
     {
-        List<int> selectedSlotIDs = slots.SelectMany(x => x.Select(y => y.SID)).ToList();
-
         CancelButton.onClick.RemoveAllListeners();
         ConfirmButton.onClick.RemoveAllListeners();
 
-        CancelButtonText.text = CropConstants.BatchPlanCancelText[PlanMode.Standby];
-        ConfirmButtonText.text = CropConstants.BatchPlanConfirmText[PlanMode.Standby];
+        CancelButtonText.text = BatchPlanCancelText[BatchPlantMode.Standby];
+        ConfirmButtonText.text = BatchPlanConfirmText[BatchPlantMode.Standby];
 
-        CancelButton.onClick.AddListener(OnCancel(PlanMode.Standby, selectedSlotIDs) + InitializePlanMap);
-        ConfirmButton.onClick.AddListener(OnConfirm(PlanMode.Standby, selectedSlotIDs));
+        CancelButton.onClick.AddListener(OnCancel(BatchPlantMode.Standby) + InitializePlanMap);
+        ConfirmButton.onClick.AddListener(OnConfirm(BatchPlantMode.Standby, null));
         
         foreach (Transform element in cropCostIconAnchor)
         {

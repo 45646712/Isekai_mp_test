@@ -11,6 +11,7 @@ using Utility = Extensions.UniversalUtility;
 public class CropCostIcon : MonoBehaviour
 {
     [SerializeField, SerializedDictionary("ResourceType", "Icon")] private SerializedDictionary<ItemConstants.ResourceType, Sprite> icons;
+    [SerializeField] private Sprite TimeResourceIcon;
     
     [SerializeField] private Image image;
     [SerializeField] private TMP_Text text;
@@ -18,6 +19,12 @@ public class CropCostIcon : MonoBehaviour
     public void Init(ItemConstants.ResourceType type, int value)
     {
         image.sprite = icons[type];
-        text.text = type == ItemConstants.ResourceType.Time ? Utility.FormatTime(value) : value.ToString();
+        text.text = value.ToString();
+    }
+    
+    public void InitTime(int value)
+    {
+        image.sprite = TimeResourceIcon;
+        text.text = Utility.FormatTime(value);
     }
 }

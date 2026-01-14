@@ -33,21 +33,27 @@ namespace Models
 
         public class CropData
         {
+            public int ID { get; private set; }
             public string Name { get; private set; }
             public ItemCategory Category { get; private set; }
             public string Description { get; private set; }
             public int TimeNeeded { get; private set; }
             public Dictionary<CropStatus, Mesh> Appearance { get; private set; }
             public Dictionary<CropStatus, Material[]> Material { get; private set; }
+            
+            public Sprite Icon{ get; private set; }
+            public Sprite DetailBg{ get; private set; }
+            public Sprite DetailImage{ get; private set; }
 
             public CropStatus Status { get; private set; }
             public DateTimeOffset MatureTime { get; private set; } //execute as usual , validate on cloudcode
 
-            public CropData(CropBaseData baseData, CropStatus status = CropStatus.Growing)
+            public CropData(CropBaseData baseData, DateTimeOffset matureTime, CropStatus status = CropStatus.Growing)
             {
                 AssetSO allMesh = AssetManager.Instance.AllAssets[AssetConstants.AssetType.Mesh];
                 AssetSO allMaterial = AssetManager.Instance.AllAssets[AssetConstants.AssetType.Material];
 
+                ID = baseData.ID;
                 Name = baseData.Name;
                 Category = baseData.Category;
                 Description = baseData.Description;
@@ -55,22 +61,24 @@ namespace Models
                 Appearance = baseData.Appearance.ToDictionary(x => x.Key, x => (Mesh)allMesh.GetAsset(x.Value));
                 Material = baseData.Material.ToDictionary(x => x.Key, x => x.Value.Select(y => (Material)allMaterial.GetAsset(y)).ToArray());
 
+                Icon = (Sprite)AssetManager.Instance.AllAssets[AssetConstants.AssetType.Sprite].GetAsset(baseData.Icon);
+                DetailBg = (Sprite)AssetManager.Instance.AllAssets[AssetConstants.AssetType.Sprite].GetAsset(baseData.DetailBg);
+                DetailImage = (Sprite)AssetManager.Instance.AllAssets[AssetConstants.AssetType.Sprite].GetAsset(baseData.DetailImage);
+                
                 Status = status;
-
-                if (status != CropStatus.Null)
-                {
-                    MatureTime = DateTimeOffset.UtcNow.AddSeconds(baseData.Costs[ResourceType.Time]);
-                }
+                MatureTime = matureTime;
             }
 
-            public CropData(CropStatus status) => Status = status;
+            public CropData() => Status = CropStatus.Null;
+
+            public void Lock() => Status = CropStatus.Locked;
+            public void UnLock() => Status = CropStatus.Null;
         }
-        
-        //temp
+
         public class CropUploadData
         {
-            public int CropID;
-            public DateTimeOffset MatureTime; //in epoch timestamp , standalone indication
+            [JsonInclude] public int CropID;
+            [JsonInclude] public DateTimeOffset MatureTime; //in epoch timestamp , standalone indication
 
             public CropUploadData(int cropID, DateTimeOffset matureTime) //constructor
             {

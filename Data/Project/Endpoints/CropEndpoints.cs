@@ -10,10 +10,10 @@ public class CropEndpoints
 {
     [CloudCodeFunction("Plant")]
     public async Task Plant(IExecutionContext context, IGameApiClient gameApiClient, int slotID, int gamedataID) => await Crop.Plant(context, gameApiClient, slotID, gamedataID);
-    
+
     [CloudCodeFunction("MultiPlant")]
     public async Task MultiPlant(IExecutionContext context, IGameApiClient gameApiClient, List<int> slotIDs, int gamedataID) => await Crop.MultiPlant(context, gameApiClient, slotIDs, gamedataID);
-    
+
     [CloudCodeFunction("Harvest")]
     public async Task Harvest(IExecutionContext context, IGameApiClient gameApiClient, int slotID) => await Crop.Harvest(context, gameApiClient, slotID);
 
@@ -26,6 +26,6 @@ public class CropEndpoints
     [CloudCodeFunction("MultiRemove")]
     public async Task MultiRemove(IExecutionContext context, IGameApiClient gameApiClient, List<int> slotIDs) => await Crop.MultiRemove(context, gameApiClient, slotIDs);
 
-    [CloudCodeFunction("GetNextMatureTime")]
-    public async Task<DateTimeOffset> GetNextMatureTime(IExecutionContext context, IGameApiClient gameApiClient) => await Crop.GetNextMatureTime(context, gameApiClient);
+    [CloudCodeFunction("TrackCropUpdate")]
+    public async Task<string?> TrackCropUpdate(IExecutionContext context, IGameApiClient gameApiClient) => await Crop.TrackCropUpdate(context, gameApiClient);
 }

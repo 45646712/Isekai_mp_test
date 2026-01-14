@@ -3,12 +3,11 @@ using System.Collections.Generic;
 using Constant;
 using Cysharp.Threading.Tasks;
 using Models;
-using Extensions;
 using Newtonsoft.Json;
 using Unity.Services.Multiplayer;
 
+using static Constant.DataConstants;
 using Access = Unity.Services.CloudCode.GeneratedBindings.Data.DataConstants_DataAccessibility;
-using PublicData = Constant.PlayerDataConstants.PublicDataType;
 
 namespace Extensions
 {
@@ -120,16 +119,16 @@ namespace Extensions
         {
             List<string> targetKeys = new()
             {
-                nameof(PublicData.UserID),
-                nameof(PublicData.Lv),
-                nameof(PublicData.Name)
+                nameof(PublicDataType.UserID),
+                nameof(PublicDataType.Lv),
+                nameof(PublicDataType.Name)
             };
 
             Dictionary<string, object> data = await CloudCodeManager.Instance.LoadMultiPlayerData(Access.Public, targetKeys);
 
-            long userID = (long)data[nameof(PublicData.UserID)];
-            byte playerLevel = (byte)data[nameof(PublicData.Lv)];
-            string playerName = (string)data[nameof(PublicData.Name)];
+            long userID = (long)data[nameof(PublicDataType.UserID)];
+            byte playerLevel = (byte)data[nameof(PublicDataType.Lv)];
+            string playerName = (string)data[nameof(PublicDataType.Name)];
 
             SessionModel.SessionHostInfo hostInfo = new SessionModel.SessionHostInfo(userID, playerLevel, playerName);
             string jsonSource = JsonConvert.SerializeObject(hostInfo);
@@ -147,16 +146,16 @@ namespace Extensions
         {
             List<string> targetKeys = new()
             {
-                nameof(PublicData.UserID),
-                nameof(PublicData.Lv),
-                nameof(PublicData.Name)
+                nameof(PublicDataType.UserID),
+                nameof(PublicDataType.Lv),
+                nameof(PublicDataType.Name)
             };
 
             Dictionary<string, object> data = await CloudCodeManager.Instance.LoadMultiPlayerData(Access.Public, targetKeys);
 
-            long userID = (long)data[nameof(PublicData.UserID)];
-            byte playerLevel = (byte)data[nameof(PublicData.Lv)];
-            string playerName = (string)data[nameof(PublicData.Name)];
+            long userID = (long)data[nameof(PublicDataType.UserID)];
+            byte playerLevel = (byte)data[nameof(PublicDataType.Lv)];
+            string playerName = (string)data[nameof(PublicDataType.Name)];
             
             SessionModel.SessionPlayerInfo clientInfo = new SessionModel.SessionPlayerInfo(userID, playerLevel, playerName);
             string jsonSource = JsonConvert.SerializeObject(clientInfo);

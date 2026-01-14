@@ -6,6 +6,8 @@ using Constant;
 using Unity.Netcode;
 using Unity.Services.Authentication;
 using Unity.Services.Multiplayer;
+using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class SessionManager : NetworkBehaviour
 {
@@ -53,6 +55,8 @@ public class SessionManager : NetworkBehaviour
             await LeaveSession(SessionConstants.SessionOwnership.Host);
             CurrentSession = newSession;
             CurrentSession.SetPrivacyState(privacy, password);
+
+            NetworkManager.Singleton.SceneManager.LoadScene(SceneConstants.GameScene, LoadSceneMode.Single);
         }
         catch (SessionException e)
         {
@@ -75,7 +79,7 @@ public class SessionManager : NetworkBehaviour
             NetworkManager.Singleton.Shutdown();
 
             UIManager.Instance.CloseAllUI();
-            
+
             ISession newSession = await MultiplayerService.Instance.JoinSessionByIdAsync(sessionID,joinPassword);
             
             await LeaveSession(SessionConstants.SessionOwnership.Client);
@@ -145,16 +149,6 @@ public class SessionManager : NetworkBehaviour
         else
         {
             await CurrentSession.LeaveAsync();
-        }
-
-        switch (ownership)
-        {
-            case SessionConstants.SessionOwnership.Host:
-                NetworkManager.Singleton.StartHost();
-                break;
-            case SessionConstants.SessionOwnership.Client:
-                NetworkManager.Singleton.StartClient();
-                break;
         }
     }
 }

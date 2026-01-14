@@ -1,9 +1,6 @@
 using System;
-using System.Collections;
 using Unity.Netcode;
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.Rendering;
 
 public class Player_movement : NetworkBehaviour
 {
@@ -13,19 +10,11 @@ public class Player_movement : NetworkBehaviour
     private Vector2 input;
     private Rigidbody rb;
 
-    private void Awake()
+    public override void OnNetworkSpawn()
     {
-        rb = GetComponent<Rigidbody>();
-    }
-
-    private void Start()
-    {
-        if (!IsOwner)
-        {
-            return;
-        }
+        enabled = OwnerClientId == NetworkManager.Singleton.LocalClientId;
         
-        NetworkManager.Singleton.SceneManager.OnLoadComplete += (id, sceneName, mode) => InputManager.Instance.EnableControl();
+        rb = GetComponent<Rigidbody>();
     }
 
     private void Update()

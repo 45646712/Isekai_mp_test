@@ -6,15 +6,12 @@ using UnityEngine;
 public class BatchPlantTerminal : MonoBehaviour
 {
     [SerializeField] private WorldButton InteractButton;
-
-    private void Start()
-    {
-        GetComponent<BoxCollider>().enabled = SessionManager.Instance.CurrentSession.IsHost;
-    }
-
+    
     public void Init(CropSlot[] slots)
     {
-        InteractButton.Init(() => { UIManager.Instance.SpawnUI(UIConstants.NonPooledUITypes.BatchPlantCropUI).GetComponent<BatchPlantCropUI>().Init(slots); });
+        GetComponent<BoxCollider>().enabled = true;
+        
+        InteractButton.Init(() => { UIManager.Instance.SpawnUI(UIConstants.NonPooledUITypes.BatchPlantCropUI).GetComponent<BatchPlantCropUI>().Init(slots).Forget(); });
     }
     
     private void OnTriggerEnter(Collider col) => InteractButton.UpdateStatus(col.CompareTag("Player"));

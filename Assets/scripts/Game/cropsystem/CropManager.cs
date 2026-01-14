@@ -1,16 +1,19 @@
 using System;
+using System.Collections;
 using UnityEngine;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json;
 using System.Threading;
-using Constant;
 using Cysharp.Threading.Tasks;
-using Models;
+using Unity.Netcode;
 using Unity.Services.CloudCode.GeneratedBindings.Data;
-using static Constant.PlayerDataConstants;
+
+using static Constant.DataConstants;
+using static Constant.CropConstants;
 using static Models.CropModel;
 
-public class CropManager : MonoBehaviour
+public class CropManager : NetworkBehaviour
 {
     public static CropManager Instance;
     
@@ -19,23 +22,39 @@ public class CropManager : MonoBehaviour
     public List<CropSlot> AllCrops { get; private set; } = new();
     
     private CancellationTokenSource source = new();
+
+    private bool isLoadComplete;
     
     private void Awake()
     {
         Instance = this;
-
-        if (!SessionManager.Instance.CurrentSession.IsHost)
-        {
-            enabled = false;
-            return;
-        }
-
-        AllCrops = Fields.SelectMany(x => x.Crops).ToList();
-        
-        LoadData().Forget(); // need ~3 second buffer
     }
-    
-    private async UniTask ValidateTimestamp(DateTimeOffset nextUpdateTime)
+
+    private async UniTaskVoid Start()
+    {
+        NetworkManager.Singleton.OnConnectionEvent += (manager, data) => UniTask.Action(async () =>
+        {
+            if (data.EventType == ConnectionEvent.ClientConnected && NetworkManager.IsHost)
+            {
+                await InitLock();
+            }
+        }).Invoke();
+        
+        AllCrops = Fields.SelectMany(x => x.Crops).ToList();
+
+        await InitLock();
+        await LoadData();
+    }
+
+    public override void OnNetworkSpawn() //for clients
+    {
+        if (!NetworkManager.IsHost)
+        {
+            Destroy(gameObject);
+        }
+    }
+
+    private async UniTask TrackNextUpdate(DateTimeOffset nextUpdateTime)
     {
         if (nextUpdateTime > DateTimeOffset.Now)
         {
@@ -46,14 +65,24 @@ public class CropManager : MonoBehaviour
             }
             catch (OperationCanceledException) { }
         }
+        else if (nextUpdateTime <= DateTimeOffset.Now && !isLoadComplete)
+        {
+            await LoadData();
+            isLoadComplete = true;
+        }
     }
-    
+
     public async UniTask Plant(int slotID, int gamedataID)
     {
         try
         {
             await CloudCodeManager.Instance.Plant(slotID, gamedataID);
-            AllCrops[slotID].Init(await CloudCodeManager.Instance.LoadGameData<CropBaseData>(DataConstants_GameDataType.Crop, gamedataID), CropConstants.CropStatus.Growing);
+            string rawBaseData = await CloudCodeManager.Instance.LoadRawGameData(DataConstants_GameDataType.Crop, gamedataID);
+
+            AllCrops[slotID].InitRpc(rawBaseData, status: CropStatus.Growing);
+
+            isLoadComplete = false;
+            await TrackCropUpdate();
         }
         catch (Exception e)
         {
@@ -61,18 +90,20 @@ public class CropManager : MonoBehaviour
         }
     }
 
-    public async UniTask Plant(List<int> slotIDs ,  int gamedataID)
+    public async UniTask Plant(List<int> slotIDs, int gamedataID)
     {
         try
         {
             await CloudCodeManager.Instance.MultiPlant(slotIDs, gamedataID);
+            string rawBaseData = await CloudCodeManager.Instance.LoadRawGameData(DataConstants_GameDataType.Crop, gamedataID);
 
-            CropBaseData baseData = await CloudCodeManager.Instance.LoadGameData<CropBaseData>(DataConstants_GameDataType.Crop, gamedataID);
-            
             foreach (int element in slotIDs)
             {
-                AllCrops[element].Init(baseData, CropConstants.CropStatus.Growing);
+                AllCrops[element].InitRpc(rawBaseData, status: CropStatus.Growing);
             }
+
+            isLoadComplete = false;
+            await TrackCropUpdate();
         }
         catch (Exception e)
         {
@@ -85,7 +116,7 @@ public class CropManager : MonoBehaviour
         try
         {
             await CloudCodeManager.Instance.Harvest(slotID);
-            AllCrops[slotID].Reset();
+            AllCrops[slotID].ResetRpc();
         }
         catch (Exception e)
         {
@@ -101,7 +132,7 @@ public class CropManager : MonoBehaviour
             
             foreach (int element in slotIDs)
             {
-                AllCrops[element].Reset();
+                AllCrops[element].ResetRpc();
             }
         }
         catch (Exception e)
@@ -114,10 +145,13 @@ public class CropManager : MonoBehaviour
     {
         try
         {
-            if (AllCrops[slotID].data.Status != CropConstants.CropStatus.Matured)
+            if (AllCrops[slotID].data.Status != CropStatus.Matured)
             {
                 await CloudCodeManager.Instance.Remove(slotID);
-                AllCrops[slotID].Reset();
+                AllCrops[slotID].ResetRpc();
+                
+                isLoadComplete = false;
+                await TrackCropUpdate();
             }
         }
         catch (Exception e)
@@ -130,14 +164,17 @@ public class CropManager : MonoBehaviour
     {
         try
         {
-            slotID = slotID.FindAll(x => AllCrops[x].data.Status != CropConstants.CropStatus.Matured);
+            slotID = slotID.FindAll(x => AllCrops[x].data.Status != CropStatus.Matured);
 
             await CloudCodeManager.Instance.MultiRemove(slotID);
             
             foreach (int element in slotID)
             {
-                AllCrops[element].Reset();
+                AllCrops[element].ResetRpc();
             }
+            
+            isLoadComplete = false;
+            await TrackCropUpdate();
         }
         catch (Exception e)
         {
@@ -145,33 +182,52 @@ public class CropManager : MonoBehaviour
         }
     }
     
-    private async UniTask ValidateTimer()
+    private async UniTask TrackCropUpdate()
     {
         source.Cancel();
         source = new();
-        
-        //ValidateTimestamp(data.Where(x => x.MatureTime > DateTimeOffset.UtcNow).OrderBy(x => x.MatureTime).FirstOrDefault().MatureTime).Forget();
+
+        TrackNextUpdate(await CloudCodeManager.Instance.TrackCropUpdate()).Forget();
     }
 
-    private async UniTask LoadData()
+    private async UniTask InitLock()
     {
+        int validSlots = (int)await CloudCodeManager.Instance.LoadPlayerData(DataConstants_DataAccessibility.Protected, nameof(ProtectedDataType.UnlockedCropSlots));
         
-        /*foreach (CropModel.CropUploadData element in data)
+        for (int i = 0; i < AllCrops.Count; i++)
         {
-            CropSO baseData = AllCropBaseData.First(x => x.ID == element.CropID);
+            AllCrops[i].slotID = i;
             
-            if (DateTimeOffset.UtcNow > element.MatureTime)
+            if (i >= validSlots)
             {
-                //AllCrops[element.SlotID].Init(baseData, element.MatureTime, CropConstants.CropStatus.Matured);
+                AllCrops[i].LockRpc();
             }
-            else
-            {
-                //AllCrops[element.SlotID].Init(baseData, element.MatureTime, CropConstants.CropStatus.Growing);
-            }
-        }*/
+        }
 
-        await ValidateTimer();
+        foreach (Field element in Fields.Where(x => x.Crops.First().slotID <= validSlots))
+        {
+            element.Init();
+        }
     }
     
-    private void OnDestroy() => StopAllCoroutines();
+    private async UniTask LoadData()
+    {
+        List<string> baseData = await CloudCodeManager.Instance.LoadMultiRawGameData(DataConstants_GameDataType.Crop);
+        Dictionary<int, string> slotData = (Dictionary<int, string>)await CloudCodeManager.Instance.LoadPlayerData(DataConstants_DataAccessibility.Protected, nameof(ProtectedDataType.CropData));
+
+        if (slotData is null or { Count: 0 })
+        {
+            await TrackCropUpdate();
+            return;
+        }
+        
+        Dictionary<int, CropUploadData> data = slotData.ToDictionary(x => x.Key, x => JsonSerializer.Deserialize<CropUploadData>(x.Value));
+        
+        foreach (var (slotID, value) in data)
+        {
+            AllCrops[slotID].InitRpc(baseData[value.CropID - 1], value.MatureTime.ToString(), DateTimeOffset.UtcNow > value.MatureTime ? CropStatus.Matured : CropStatus.Growing);
+        }
+
+        await TrackCropUpdate();
+    }
 }

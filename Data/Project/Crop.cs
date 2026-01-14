@@ -5,7 +5,6 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using Unity.Services.CloudCode.Apis;
 using Unity.Services.CloudCode.Core;
-
 using static Data.ItemConstants;
 using static Data.CropModels;
 using static Data.DataConstants;
@@ -16,6 +15,8 @@ public class Crop
 {
     public static async Task Plant(IExecutionContext context, IGameApiClient gameApiClient, int slotID, int gamedataID)
     {
+        await ValidateProgress(context, gameApiClient, slotID);
+        
         CropBaseData baseData = JsonSerializer.Deserialize<CropBaseData>(await GameData.LoadGameData(context, gameApiClient, GameDataType.Crop, gamedataID) ?? string.Empty) ?? throw new NullReferenceException("game data not found!");
         
         string? result = (string?)await PlayerData.LoadPlayerData(context, gameApiClient, DataAccessibility.Protected, nameof(ProtectedPlayerKeys.CropData));
@@ -23,13 +24,14 @@ public class Crop
         Dictionary<int, string> data = result is null ? new() : JsonSerializer.Deserialize<Dictionary<int, string>>(result)!;
 
         data[slotID] = data.ContainsKey(slotID) ? throw new InvalidOperationException("Slot is not empty!") : JsonSerializer.Serialize(new CropUploadData(baseData.ID, DateTimeOffset.UtcNow.AddSeconds(baseData.TimeNeeded)));
-
+        
         await PlayerData.UpdateMultiPlayerData(context, gameApiClient, DataAccessibility.Protected, DataOperations.Subtract, baseData.Costs.ToDictionary(x => x.Key.ToString(), x => x.Value));
         await PlayerData.SavePlayerData(context, gameApiClient, DataAccessibility.Protected, nameof(ProtectedPlayerKeys.CropData), JsonSerializer.Serialize(data));
     }
 
     public static async Task MultiPlant(IExecutionContext context, IGameApiClient gameApiClient, List<int> slotIDs, int gamedataID)
     {
+        await ValidateProgress(context, gameApiClient, slotIDs.Max());
         
         CropBaseData baseData = JsonSerializer.Deserialize<CropBaseData>(await GameData.LoadGameData(context, gameApiClient, GameDataType.Crop, gamedataID) ?? string.Empty) ?? throw new NullReferenceException("game data not found!");
         
@@ -48,6 +50,8 @@ public class Crop
 
     public static async Task Harvest(IExecutionContext context, IGameApiClient gameApiClient, int slotID)
     {
+        await ValidateProgress(context, gameApiClient, slotID);
+        
         string? result = (string?)await PlayerData.LoadPlayerData(context, gameApiClient, DataAccessibility.Protected, nameof(ProtectedPlayerKeys.CropData));
 
         Dictionary<int, string> source = result is null ? throw new InvalidOperationException("no valid slots for harvesting!") : JsonSerializer.Deserialize<Dictionary<int, string>>(result)!;
@@ -70,11 +74,14 @@ public class Crop
     
     public static async Task MultiHarvest(IExecutionContext context, IGameApiClient gameApiClient, List<int> slotIDs)
     {
+        await ValidateProgress(context, gameApiClient, slotIDs.Max());
+        
         string? result = (string?)await PlayerData.LoadPlayerData(context, gameApiClient, DataAccessibility.Protected, nameof(ProtectedPlayerKeys.CropData));
 
         Dictionary<int, string> source = result is null ? throw new InvalidOperationException("no valid slots for harvesting!") : JsonSerializer.Deserialize<Dictionary<int, string>>(result)!;
-        Dictionary<int, CropUploadData> allTarget = slotIDs.ToDictionary(x => x, x => JsonSerializer.Deserialize<CropUploadData>(source[x])!);
-
+        
+        Dictionary<int, CropUploadData> allTarget = source.Count == 0 ? throw new InvalidOperationException("no valid slots for harvesting!") : slotIDs.ToDictionary(x => x, x => JsonSerializer.Deserialize<CropUploadData>(source[x] ?? throw new InvalidOperationException("slot is not harvestable!"))!);
+        
         List<string> baseSource = await GameData.LoadMultiGameData(context, gameApiClient, GameDataType.Crop);
         List<CropBaseData> AllBaseData = baseSource.Select(x => JsonSerializer.Deserialize<CropBaseData>(x)!).OrderBy(y => y.ID).ToList();
 
@@ -104,6 +111,8 @@ public class Crop
 
     public static async Task Remove(IExecutionContext context, IGameApiClient gameApiClient, int slotID)
     {
+        await ValidateProgress(context, gameApiClient, slotID);
+        
         string? result = (string?)await PlayerData.LoadPlayerData(context, gameApiClient, DataAccessibility.Protected, nameof(ProtectedPlayerKeys.CropData));
 
         Dictionary<int, string> data = result is null ? throw new InvalidOperationException("no valid slots for removing!") : JsonSerializer.Deserialize<Dictionary<int, string>>(result)!;
@@ -115,6 +124,8 @@ public class Crop
     
     public static async Task MultiRemove(IExecutionContext context, IGameApiClient gameApiClient, List<int> slotIDs)
     {
+        await ValidateProgress(context, gameApiClient, slotIDs.Max());
+        
         string? result = (string?)await PlayerData.LoadPlayerData(context, gameApiClient, DataAccessibility.Protected, nameof(ProtectedPlayerKeys.CropData));
 
         Dictionary<int, string> data = result is null ? throw new InvalidOperationException("no valid slots for removing!") : JsonSerializer.Deserialize<Dictionary<int, string>>(result)!;
@@ -127,17 +138,31 @@ public class Crop
         await PlayerData.SavePlayerData(context, gameApiClient, DataAccessibility.Protected, nameof(ProtectedPlayerKeys.CropData), JsonSerializer.Serialize(data));
     }
 
-    public static async Task<DateTimeOffset> GetNextMatureTime(IExecutionContext context, IGameApiClient gameApiClient)
+    public static async Task<string?> TrackCropUpdate(IExecutionContext context, IGameApiClient gameApiClient)
     {
         string? result = (string?)await PlayerData.LoadPlayerData(context, gameApiClient, DataAccessibility.Protected, nameof(ProtectedPlayerKeys.CropData));
+        
+        Dictionary<int, string>? source = result is null ? null : JsonSerializer.Deserialize<Dictionary<int, string>>(result)!;
 
-        if (result == null)
+        if (source == null || source.Count == 0)
         {
-            return default;
+            return null;
         }
 
-        Dictionary<int, string>? data = JsonSerializer.Deserialize<Dictionary<int, string>>(result);
+        DateTimeOffset nextUpdateTime = source
+            .Select(x => JsonSerializer.Deserialize<CropUploadData>(x.Value)!.MatureTime)
+            .Where(x => x > DateTimeOffset.UtcNow).OrderBy(x => x).FirstOrDefault();
         
-        return data is null ? default : data.Select(x => JsonSerializer.Deserialize<CropUploadData>(x.Value)!.MatureTime).OrderBy(y => y).First();
+        return JsonSerializer.Serialize(nextUpdateTime);
+    }
+
+    private static async Task ValidateProgress(IExecutionContext context, IGameApiClient gameApiClient, int slotID)
+    {
+        long? unlockProgress = (long?)await PlayerData.LoadPlayerData(context, gameApiClient, DataAccessibility.Protected, nameof(ProtectedPlayerKeys.UnlockedCropSlots));
+
+        if (slotID >= unlockProgress)
+        {
+            throw new InvalidOperationException("request passed unlocked amount, potential manipulation!");
+        }
     }
 }

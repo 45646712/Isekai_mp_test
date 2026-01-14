@@ -33,12 +33,10 @@ public class WorldButton : MonoBehaviour, IWorldUIObject
 
     private void LateUpdate()
     {
-        if (!renderer.enabled)
+        if (renderer.enabled)
         {
-            return;
+            transform.parent.forward = Camera.main.transform.forward;
         }
-        
-        transform.parent.forward = Camera.main.transform.forward;
     }
 
     public void Init(int index, Action evt) //get enum -> int
@@ -52,10 +50,7 @@ public class WorldButton : MonoBehaviour, IWorldUIObject
         renderer.material = icons[index];
     }
     
-    public void Init(Action evt)
-    {
-        raycastEvt = evt;
-    }
-
+    public void Init(Action evt) => raycastEvt = evt;
+    
     public void UpdateStatus(bool isActive) => col.enabled = renderer.enabled = isActive;
 }

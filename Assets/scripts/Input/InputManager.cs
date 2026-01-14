@@ -11,11 +11,8 @@ public class InputManager : MonoBehaviour
 {
     public static InputManager Instance;
     
-    [field: SerializeField] public GameObject CinemachinePrefab { get; private set; }
-
     public PlayerInput playerInput { get; private set; }
-    public CinemachineCamera SpawnedCamera { get; set; }
-
+    
     private void Awake()
     {
         Instance = this;
@@ -32,10 +29,6 @@ public class InputManager : MonoBehaviour
     {
         GameObject obj = UIManager.Instance.SpawnUI(UIConstants.NonPooledUITypes.ControlOverlay);
         UIManager.Instance.AllActiveUIs.Add(UIConstants.NonPooledUITypes.ControlOverlay, obj);
-        
-        Canvas inputCanvas = obj.GetComponent<Canvas>();
-        inputCanvas.worldCamera = Camera.main;
-        inputCanvas.planeDistance = 1000;
     }
 
     public void DisableControl()

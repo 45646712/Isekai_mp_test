@@ -14,6 +14,11 @@ namespace Constant
             CropGrowingUI,
         }
 
+        public enum NonNetworkEntityTypes
+        {
+            CropButton
+        }
+        
         public const string GeneralCancelButtonText = "Cancel";
         public const string GeneralConfirmButtonText = "Confirm";
     }

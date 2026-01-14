@@ -46,7 +46,7 @@ public static class CropModels
             this.DetailImage = DetailImage;
         }
     }
-
+    
     public class CropUploadData
     {
         [JsonInclude] public int CropID;
